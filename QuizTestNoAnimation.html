@@ -4,35 +4,35 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 <style type="text/css">
 	.demo-target{background:white;clear:both;border: 1px solid #AAA;width:300px;height:300px;margin:0 auto; display: inline-block;
-	padding: 20px;
-    margin: 0 auto;
+	padding: 5px;
+    margin: 0.75%;
     display: inline-block;}
     .target-container{
     	width: 100%;
        text-align:center;
+      }
+    h1.textstyling {
+  text-align: center;
+  font-size: 70;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+  color:#212121;
+}
+h2.textstyling {
+	text-align: center;
+  font-size: 50;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+  color:#212121;
     }
 </style>
 </head>
 <body>
 <div class="demo container">
-  <h1>Hanzi Writer Demos--</h1>
-  <form class="form-inline char-select-form js-char-form">
-    <div class="form-group">
-      <label for="character-select">
-        Character
-      </label>
-      <input type="text" class="form-control character-select" id="character-select" size="1" maxlength="1" value="我" />
-    </div>
-    <button type="submit" class="btn btn-default">Update demos</button>
-  </form>
-
-  <hr class="demo-divider" />
+  <h1 class="textstyling">Hanzi Writer Demos</h1>
 
 
-
-  <hr class="demo-divider" />
-
-  <h4>Stroke Quiz</h4>
+  <h2 class="textstyling">Stroke Practice</h2>
   <div id="PutCharsHere" class="target-container">
   <!-- 
   <p>Quiz yourself by drawing the character <strong class="char-symbol0"></strong> below with your mouse or finger</p>
@@ -50,6 +50,9 @@
         <button class="btn btn-primary" id="quiz-reset">Reset</button>
       </div>
     </form>
+      <form class="form-inline char-select-form js-char-form">
+    <button type="submit" class="btn btn-default">Update demos</button>
+  </form>
   </div>
   <a href="docs.html#quizzing-link" class="demo-docs-link">Learn more about quizzes</a>
 </div>

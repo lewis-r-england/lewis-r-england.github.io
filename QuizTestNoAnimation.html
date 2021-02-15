@@ -3,7 +3,14 @@
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.0/dist/hanzi-writer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 <style type="text/css">
-	.demo-target{background:white;clear:both;border: 1px solid #AAA;width:300px;height:300px;margin:0 auto; display: inline-block;}
+	.demo-target{background:white;clear:both;border: 1px solid #AAA;width:300px;height:300px;margin:0 auto; display: inline-block;
+	padding: 20px;
+    margin: 0 auto;
+    display: inline-block;}
+    .target-container{
+    	width: 100%;
+       text-align:center;
+    }
 </style>
 </head>
 <body>
@@ -26,7 +33,7 @@
   <hr class="demo-divider" />
 
   <h4>Stroke Quiz</h4>
-  <div id="PutCharsHere">
+  <div id="PutCharsHere" class="target-container">
   <!-- 
   <p>Quiz yourself by drawing the character <strong class="char-symbol0"></strong> below with your mouse or finger</p>
   <div class="demo-target" id="quiz-target0"></div>

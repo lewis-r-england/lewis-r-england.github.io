@@ -2,7 +2,11 @@
 <head>
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.0/dist/hanzi-writer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- In the longer term, if the screen is below a certain size, make chars bigger. On phone it almost wants to be double the size.-->
+<link rel="stylesheet" type="text/css" href="./buttonscss.css">
 <style type="text/css">
+	
+
 	.demo-target{background:white;clear:both;border: 1px solid #AAA;width:300px;height:300px;margin:0 auto; display: inline-block;
 	padding: 5px;
     margin: 0.75%;
@@ -11,6 +15,33 @@
     	width: 100%;
        text-align:center;
       }
+     .bottom-button-row{
+     	background-color: #000;
+    	width: 100%;
+  		position:relative;
+  		display: inline-block;
+  		
+       text-align:center;
+     }
+     .button-bottom{
+    
+	padding: 5px;
+
+    display: inline-block;
+     }
+   .togglebox-box{
+	padding: 5px;
+    text-align:center;
+
+    ;
+   }
+    p.togglebox-box{
+   color:#FFFFFF;
+	text-align: center;
+  font-size: 25;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+   }
     h1.textstyling {
   text-align: center;
   font-size: 70;
@@ -25,10 +56,25 @@ h2.textstyling {
   font-weight:300;
   color:#212121;
     }
+
 </style>
 </head>
 <body>
-<div class="demo container">
+
+
+
+<div class="button-bottom">
+    <button class="buttonLarge" id="debug-show">Show</button>
+ </div>
+<div class="button-bottom">
+    <button class="buttonLarge" id="debug-hide">Hide</button>
+ </div>
+
+
+
+
+	<!--  -->
+<div class="demo container" id='MainQuizScreenDiv'>
   <h1 class="textstyling">Hanzi Writer Demos</h1>
 
 
@@ -41,27 +87,76 @@ h2.textstyling {
   <div class="demo-target" id="quiz-target1"></div>
   -->
 	</div>
-  <div class="demo-controls">
-    <form class="form-inline">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" checked="checked" id="quiz-show-outline" /> Show Outline
-        </label>
-        <button class="btn btn-primary" id="quiz-reset">Reset</button>
-      </div>
-    </form>
-      <form class="form-inline char-select-form js-char-form">
-    <button type="submit" class="btn btn-default">Update demos</button>
-  </form>
-  </div>
-  <a href="docs.html#quizzing-link" class="demo-docs-link">Learn more about quizzes</a>
+
+
+
+</div>
+  <div class="bottom-button-row" id='MainFooterScreenDiv'>
+  
+  	<div class="button-bottom">
+    <button class="buttonLarge" id="quiz-show-radical">Toggle Radical</button>
+ </div>
+ 
+   <div class="button-bottom">
+    <button class="buttonLarge" id="quiz-show-outline">Toggle Char Outline</button>
+ </div>
+<div class="button-bottom">
+    <button class="buttonLarge" id="quiz-reset">Reset</button>
+ </div>
+ <!--<div class="button-bottom">
+    <button type="submit" class="buttonLarge">Update demos</button>
+ </div>
+  -->
+  <div class="button-bottom">
+    <button class="buttonLarge" id="next-char">Next</button>
+ </div>
+ 	<div class="button-bottom">
+    <button class="buttonLarge" id="show-animation">Show Animation</button>
+ </div>
 </div>
 <script type="text/javascript">
 	// To work out our listy
 let params = new URLSearchParams(location.search);
 //params.get('char') # => "n1"
 //params.getAll('char') # => ["n1", "n2"]
-var CurrentWord = params.get('char')
+//var CurrentWord = params.get('char')
+var SectTitleArray = new Array()
+Sections = params.getAll('section')
+for (i = 0; i < Sections.length; i++) {
+	var titleLocate = Sections[i] + "Title";
+	var sectionTitle = params.get(titleLocate);
+	var tempArray = new Array(Sections[i], sectionTitle);
+	SectTitleArray[i] = (tempArray);
+}
+var CharecterListBIG = new Array();
+var EnglishListBIG = new Array();
+var PinyinListBIG = new Array();
+var SentencePartListBIG = new Array();
+//this is best for python import, if reading from internal list, meanings probs stored together, list would need to be for-i-looped and split up
+for (i = 0; i < SectTitleArray.length; i++) {
+	var EnglishLocate = SectTitleArray[i][0] + "Eng";
+	var tempEngList = params.getAll(EnglishLocate);
+	EnglishListBIG[i] = tempEngList
+
+	var CharLocate = SectTitleArray[i][0] + "Hanzi";
+	var tempCharList = params.getAll(CharLocate);
+	CharecterListBIG[i] = tempEngList
+
+	var PinyinLocate = SectTitleArray[i][0] + "Pyn";
+	var tempPynList = params.getAll(PinyinLocate);
+	PinyinListBIG[i] = tempPynList
+
+	var SntPrtLocate = SectTitleArray[i][0] + "SntPrt";
+	var tempSntPrtList = params.getAll(SntPrtLocate);
+	SentencePartListBIG[i] = tempSntPrtList
+	
+}
+
+
+
+
+
+CurrentWord = params.get('char')
 var CurrentWordBrokenIntoChars = CurrentWord.split("")
 //var CurrentWordBrokenIntoChars = ["我", "们","去","上","海"];
 var i;
@@ -83,7 +178,29 @@ var InsertQuizBoxDynamic = document.getElementById('PutCharsHere'),
 //var quizWriter1;
 var character;
 var isCharVisible;
-var isOutlineVisible;
+var CanSeeOutline = 0;
+var CanSeeRadical = 0;
+var WasCharCorrect = 0;
+// var ListOfCharAndResut [‘明天’，1]
+function fadeOutIntroductionScreen() {}
+
+function fadeInNextSectionScreen() {}
+function fadeOutNextSectionScreen() {}
+
+function fadeInCharIntroScreen() {}
+function fadeOutCharIntroScreen() {}
+
+function fadeInQuizScreen() {
+	$("#MainQuizScreenDiv").fadeIn(1000);
+	$("#MainFooterScreenDiv").fadeIn(1200);
+}
+function fadeOutQuizScreen() {
+	$("#MainQuizScreenDiv").fadeOut(1200);
+	$("#MainFooterScreenDiv").fadeOut(1000);
+}
+
+ 
+function fadeInEndScreen() {}
 
 function updateCharacter() {
 
@@ -114,7 +231,7 @@ for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
   //var Command = "$('.char-symbol" + i + "').text(character);";
   eval(Command);
 
-  var Command = "quizWriter" + i + " = HanziWriter.create('quiz-target" + i + "', character, {width: 300, height: 300, showOutline: shouldShowOutline('quiz'), showCharacter: false, showHintAfterMisses: 1 });";
+  var Command = "quizWriter" + i + " = HanziWriter.create('quiz-target" + i + "', character, {width: 300, height: 300, showOutline: false, showCharacter: false, showHintAfterMisses: 1 });";
   eval(Command);
 
   var Command = "quizWriter" + i + ".quiz();";
@@ -148,9 +265,7 @@ for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
   //window.quizWriter = quizWriter;
 }
 
-function shouldShowOutline(demoType) {
-  return $('#' + demoType + '-show-outline').prop('checked');
-}
+
 
 $(function() {
   updateCharacter();
@@ -172,20 +287,86 @@ $(function() {
   });
 
 
+
+$('#next-char').on('click', function() {
+  	CurrentListIndex = CurrentListIndex + 1;
+  	if (CurrentListIndex > CurrentMaxListIndex){
+  		CurrentSectionIndex = CurrentSectionIndex + 1;
+  		if(CurrentSectionIndex > MaxSectionIndex){
+  			fadeOutQuizScreen();
+  			fadeInEndScreen();
+  		}
+  		else{
+  			fadeOutQuizScreen();
+  			fadeInNextSectionScreen();
+  		}
+  	}
+  	else{
+  		fadeOutQuizScreen();
+  		fadeInCharIntroScreen();
+  		updateCharacter();
+  	}
+    
+    
+
+	});
+
+
+
   $('#quiz-show-outline').on('click', function() {
   	
-    var method = shouldShowOutline('quiz') ? 'showOutline' : 'hideOutline';
-
+    //var method = shouldShowOutline('quiz') ? 'showOutline' : 'hideOutline';
+    var method = 'showOutline'; 
+     if (CanSeeOutline == 1){
+    	method = 'hideOutline';
+    	CanSeeOutline = 0
+    }
+    else{
+    	method = 'showOutline'
+    	CanSeeOutline = 1
+    }
     for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
     var TimeToWait = i*75
+   
     var Command = 'setTimeout(function(){ quizWriter' + i + '[method](); }, ' + TimeToWait + ');'
     eval(Command);
 	}
+	});
     //quizWriter[method]();
     //setTimeout(function(){ quizWriter2[method](); }, 75);
-    
-  });
-});
+    $('#quiz-show-radical').on('click', function() {
+  	
+    //var method = shouldShowOutline('quiz') ? 'showOutline' : 'hideOutline';
+    var radicalcolor = '#555'
+     if (CanSeeRadical == 1){
+    	radicalcolor = '#555';
+    	CanSeeRadical = 0
+    }
+    else{
+    	radicalcolor = '#168F16'
+    	CanSeeRadical = 1
+    }
+    for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
+    var TimeToWait = i*75
+   
+    var Command = 'setTimeout(function(){ quizWriter' + i + '.updateColor("strokeColor", "' + radicalcolor + '"); }, ' + TimeToWait + ');'
+    eval(Command);
+	}
+	});
+
+
+	$('#debug-show').on('click', function() {
+		fadeInQuizScreen();
+		
+	})
+	});
+	$('#debug-hide').on('click', function() {
+		fadeOutQuizScreen();
+
+	});
+
+
+ 
      
 </script>
 </body>

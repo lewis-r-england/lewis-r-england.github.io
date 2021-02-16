@@ -6,6 +6,29 @@
 <link rel="stylesheet" type="text/css" href="./buttonscss.css">
 <style type="text/css">
 	
+#StartIntroScreenDiv{
+	display:none;
+}
+#SectionIntroScreenDiv{
+	display:none;
+}
+#CharIntroScreenDiv{
+	display:none;
+}
+#MainQuizScreenDiv{
+	display:none;
+}
+#MainFooterScreenDiv{
+	display:none;
+}
+#EndScreenDiv{
+	display:none;
+}
+
+
+
+
+
 
 	.demo-target{background:white;clear:both;border: 1px solid #AAA;width:300px;height:300px;margin:0 auto; display: inline-block;
 	padding: 5px;
@@ -62,7 +85,7 @@ h2.textstyling {
 <body>
 
 
-
+<!---
 <div class="button-bottom">
     <button class="buttonLarge" id="debug-show">Show</button>
  </div>
@@ -70,7 +93,7 @@ h2.textstyling {
     <button class="buttonLarge" id="debug-hide">Hide</button>
  </div>
 
-
+--->
 
 
 	<!--  -->
@@ -114,7 +137,39 @@ h2.textstyling {
     <button class="buttonLarge" id="show-animation">Show Animation</button>
  </div>
 </div>
+
+<div id="CharIntroScreenDiv">
+<div class="button-bottom">
+    <button class="buttonLarge" id="show-quiz-after-intro">ShowCharBox</button>
+ </div>
+</div>
+
+<div id="SectionIntroScreenDiv">
+<div class="button-bottom">
+    <button class="buttonLarge" id="next-sect-confirm">StartNextSection</button>
+ </div>
+</div>
+
+<div id="StartIntroScreenDiv">
+<div class="button-bottom">
+    <button class="buttonLarge" id="begin-from-start">Begin</button>
+ </div>
+</div>
+
+<div id="SectionIntroScreenDiv">
+<div class="button-bottom">
+    <button class="buttonLarge" id="next-sect-confirm">StartNextSection</button>
+ </div>
+</div>
+
+<div id="EndScreenDiv">
+	<h1>Hiya</h1>
+</div>
+
+
 <script type="text/javascript">
+
+
 	// To work out our listy
 let params = new URLSearchParams(location.search);
 //params.get('char') # => "n1"
@@ -140,7 +195,7 @@ for (i = 0; i < SectTitleArray.length; i++) {
 
 	var CharLocate = SectTitleArray[i][0] + "Hanzi";
 	var tempCharList = params.getAll(CharLocate);
-	CharecterListBIG[i] = tempEngList
+	CharecterListBIG[i] = tempCharList
 
 	var PinyinLocate = SectTitleArray[i][0] + "Pyn";
 	var tempPynList = params.getAll(PinyinLocate);
@@ -152,24 +207,32 @@ for (i = 0; i < SectTitleArray.length; i++) {
 	
 }
 
+var CurrentSectionIndex = 0;
+var MaxSectionIndex = SectTitleArray.length - 1;
+var CurrentListIndex = 0;
+var CurrentMaxListIndex = CharecterListBIG[CurrentSectionIndex].length - 1;
+var characterForDisplay 
+
+function breakupandpushNewChar(CurrentWord) {
+	
+	$("#PutCharsHere").empty();
+
+	characterForDisplay = CurrentWord.split("")
 
 
-
-
-CurrentWord = params.get('char')
-var CurrentWordBrokenIntoChars = CurrentWord.split("")
-//var CurrentWordBrokenIntoChars = ["我", "们","去","上","海"];
+//var characterForDisplay = ["我", "们","去","上","海"];
 var i;
-for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
+for (i = 0; i < characterForDisplay.length; i++) {
 var InsertQuizBoxDynamic = document.getElementById('PutCharsHere'),
     newdiv = document.createElement('div');
     newdiv.className = 'demo-target';
     var Command = "newdiv.id = 'quiz-target" + i + "';" //add an id
     eval(Command)
-    InsertQuizBoxDynamic.appendChild(newdiv);        //append to the specified parent-div
-}    
-
-
+    InsertQuizBoxDynamic.appendChild(newdiv);
+    
+}   
+updateCharacter() 
+}
 
 ///////OLD MAIN SCRIPT STARTED HERE
 
@@ -182,13 +245,31 @@ var CanSeeOutline = 0;
 var CanSeeRadical = 0;
 var WasCharCorrect = 0;
 // var ListOfCharAndResut [‘明天’，1]
-function fadeOutIntroductionScreen() {}
+function fadeInIntroductionScreen() {
+	$("#StartIntroScreenDiv").fadeIn(1000);
+}
 
-function fadeInNextSectionScreen() {}
-function fadeOutNextSectionScreen() {}
 
-function fadeInCharIntroScreen() {}
-function fadeOutCharIntroScreen() {}
+function fadeOutIntroductionScreen() {
+	$("#StartIntroScreenDiv").fadeOut(1000);
+}
+
+function fadeInNextSectionScreen() {
+	//get el by id, update section
+	$("#SectionIntroScreenDiv").fadeIn(1000);
+}
+
+function fadeOutNextSectionScreen() {
+	$("#SectionIntroScreenDiv").fadeOut(1000);
+}
+
+function fadeInCharIntroScreen() {
+	//get el by id, update eng
+	$("#CharIntroScreenDiv").fadeIn(1000);
+}
+function fadeOutCharIntroScreen() {
+	$("#CharIntroScreenDiv").fadeOut(1000);
+}
 
 function fadeInQuizScreen() {
 	$("#MainQuizScreenDiv").fadeIn(1000);
@@ -199,8 +280,15 @@ function fadeOutQuizScreen() {
 	$("#MainFooterScreenDiv").fadeOut(1000);
 }
 
- 
-function fadeInEndScreen() {}
+function fadeInEndScreen() {
+	//getelbyid show char feedback list
+	$("#EndScreenDiv").fadeIn(1000);
+	
+}
+
+function pushFirstChar() {
+	breakupandpushNewChar(CharecterListBIG[CurrentSectionIndex][CurrentListIndex])
+}
 
 function updateCharacter() {
 
@@ -222,12 +310,12 @@ function updateCharacter() {
 
 
 //
-for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
+for (i = 0; i < characterForDisplay.length; i++) {
 
   var Command = "$('#quiz-target" + i + "').html('');";
   eval(Command);
 
-  var character = CurrentWordBrokenIntoChars[i];
+  var character = characterForDisplay[i];
   //var Command = "$('.char-symbol" + i + "').text(character);";
   eval(Command);
 
@@ -268,7 +356,8 @@ for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
 
 
 $(function() {
-  updateCharacter();
+	fadeInIntroductionScreen()
+  
 
   $('.js-char-form').on('submit', function(evt) {
     evt.preventDefault();
@@ -278,7 +367,7 @@ $(function() {
 
   $('#quiz-reset').on('click', function(evt) {
     evt.preventDefault();
-    for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
+    for (i = 0; i < characterForDisplay.length; i++) {
     var TimeToWait = i*75
     var Command = 'setTimeout(function(){ quizWriter' + i + '.quiz(); }, ' + TimeToWait + ');'
     eval(Command);
@@ -292,24 +381,46 @@ $('#next-char').on('click', function() {
   	CurrentListIndex = CurrentListIndex + 1;
   	if (CurrentListIndex > CurrentMaxListIndex){
   		CurrentSectionIndex = CurrentSectionIndex + 1;
+  		CurrentListIndex = 0;
   		if(CurrentSectionIndex > MaxSectionIndex){
   			fadeOutQuizScreen();
-  			fadeInEndScreen();
+  			
+  			 setTimeout(function(){ fadeInEndScreen(); }, 1000);
+  			
   		}
   		else{
+  			CurrentMaxListIndex = CharecterListBIG[CurrentSectionIndex].length - 1;
   			fadeOutQuizScreen();
-  			fadeInNextSectionScreen();
+  			  	setTimeout(function(){ fadeInNextSectionScreen(); }, 1000);
+  			
   		}
   	}
   	else{
   		fadeOutQuizScreen();
-  		fadeInCharIntroScreen();
-  		updateCharacter();
+  		  	setTimeout(function(){ fadeInCharIntroScreen(); }, 1000);
+  		
+  		
   	}
     
     
 
 	});
+
+
+//WordIntoScreen
+$('#show-quiz-after-intro').on('click', function() {
+	fadeOutCharIntroScreen();
+	// if we allow custom settings, these 'default' values will need to be changable. This currently resets it from whatever was before
+	var CanSeeOutline = 0;
+    var CanSeeRadical = 0;
+	breakupandpushNewChar(CharecterListBIG[CurrentSectionIndex][CurrentListIndex])
+
+  	
+  	setTimeout(function(){ fadeInQuizScreen() }, 1000);
+
+	});
+//
+
 
 
 
@@ -325,7 +436,7 @@ $('#next-char').on('click', function() {
     	method = 'showOutline'
     	CanSeeOutline = 1
     }
-    for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
+    for (i = 0; i < characterForDisplay.length; i++) {
     var TimeToWait = i*75
    
     var Command = 'setTimeout(function(){ quizWriter' + i + '[method](); }, ' + TimeToWait + ');'
@@ -346,7 +457,7 @@ $('#next-char').on('click', function() {
     	radicalcolor = '#168F16'
     	CanSeeRadical = 1
     }
-    for (i = 0; i < CurrentWordBrokenIntoChars.length; i++) {
+    for (i = 0; i < characterForDisplay.length; i++) {
     var TimeToWait = i*75
    
     var Command = 'setTimeout(function(){ quizWriter' + i + '.updateColor("strokeColor", "' + radicalcolor + '"); }, ' + TimeToWait + ');'
@@ -365,6 +476,20 @@ $('#next-char').on('click', function() {
 
 	});
 
+	$('#next-sect-confirm').on('click', function() {
+		fadeOutNextSectionScreen()
+		setTimeout(function(){ fadeInCharIntroScreen() }, 1000);
+ 		
+
+	});
+
+$('#begin-from-start').on('click', function() {
+		fadeOutIntroductionScreen()
+		pushFirstChar();
+		setTimeout(function(){ fadeInNextSectionScreen() }, 1000);
+		
+
+	});
 
  
      

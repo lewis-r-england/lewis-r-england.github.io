@@ -241,8 +241,11 @@ updateCharacter()
 //var quizWriter1;
 var character;
 var isCharVisible;
-var CanSeeOutline = 0;
-var CanSeeRadical = 0;
+var ShouldISeeOutline = 0;
+var ShouldISeeRadical = 0;
+var HintAfterMissesVar = 1;
+var CanSeeOutline = ShouldISeeOutline;
+var CanSeeRadical = ShouldISeeRadical;
 var WasCharCorrect = 0;
 // var ListOfCharAndResut [‘明天’，1]
 function fadeInIntroductionScreen() {
@@ -286,9 +289,9 @@ function fadeInEndScreen() {
 	
 }
 
-function pushFirstChar() {
-	breakupandpushNewChar(CharecterListBIG[CurrentSectionIndex][CurrentListIndex])
-}
+//function pushFirstChar() {
+//	breakupandpushNewChar(CharecterListBIG[CurrentSectionIndex][CurrentListIndex])
+//}
 
 function updateCharacter() {
 
@@ -311,7 +314,7 @@ function updateCharacter() {
 
 //
 for (i = 0; i < characterForDisplay.length; i++) {
-
+	var tempycolourthing 
   var Command = "$('#quiz-target" + i + "').html('');";
   eval(Command);
 
@@ -319,14 +322,31 @@ for (i = 0; i < characterForDisplay.length; i++) {
   //var Command = "$('.char-symbol" + i + "').text(character);";
   eval(Command);
 
-  var Command = "quizWriter" + i + " = HanziWriter.create('quiz-target" + i + "', character, {width: 300, height: 300, showOutline: false, showCharacter: false, showHintAfterMisses: 1 });";
+
+  if (ShouldISeeOutline == 0){
+  	truefalsevar = 'false'
+  }
+ else{
+ 	truefalsevar = 'true'
+ }
+  if (ShouldISeeRadical == 0){
+  	alert('0')
+  	tempycolourthing = '#555'
+  }
+ else{
+ 	alert('1')
+ 	tempycolourthing = '#168F16'
+ }
+  var Command = "quizWriter" + i + " = HanziWriter.create('quiz-target" + i + "', character, {width: 300, height: 300, showOutline: " + truefalsevar + ", showCharacter: false,showHintAfterMisses: " + HintAfterMissesVar + " });";
+  alert(Command)
   eval(Command);
 
   var Command = "quizWriter" + i + ".quiz();";
   eval(Command);
+
+  var Command = 'quizWriter' + i + '.updateColor("strokeColor", "' + tempycolourthing + '");'
+    eval(Command);
 }
-
-
 
 
 
@@ -359,10 +379,10 @@ $(function() {
 	fadeInIntroductionScreen()
   
 
-  $('.js-char-form').on('submit', function(evt) {
-    evt.preventDefault();
-    updateCharacter();
-  });
+  //$('.js-char-form').on('submit', function(evt) {
+  //  evt.preventDefault();
+   // updateCharacter();
+  //});
 
 
   $('#quiz-reset').on('click', function(evt) {
@@ -411,8 +431,8 @@ $('#next-char').on('click', function() {
 $('#show-quiz-after-intro').on('click', function() {
 	fadeOutCharIntroScreen();
 	// if we allow custom settings, these 'default' values will need to be changable. This currently resets it from whatever was before
-	var CanSeeOutline = 0;
-    var CanSeeRadical = 0;
+	CanSeeOutline = ShouldISeeOutline;
+    CanSeeRadical = ShouldISeeRadical;
 	breakupandpushNewChar(CharecterListBIG[CurrentSectionIndex][CurrentListIndex])
 
   	
@@ -485,7 +505,6 @@ $('#show-quiz-after-intro').on('click', function() {
 
 $('#begin-from-start').on('click', function() {
 		fadeOutIntroductionScreen()
-		pushFirstChar();
 		setTimeout(function(){ fadeInNextSectionScreen() }, 1000);
 		
 

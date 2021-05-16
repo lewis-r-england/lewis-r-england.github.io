@@ -1,0 +1,632 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.0/dist/hanzi-writer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- In the longer term, if the screen is below a certain size, make chars bigger. On phone it almost wants to be double the size.-->
+<link rel="stylesheet" type="text/css" href="./buttonscss.css">
+<style type="text/css">
+	
+#StartIntroScreenDiv{
+	display:none;
+}
+#SectionIntroScreenDiv{
+	display:none;
+}
+#CharIntroScreenDiv{
+	display:none;
+}
+#MainQuizScreenDiv{
+	display:none;
+}
+#MainFooterScreenDiv{
+	display:none;
+   position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+#EndScreenDiv{
+	display:none;
+}
+
+
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+
+}
+
+	.demo-target{background:white;clear:both;border: 1px solid #AAA;width:300px;height:300px;margin:0 auto; display: inline-block;
+	padding: 5px;
+    margin: 0.75%;
+    display: inline-block;}
+    .target-container{
+    	width: 100%;
+       text-align:center;
+      }
+     .bottom-button-row{
+     	background-color: #000;
+    	width: 100%;
+  		position:relative;
+  		display: inline-block;
+  		
+       text-align:center;
+     }
+     .button-bottom{
+    
+	padding: 5px;
+
+    display: inline-block;
+     }
+   .togglebox-box{
+	padding: 5px;
+    text-align:center;
+
+    ;
+   }
+    p.togglebox-box{
+   color:#FFFFFF;
+	text-align: center;
+  font-size: 25;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+   }
+    h1.textstyling {
+  text-align: center;
+  font-size: 70;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+  color:#212121;
+}
+h2.textstyling {
+	text-align: center;
+  font-size: 35;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+  color:#212121;
+    }
+    h3.textstyling {
+  text-align: center;
+  font-size: 20;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+  color:#212121;
+    }
+
+</style>
+</head>
+<body>
+
+
+<!---
+<div class="button-bottom">
+    <button class="buttonLarge" id="debug-show">Show</button>
+ </div>
+<div class="button-bottom">
+    <button class="buttonLarge" id="debug-hide">Hide</button>
+ </div>
+
+--->
+
+
+	<!--  -->
+<div class="demo container" id='MainQuizScreenDiv'>
+  <h2 class="textstyling" id="MainQuizScreenTopic">Lesson 13 / Chinese / Insert Topic Here</h2>
+
+  <div>
+  <h1 display="inline-block" class="textstyling" id="MainQuizScreenWord">InsertEnglishWordHere</h1>
+  <!--<h3 display="inline-block" class="textstyling" id="MainQuizScreenSentencePart">InsertSentencePartHere</h3>-->
+  </div>
+  <div id="PutCharsHere" class="target-container">
+  <!-- ---
+  <p>Quiz yourself by drawing the character <strong class="char-symbol0"></strong> below with your mouse or finger</p>
+  <div class="demo-target" id="quiz-target0"></div>
+    <p>Quiz yourself by drawing the character <strong class="char-symbol1"></strong> below with your mouse or finger</p>
+  <div class="demo-target" id="quiz-target1"></div>
+  -->
+	</div>
+
+
+
+</div>
+  <div class="bottom-button-row" id='MainFooterScreenDiv'>
+  
+  	<div class="button-bottom">
+    <button class="buttonLarge" id="quiz-show-radical">Toggle Radical</button>
+ </div>
+ 
+   <div class="button-bottom">
+    <button class="buttonLarge" id="quiz-show-outline">Toggle Char Outline</button>
+ </div>
+<div class="button-bottom">
+    <button class="buttonLarge" id="quiz-reset">Reset</button>
+ </div>
+ <!--<div class="button-bottom">
+    <button type="submit" class="buttonLarge">Update demos</button>
+ </div>
+  -->
+  <div class="button-bottom">
+    <button class="buttonLarge" id="next-char-incorr">Save as incorrect</button>
+ </div>
+  <div class="button-bottom">
+    <button class="buttonLarge" id="next-char-corr">Save as correct</button>
+ </div>
+ 	<div class="button-bottom">
+    <button class="buttonLarge" id="engpinchar">Eng/Pinyin/Hanzi</button>
+ </div>
+</div>
+
+<div id="CharIntroScreenDiv" class="center-screen">
+  <h1 class="textstyling" id="CharIntroScreenText">You are now about to write '' in Hanzi</h1>
+<div class="button-bottom">
+    <button class="buttonLarge" id="show-quiz-after-intro">Write Character</button>
+ </div>
+</div>
+
+<div id="SectionIntroScreenDiv" class="center-screen">
+  <h2 class="textstyling">About to begin</h2>
+  <h1 class="textstyling" id="SectionTitleSectionScreen">-</h1>
+  <h2 class="textstyling">Character Set</h2>
+<div class="button-bottom">
+    <button class="buttonLarge" id="next-sect-confirm">Start Section</button>
+ </div>
+</div>
+
+<div id="StartIntroScreenDiv" class="center-screen">
+  <h1 class="textstyling">Welcome to 汉字的学习</h1>
+<div class="button-bottom">
+    <button class="buttonLarge" id="begin-from-start">Start</button>
+ </div>
+</div>
+
+
+
+<div id="EndScreenDiv" class="center-screen">
+	<h1 class="textstyling">Thank you for practicing</h1>
+  <h3 class="textstyling" id="feedbackbox">Feedback</h3>
+</div>
+
+
+<script type="text/javascript">
+
+
+	// To work out our listy
+let params = new URLSearchParams(location.search);
+//params.get('char') # => "n1"
+//params.getAll('char') # => ["n1", "n2"]
+//var CurrentWord = params.get('char')
+var SectTitleArray = new Array()
+Sections = params.getAll('section')
+for (i = 0; i < Sections.length; i++) {
+	var titleLocate = Sections[i] + "Title";
+	var sectionTitle = params.get(titleLocate);
+	var tempArray = new Array(Sections[i], sectionTitle);
+	SectTitleArray[i] = (tempArray);
+}
+var CharecterListBIG = new Array();
+var EnglishListBIG = new Array();
+var PinyinListBIG = new Array();
+//var SentencePartListBIG = new Array();
+//this is best for python import, if reading from internal list, meanings probs stored together, list would need to be for-i-looped and split up
+for (i = 0; i < SectTitleArray.length; i++) {
+	var EnglishLocate = SectTitleArray[i][0] + "Eng";
+	var tempEngList = params.getAll(EnglishLocate);
+	EnglishListBIG[i] = tempEngList
+
+	var CharLocate = SectTitleArray[i][0] + "Hanzi";
+	var tempCharList = params.getAll(CharLocate);
+	CharecterListBIG[i] = tempCharList
+
+	var PinyinLocate = SectTitleArray[i][0] + "Pyn";
+	var tempPynList = params.getAll(PinyinLocate);
+	PinyinListBIG[i] = tempPynList
+
+	//var SntPrtLocate = SectTitleArray[i][0] + "SntPrt";
+	//var tempSntPrtList = params.getAll(SntPrtLocate);
+	//SentencePartListBIG[i] = tempSntPrtList
+	
+
+var ShouldISeeOutline = params.get('einstellungOutline');
+var WhatReferenceShouldISee = params.get('einstellungReference');
+var ShouldISeeRadical = params.get('einstellungRadical');
+var HintAfterMissesVar = params.get('einstellungHints');
+}
+
+var CurrentSectionIndex = 0;
+var MaxSectionIndex = SectTitleArray.length - 1;
+var CurrentListIndex = 0;
+var CurrentMaxListIndex = CharecterListBIG[CurrentSectionIndex].length - 1;
+var characterForDisplay 
+
+function breakupandpushNewChar(CurrentWord) {
+	
+	$("#PutCharsHere").empty();
+
+	characterForDisplay = CurrentWord.split("")
+
+
+//var characterForDisplay = ["我", "们","去","上","海"];
+var i;
+var z;
+for (i = 0; i < characterForDisplay.length; i++) {
+var InsertQuizBoxDynamic = document.getElementById('PutCharsHere'),
+    newdiv = document.createElement('div');
+    newdiv.className = 'demo-target';
+    var Command = "newdiv.id = 'quiz-target" + i + "';" //add an id
+    eval(Command)
+    InsertQuizBoxDynamic.appendChild(newdiv);
+    
+}   
+updateCharacter() 
+}
+
+///////OLD MAIN SCRIPT STARTED HERE
+
+
+//var quizWriter0;
+//var quizWriter1;
+
+
+
+var character;
+var iterationCount = 0;
+var isCharVisible;
+//var ShouldISeeOutline = 0;
+//var WhatReferenceShouldISee = 2; //0 = english, 1 = Pinyin, 2 = Hanzi
+var WhatReferenceDoISee = WhatReferenceShouldISee;
+//var ShouldISeeRadical = 0;
+//var HintAfterMissesVar = 1;
+var CanSeeOutline = ShouldISeeOutline;
+var WasCharacterCorrectBIG = new Array();
+// var ListOfCharAndResut [‘明天’，1]
+function fadeInIntroductionScreen() {
+	$("#StartIntroScreenDiv").fadeIn(300);
+}
+
+
+function fadeOutIntroductionScreen() {
+	$("#StartIntroScreenDiv").fadeOut(300);
+}
+
+function fadeInNextSectionScreen() {
+	//get el by id, update section
+  document.getElementById("SectionTitleSectionScreen").innerHTML = SectTitleArray[CurrentSectionIndex][1];
+	$("#SectionIntroScreenDiv").fadeIn(300);
+}
+
+function fadeOutNextSectionScreen() {
+	$("#SectionIntroScreenDiv").fadeOut(300);
+}
+
+function fadeInCharIntroScreen() {
+	//get el by id, update eng
+  // WhatReferenceShouldISee // 0 = English / 1 = Pinyin / 2 = Hanzi //
+   if (WhatReferenceShouldISee == 0){
+   
+    document.getElementById("CharIntroScreenText").innerHTML = EnglishListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+   else if (WhatReferenceShouldISee == 1){
+  
+    document.getElementById("CharIntroScreenText").innerHTML = PinyinListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+    else if (WhatReferenceShouldISee == 2){
+    document.getElementById("CharIntroScreenText").innerHTML = CharecterListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+	$("#CharIntroScreenDiv").fadeIn(300);
+}
+function fadeOutCharIntroScreen() {
+	$("#CharIntroScreenDiv").fadeOut(300);
+}
+
+function fadeInQuizScreen() {
+	$("#MainQuizScreenDiv").fadeIn(300);
+	$("#MainFooterScreenDiv").fadeIn(300);
+}
+function fadeOutQuizScreen() {
+	$("#MainQuizScreenDiv").fadeOut(300);
+	$("#MainFooterScreenDiv").fadeOut(300);
+}
+
+function fadeInEndScreen() {
+  StringofArray = '['
+  for (i = 0; i < WasCharacterCorrectBIG.length; i++) {
+    StringofArray = StringofArray + '['
+      for (z = 0; z < WasCharacterCorrectBIG[i].length; z++) {
+          if (z > 0){
+            StringofArray = StringofArray + ','
+          }
+          StringofArray = StringofArray + "'" + WasCharacterCorrectBIG[i][z] + "'"
+      }
+    StringofArray = StringofArray + ']'
+  }
+  StringofArray = StringofArray + ']'
+	//getelbyid show char feedback list
+  
+  document.getElementById("feedbackbox").innerHTML = StringofArray;
+	$("#EndScreenDiv").fadeIn(300);
+	
+}
+
+//function pushFirstChar() {
+//	breakupandpushNewChar(CharecterListBIG[CurrentSectionIndex][CurrentListIndex])
+//}
+
+function updateCharacter() {
+
+  //$('#quiz-target0').html('');
+  //$('#quiz-target1').html('');
+
+  //var character = $('#character-select').val();
+  //$('.char-symbol1').text(character);
+  
+  //quizWriter0 = HanziWriter.create('quiz-target0', character, {
+  //  width: 300,
+   // height: 300,
+  //  showOutline: shouldShowOutline('quiz'),
+  //  showCharacter: false,
+  //  showHintAfterMisses: 1
+  //});
+  //quizWriter0.quiz();
+
+
+
+//
+for (i = 0; i < characterForDisplay.length; i++) {
+	var tempycolourthing 
+  var Command = "$('#quiz-target" + i + "').html('');";
+  eval(Command);
+
+  var character = characterForDisplay[i];
+  //var Command = "$('.char-symbol" + i + "').text(character);";
+  eval(Command);
+
+
+  if (ShouldISeeOutline == 0){
+  	truefalsevar = 'false'
+  }
+ else{
+ 	truefalsevar = 'true'
+ }
+  if (ShouldISeeRadical == 0){
+  	tempycolourthing = '#555'
+  }
+ else{
+ 	tempycolourthing = '#168F16'
+ }
+  var Command = "quizWriter" + i + " = HanziWriter.create('quiz-target" + i + "', character, {width: 300, height: 300, showOutline: " + truefalsevar + ", showCharacter: false,showHintAfterMisses: " + HintAfterMissesVar + " });";
+  eval(Command);
+
+  var Command = "quizWriter" + i + ".quiz();";
+  eval(Command);
+
+  var Command = 'quizWriter' + i + '.updateColor("strokeColor", "' + tempycolourthing + '");'
+    eval(Command);
+}
+
+
+
+
+
+
+//
+
+
+
+
+
+  // quizWriter1 = HanziWriter.create('quiz-target1', character, {
+  //  width: 300,
+  //  height: 300,
+  //  showOutline: shouldShowOutline('quiz'),
+  //  showCharacter: false,
+  //  showHintAfterMisses: 1
+  //});
+  //quizWriter1.quiz();
+
+  // for easier debugging
+  //window.animationWriter = animationWriter;
+  //window.quizWriter = quizWriter;
+}
+
+
+
+$(function() {
+	fadeInIntroductionScreen()
+  
+
+  //$('.js-char-form').on('submit', function(evt) {
+  //  evt.preventDefault();
+   // updateCharacter();
+  //});
+
+
+  $('#quiz-reset').on('click', function(evt) {
+    evt.preventDefault();
+    for (i = 0; i < characterForDisplay.length; i++) {
+    var TimeToWait = i*75
+    var Command = 'setTimeout(function(){ quizWriter' + i + '.quiz(); }, ' + TimeToWait + ');'
+    eval(Command);
+	}
+    
+  });
+
+
+
+function moveOnToNextChar(){
+  CurrentListIndex = CurrentListIndex + 1;
+    if (CurrentListIndex > CurrentMaxListIndex){
+      CurrentSectionIndex = CurrentSectionIndex + 1;
+      CurrentListIndex = 0;
+      if(CurrentSectionIndex > MaxSectionIndex){
+        fadeOutQuizScreen();
+        
+         setTimeout(function(){ fadeInEndScreen(); }, 300);
+        
+      }
+      else{
+        CurrentMaxListIndex = CharecterListBIG[CurrentSectionIndex].length - 1;
+        fadeOutQuizScreen();
+            setTimeout(function(){ fadeInNextSectionScreen(); }, 300);
+        
+      }
+    }
+    else{
+      fadeOutQuizScreen();
+          setTimeout(function(){ fadeInCharIntroScreen(); }, 300); 
+    }
+}
+
+$('#next-char-corr').on('click', function() {
+  	
+    var TempArrayey = new Array(CharecterListBIG[CurrentSectionIndex][CurrentListIndex], '1');
+    WasCharacterCorrectBIG[iterationCount] = TempArrayey;
+    iterationCount = iterationCount + 1;
+    moveOnToNextChar()
+	});
+
+$('#next-char-incorr').on('click', function() {
+    
+    var TempArrayey = new Array(CharecterListBIG[CurrentSectionIndex][CurrentListIndex], '0');
+    WasCharacterCorrectBIG[iterationCount] = TempArrayey;
+    iterationCount = iterationCount + 1;
+    moveOnToNextChar()
+
+  });
+//WordIntoScreen
+$('#show-quiz-after-intro').on('click', function() {
+	fadeOutCharIntroScreen();
+	// if we allow custom settings, these 'default' values will need to be changable. This currently resets it from whatever was before
+	CanSeeOutline = ShouldISeeOutline;
+    CanSeeRadical = ShouldISeeRadical;
+	 breakupandpushNewChar(CharecterListBIG[CurrentSectionIndex][CurrentListIndex])
+
+
+   document.getElementById("MainQuizScreenTopic").innerHTML = SectTitleArray[CurrentSectionIndex][1];
+   //document.getElementById("MainQuizScreenSentencePart").innerHTML = SentencePartListBIG[CurrentSectionIndex][CurrentListIndex];
+   
+   WhatReferenceDoISee = WhatReferenceShouldISee;
+   // WhatReferenceShouldISee // 0 = English / 1 = Pinyin / 2 = Hanzi //
+   if (WhatReferenceShouldISee == 0){
+    document.getElementById("MainQuizScreenWord").innerHTML = EnglishListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+   else if (WhatReferenceShouldISee == 1){
+    document.getElementById("MainQuizScreenWord").innerHTML = PinyinListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+    else if (WhatReferenceShouldISee == 2){
+    document.getElementById("MainQuizScreenWord").innerHTML = CharecterListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+
+
+
+
+  	
+  	setTimeout(function(){ fadeInQuizScreen() }, 300);
+
+	});
+//
+
+
+
+
+  $('#quiz-show-outline').on('click', function() {
+  	
+    //var method = shouldShowOutline('quiz') ? 'showOutline' : 'hideOutline';
+    var method = 'showOutline'; 
+     if (CanSeeOutline == 1){
+    	method = 'hideOutline';
+    	CanSeeOutline = 0
+    }
+    else{
+    	method = 'showOutline'
+    	CanSeeOutline = 1
+    }
+    for (i = 0; i < characterForDisplay.length; i++) {
+    var TimeToWait = i*75
+   
+    var Command = 'setTimeout(function(){ quizWriter' + i + '[method](); }, ' + TimeToWait + ');'
+    eval(Command);
+	}
+	});
+    //quizWriter[method]();
+    //setTimeout(function(){ quizWriter2[method](); }, 75);
+    $('#quiz-show-radical').on('click', function() {
+  	
+    //var method = shouldShowOutline('quiz') ? 'showOutline' : 'hideOutline';
+    var radicalcolor = '#555'
+     if (CanSeeRadical == 1){
+    	radicalcolor = '#555';
+    	CanSeeRadical = 0
+    }
+    else{
+    	radicalcolor = '#168F16'
+    	CanSeeRadical = 1
+    }
+    for (i = 0; i < characterForDisplay.length; i++) {
+    var TimeToWait = i*75
+   
+    var Command = 'setTimeout(function(){ quizWriter' + i + '.updateColor("strokeColor", "' + radicalcolor + '"); }, ' + TimeToWait + ');'
+    eval(Command);
+	}
+	});
+
+
+	$('#debug-show').on('click', function() {
+		fadeInQuizScreen();
+		
+	})
+	});
+	$('#debug-hide').on('click', function() {
+		fadeOutQuizScreen();
+
+	});
+
+	$('#next-sect-confirm').on('click', function() {
+		fadeOutNextSectionScreen()
+		setTimeout(function(){ fadeInCharIntroScreen() }, 300);
+ 		
+
+	});
+
+$('#begin-from-start').on('click', function() {
+		fadeOutIntroductionScreen()
+		setTimeout(function(){ fadeInNextSectionScreen() }, 300);
+		
+
+	});
+
+
+function whatToDo(){
+   // WhatReferenceShouldISee // 0 = English / 1 = Pinyin / 2 = Hanzi //
+   if (WhatReferenceDoISee == 0){
+    document.getElementById("MainQuizScreenWord").innerHTML = EnglishListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+   else if (WhatReferenceDoISee == 1){
+    document.getElementById("MainQuizScreenWord").innerHTML = PinyinListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+    else if (WhatReferenceDoISee == 2){
+    document.getElementById("MainQuizScreenWord").innerHTML = CharecterListBIG[CurrentSectionIndex][CurrentListIndex];
+   }
+}
+
+
+$('#engpinchar').on('click', function() {
+    WhatReferenceDoISee = parseInt(WhatReferenceDoISee) + 1
+    if (WhatReferenceDoISee == 3){
+      WhatReferenceDoISee = 0
+    }
+    $("#MainQuizScreenWord").fadeOut(200);
+  setTimeout(function(){ whatToDo() }, 200);
+   $("#MainQuizScreenWord").fadeIn(200);
+  });
+
+
+     
+</script>
+</body>
+</html>

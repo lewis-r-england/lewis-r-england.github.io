@@ -2846,6 +2846,7 @@ function showSuggestions(event) {
         function showPopup(station) {
             document.getElementById("popup").style.display = "block";
             document.getElementById("replacename").innerText = station + " is an invalid station name. Please select a valid station:";
+	    document.getElementById("popupInput").value = "";
         }
 
 

@@ -111,7 +111,7 @@ padding: 10px;
 	<div id="boxup"> 
 	<div id="startpage" style="display:flex;justify-content:space-between">
 
-        <h3>Enter Price:</h3> <label><input type="text" id="priceInput"></label>
+        <h3 id="priceprompt">Enter Price:</h3> <label><input type="text" id="priceInput"></label>
         <button class="button" style="height:70%" onclick="savePrice()">Next</button>
 	
 	</div>
@@ -144,6 +144,7 @@ padding: 10px;
     <script>
 
 var OriginStationCode;
+var Destination;
 
         const stationCodes = {"Abbey Wood": "ABW",
 "Aber": "ABE",
@@ -2856,6 +2857,7 @@ function showSuggestions(event) {
                 return false;
             }
 	    DestinationStationCode = stationCodes[destination];
+	    Destination = destination;
             return true;
         }
 
@@ -2907,14 +2909,17 @@ function showSuggestions(event) {
 		box.style.display = 'none'; // Show the box
 
 		document.getElementById("iframeContainer").style.display = "block";
+
+		
             if (currentStationIndex >= stationList.length) {
                 showSummary();
                 return;
             }
 
             let station = stationList[currentStationIndex];
+	document.getElementById("priceprompt").innerText = `Enter price for ${station} -> ${Destination} :`;
             let OriginStationCode = stationCodes[station];
-
+	
 
 	URLtogoto = "http://www.lner.co.uk/buy-tickets/booking-engine/?od=x&onlc=6121&ocrs=" + OriginStationCode + "&dd=x&dnlc=7355&dcrs=" + DestinationStationCode + "&JourneyType=returnJourney&DepartureDate=17+April%2C+2025&ocffp=&ocffd=&outda=n&ReturnDate=24+April%2C+2025&icffp=&icffd=&retda=y&DepartureTime=19%3A30&DepartureHour=" + HOURarrivalTime + "&DepartureMin=" + MINarrivalTime + "&ReturnTime=16%3A00&ReturnHour=" + HOURdepartureTime + "&ReturnMin=" + MINdepartureTime + "&outd=" + DAYarrivalDate + "&outm=" + MONTHarrivalDate + "&outy=" + YEARarrivalDate + "&retd=" + DAYdepartureDate + "&retm=" + MONTHdepartureDate + "&rety=" + YEARdepartureDate + "&outh=" + HOURarrivalTime + "&outmi=" + MINarrivalTime + "&reth=" + HOURdepartureTime + "&retmi=" + MINdepartureTime + "&nad=1&nch=0&totalPassengers=1&totalPassengersMinimum=1&RailCardCode=&rc=&rcn=&tto=0&pc=&cc=&tsc=0&Clearpromo=0&refC=&inToc=&orderId=&brandName=&shouldHideJourneyPicker=False&viewTimetableFormActionPath=%2Fbuy-tickets%2Fbooking-engine%2F";
 

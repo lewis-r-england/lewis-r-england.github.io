@@ -1,8 +1,8 @@
 {
-  "name": "PWA Offline Example",
+  "name": "Cumberland Lodge Schedule",
   "short_name": "PWA Example",
   "description": "A simple Progressive Web App that works offline.",
-  "start_url": "/",
+  "start_url": "/new/dynamicschedulePWA.html",
   "display": "standalone",  // Removes the browser UI for fullscreen display
   "background_color": "#ffffff",
   "theme_color": "#2196F3",

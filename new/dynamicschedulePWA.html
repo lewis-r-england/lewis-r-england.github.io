@@ -121,23 +121,187 @@
     </div>
 
     <script>
-        const scheduleData = [
-            { date: "2025-02-25", events: [
-                { time: "08:00", name: "Opening Ceremony" },
-                { time: "10:00", name: "Keynote Speech" },
-                { time: "14:00", name: "Networking Event" }
+        //const scheduleData = [
+         //   { date: "2025-02-25", events: [
+          //      { time: "08:00", name: "Opening Ceremony" },
+            //    { time: "10:00", name: "Keynote Speech" },
+              //  { time: "14:00", name: "Networking Event" }
+//            ]},
+  //          { date: "2025-02-26", events: [
+    //            { time: "09:30", name: "Panel Discussion" },
+      //          { time: "11:00", name: "Workshop" },
+        //        { time: "12:20", name: "Product Demos" }
+          //  ]},
+            //{ date: "2025-02-27", events: [
+              //  { time: "10:00", name: "Breakout Sessions" },
+                //{ time: "12:00", name: "Lunch & Networking" },
+  //              { time: "13:00", name: "Closing Remarks" }
+    //        ]}
+      //  ];
+
+const scheduleData = [
+            { date:"2025-02-26", events: [
+{
+        time:"15:30:00",
+        name:"Anreise und Check-in"
+        
+    },
+    {
+        time:"16:00:00",
+        name:"Tee & Kaffee"
+        
+    },
+    {
+        time:"17:00:00",
+        name:"Begrüßung"
+        
+    },
+    {
+        time:"17:30:00",
+        name:"Sprache Macht Differenz. Zum Potential differenzsensibler Überlegungen (auch) in DaF-Kontexten"
+        
+    },
+    {
+        time:"18:45:00",
+        name:"Abendessen"
+        
+    },
+    {
+        time:"20:00:00",
+        name:"Speed-Dating zum Kennenlernen"
+        
+    }
             ]},
-            { date: "2025-02-26", events: [
-                { time: "09:30", name: "Panel Discussion" },
-                { time: "11:00", name: "Workshop" },
-                { time: "12:20", name: "Product Demos" }
+            { date:"2025-02-27", events: [
+
+    {
+        time:"08:00:00",
+        name:"Frühstück"
+        
+    },
+    {
+        time:"09:15:00",
+        name:"Workshop: KI trifft Mediation! Mit KI-Tools die Mediationskompetenz fördern"
+        
+    },
+    {
+        time:"09:15:00",
+        name:"Parallelveranstaltungen"
+        
+    },
+{
+        time:"09:15:00",
+        name:"Künstlerische Forschung und Lehre in German Studies "
+    },
+    {
+        time:"09:15:00",
+        name:"Across Language Borders: Writing Integration and Belonging in Kindertransport Diaries"
+    },
+    {
+        time:"10:45:00",
+        name:"Tee & Kaffee"
+    },
+    {
+        time:"11:15:00",
+        name:"Unsere Lehre - preiswürdig, inspirierend, digital"
+    },
+    {
+        time:"12:45:00",
+        name:"Mittagessen"
+    },
+    {
+        time:"13:45:00",
+        name:"Spaziergänge im Park"
+    },
+    {
+        time:"14:45:00",
+        name:"Tee & Kaffee"
+    },
+    {
+        time:"15:15:00",
+        name:"Parallelveranstaltungen"
+    },
+    {
+        time:"15:15:00",
+        name:"Exhibiting Kafka"
+    },
+    {
+        time:"15:15:00",
+        name:"Geschichte in DaF – Die DDR in Lehrwerken und Unterricht "
+    },
+    {
+        time:"15:15:00",
+        name:"Think Tank: Decolonising the Curriculum Antonia "
+    },
+    {
+        time:"16:45:00",
+        name:"Pause"
+    },
+    {
+        time:"17:00:00",
+        name:"Was treibt uns um? Themen, Perspektiven und Diskurse in Deutschland, GB und Irland "
+    },
+    {
+        time:"18:30:00",
+        name:"Verabschiedung ausscheidender Lektor*innen und Lehrassistent*innen"
+    },
+    {
+        time:"19:15:00",
+        name:"Abendessen"
+    },
+    {
+        time:"20:30:00",
+        name:"Wunschfilm & Diskussion"
+    }
             ]},
-            { date: "2025-02-27", events: [
-                { time: "10:00", name: "Breakout Sessions" },
-                { time: "12:00", name: "Lunch & Networking" },
-                { time: "13:00", name: "Closing Remarks" }
+            { date:"2025-02-28", events: [
+    {
+        time:"08:00:00",
+        name:"Check-out und Kofferabgabe"
+    },
+    {
+        time:"08:30:00",
+        name:"Frühstück"
+    },
+    {
+        time:"09:45:00",
+        name:"Parallelveranstaltungen"
+    },
+{
+        time:"09:45:00",
+        name:"Workshop „Texte, Netze lesen – (literarische) Textnetze und gesellschaftliche Diskurse"
+    },
+    {
+        time:"09:45:00",
+        name:"Gesprächsrunde mit Vorschlägen und Ideen zum Thema „Scholarship“ und „Research“ "
+    },
+    {
+        time:"09:45:00",
+        name:"Dialekte im DaF Unterricht: Anwendung und (sprach-)politische Überlegungen "
+    },
+    {
+        time:"11:15:00",
+        name:"Tee & Kaffee"
+    },
+    {
+        time:"11:45:00",
+        name:"Austausch unter Kolleg*innen: Erfahrungen und Erwartungen in der Rolle als (Orts-)Lektor*in und Lehrassistent*in  "
+    },
+    {
+        time:"12:45:00",
+        name:"Besprechung im Plenum"
+    },
+    {
+        time:"13:15:00",
+        name:"Mittagessen"
+    },
+    {
+        time:"14:15:00",
+        name:"In kleiner Runde: Rückmeldung der Sprecher*innen der Austauschgruppen & Möglichkeit zum weiteren Vernetzen "
+    }
             ]}
         ];
+
 
         function generateSchedule() {
             const container = document.getElementById("schedule-container");

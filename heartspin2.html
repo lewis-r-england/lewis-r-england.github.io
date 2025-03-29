@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Heart Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #fff5f5;
+            font-family: 'Arial', sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        #text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff3366;
+            font-size: 0;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+            opacity: 0;
+            transition: opacity 1s, font-size 1s;
+        }
+        #text.visible {
+            font-size: 5vw;
+            opacity: 1;
+        }
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff3366;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="text">I love you</div>
+    <div id="loading">Loading heart...</div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xfff5f5);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        // Heart model
+        let heart;
+        const loader = new THREE.GLTFLoader();
+        
+        // Animation variables
+        let targetScale = 1;
+        let currentScale = 0.1;
+        let isGrowing = true;
+        let isSpinning = false;
+        const spinSpeed = 0.005;
+        
+        // Text element
+        const textElement = document.getElementById('text');
+        const loadingElement = document.getElementById('loading');
+        let textVisible = false;
+        let modelLoaded = false;
+        
+        // Load GLTF model
+        loader.load(
+            'heart.gltf',
+            function (gltf) {
+                heart = gltf.scene;
+                
+                // Set initial scale and position
+                heart.scale.set(0.1, 0.1, 0.1);
+                heart.position.set(0, 0, 0);
+                
+                // Apply material settings to all parts of the model
+                heart.traverse(function(child) {
+                    if (child.isMesh) {
+                        child.material = new THREE.MeshPhongMaterial({ 
+                            color: 0xff3366,
+                            emissive: 0xff3366,
+                            emissiveIntensity: 0.2,
+                            specular: 0xffffff,
+                            shininess: 30
+                        });
+                    }
+                });
+                
+                scene.add(heart);
+                loadingElement.style.display = 'none';
+                modelLoaded = true;
+            },
+            undefined,
+            function (error) {
+                console.error('Error loading GLTF model:', error);
+                loadingElement.textContent = 'Error loading heart model';
+            }
+        );
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Interaction handler
+        window.addEventListener('click', () => {
+            if (!textVisible && modelLoaded) {
+                textElement.classList.add('visible');
+                textVisible = true;
+                
+                // Change heart color to pulse
+                heart.traverse(function(child) {
+                    if (child.isMesh) {
+                        child.material.color.setHex(0xff0066);
+                        setTimeout(() => {
+                            child.material.color.setHex(0xff3366);
+                        }, 300);
+                    }
+                });
+            }
+        });
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (modelLoaded) {
+                // Growth animation
+                if (isGrowing) {
+                    currentScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.05);
+                    heart.scale.set(currentScale, currentScale, currentScale);
+                    
+                    if (Math.abs(currentScale - targetScale) < 0.01) {
+                        isGrowing = false;
+                        isSpinning = true;
+                    }
+                }
+                
+                // Spin animation
+                if (isSpinning) {
+                    heart.rotation.y += spinSpeed;
+                }
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>

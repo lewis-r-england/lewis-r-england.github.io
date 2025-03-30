@@ -42,7 +42,8 @@
             const difference = targetDate - now;
 
             if (difference < 0) {
-                document.getElementById("countdown").innerText = "Please refresh the page!";
+                document.getElementById("countdown").innerText = "Transferring!";
+                window.location.replace("mummessage.html");
                 return;
             }
 

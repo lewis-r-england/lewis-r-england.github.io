@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Mother's Day</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+            font-family: 'Arial', sans-serif;
+        }
+#overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            
+            /* Apply the animation after 1s delay */
+            animation: fadeAndBlur 5s ease-out 1s forwards;
+        }
+        
+        @keyframes fadeAndBlur {
+            0% {
+                opacity: 1;
+                filter: blur(0px);
+            }
+            100% {
+                opacity: 0;
+                filter: blur(10px);
+            }
+        }
+        
+        .flower-container {
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform-origin: bottom center;
+            animation: sway 5s 12s infinite ease-in-out;
+        }
+        
+        .flower {
+            position: relative;
+            opacity: 0;
+            animation: appear 1s forwards;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+            z-index: 2;
+        }
+        
+        .flower-stalk {
+            position: relative;
+            width: 3px;
+            background: linear-gradient(to top, #228B22, #7CFC00);
+            transform-origin: bottom center;
+            animation: growStalk 2s forwards;
+            z-index: 1;
+            opacity: 0;
+            margin-bottom: -1em; /* Pull flower down to top of stalk */
+        }
+        
+        @keyframes appear {
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes growStalk {
+            0% { 
+                height: 0; 
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            to { 
+                height: 60px; 
+                opacity: 1;
+            }
+        }
+        
+        @keyframes sway {
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
+        }
+        
+        .message {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            filter: blur(10px);
+            animation: reveal 3s 16s forwards;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 9rem;
+            color: #FF69B4;
+            top: 20%;
+            opacity: 0;
+            animation: floatIn 2s 20s forwards, float 3s 22s infinite ease-in-out;
+            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.7));
+        }
+        
+        @keyframes reveal {
+            to {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+        
+        @keyframes floatIn {
+            to {
+                opacity: 1;
+                top: 10%;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(-5px); }
+            50% { transform: translateY(5px); }
+        }
+        
+        .sun {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 0 70px 0px #FFD700;
+            animation: pulse 4s infinite alternate;
+            z-index: -99999;
+        }
+        
+        @keyframes pulse {
+            to {
+                box-shadow: 0 0 150px 30px #FFD700;
+            }
+        }
+        
+        .cloud {
+            position: absolute;
+            font-size: 3rem;
+            animation: moveCloud linear infinite;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+            z-index: -9999;
+        }
+        
+        @keyframes moveCloud {
+            to {
+                transform: translateX(140vw);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .message {
+                font-size: 2.5rem;
+            }
+            .sun {
+                width: 70px;
+                height: 70px;
+                top: 30px;
+                right: 30px;
+              
+
+            }
+            .cloud {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sun"></div>
+    <div class="message">Happy Mother's Day</div>
+    <div class="heart">❤️</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Create clouds
+            createClouds();
+            
+            // Create flowers
+            const colors = ['#FF69B4', '#FF1493', '#FF00FF', '#DA70D6', '#BA55D3'];
+            const flowerTypes = ['🌸', '🌺', '🌷', '🌹', '💐', '🏵️'];
+      
+            // Spread flowers evenly across the screen
+            const flowerCount = 20;
+            for (let i = 0; i < flowerCount; i++) {
+                createFlower(i, flowerCount);
+            }
+            
+            function createFlower(index, total) {
+                const flowerContainer = document.createElement('div');
+                flowerContainer.className = 'flower-container';
+                
+                // Distribute flowers evenly across the screen with some randomness
+                const position = (index / total) * 100 + (Math.random() * 5 - 2.5);
+                flowerContainer.style.left = `${position}%`;
+                
+                // Random delay for more natural appearance
+                const delay = (Math.random() * 15) + 5;
+                flowerContainer.style.animationDelay = `${delay}s`;
+                
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.textContent = flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
+                flower.style.fontSize = `${Math.random() * 30 + 20}px`;
+                flower.style.color = colors[Math.floor(Math.random() * colors.length)];
+                flower.style.animationDelay = `${delay}s`;
+                
+                // Add stalk to specific flowers (after flower appears)
+                if (flower.textContent === '🌸' || flower.textContent === '🏵️') {
+                    const stalk = document.createElement('div');
+                    stalk.className = 'flower-stalk';
+                    const stalkHeight = Math.random() * 40 + 40;
+                    stalk.style.height = `${stalkHeight}px`;
+                    const delay2 = delay - 2;
+                    stalk.style.animationDelay = `${delay2}s`;
+                    
+                    // Position flower at top of stalk
+                    flower.style.position = 'absolute';
+                    flower.style.bottom = `37px`;
+                    
+                    flowerContainer.appendChild(stalk);
+                    flowerContainer.appendChild(flower);
+                } else {
+                    flowerContainer.appendChild(flower);
+                }
+                
+                document.body.appendChild(flowerContainer);
+            }
+            
+            function createClouds() {
+                const cloudEmojis = ['☁️'];
+                
+                for (let i = 0; i < 6; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.className = 'cloud';
+                    cloud.textContent = cloudEmojis[Math.floor(Math.random() * cloudEmojis.length)];
+                    
+                    // Random cloud properties
+                    cloud.style.top = `${Math.random() * 30 + 10}%`;
+                    cloud.style.left = `${Math.random() * -30 - 10}%`; /* Start off-screen */
+                    cloud.style.animationDuration = `${Math.random() * 100 + 35}s`;
+                    cloud.style.animationDelay = `${(Math.random() * 2) + 7}s`;
+                    cloud.style.fontSize = `${Math.random() * 50 + 30}px`;
+                    
+                    document.body.appendChild(cloud);
+                }
+            }
+        });
+    </script>
+    <div id="overlay"></div>
+</body>
+</html>

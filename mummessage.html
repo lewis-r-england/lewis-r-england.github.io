@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Message</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+        .message-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+        }
+        .message {
+            font-size: 24px;
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            filter: blur(10px);
+            transition: opacity 6s ease-in-out, transform 6s ease-in-out, filter 6s ease-in-out;
+        }
+        .message.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0px);
+        }
+        .message.hide {
+            opacity: 0;
+            transform: scale(1.2) translateY(-20px);
+            filter: blur(10px);
+        }
+        .image {
+            width: 100%;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container" id="messageContainer"></div>
+    <script>
+        const messages = [
+            "Dear Mum, <br>thank you so much for all you do.",
+            "You've worked tirelessly to raise me and Lizzie,",
+            "and you never fail to offer sage advice and be a voice of reason.",
+            "You always have a smile on your face, taking whatever comes positively. <br><br> Thank you for all the wonderful moments you continue to bring.",
+            "<img src='mum/1.jpg' class='image'>",
+            "<img src='mum/2.jpg' class='image'>",
+            "<img src='mum/3.jpg' class='image'>",
+            "You are the very best mum, role model and person we could ask for.",
+            "So! With that I'd like to wish you a...",
+        ];
+
+        let index = 0;
+        const container = document.getElementById('messageContainer');
+
+        function showNextMessage() {
+            container.innerHTML = `<div class='message'>${messages[index]}</div>`;
+            const element = container.firstChild;
+            setTimeout(() => element.classList.add('show'), 100);
+            setTimeout(() => element.classList.add('hide'), 9000);
+            setTimeout(() => {
+                element.classList.remove('show', 'hide');
+            }, 9000);
+            alert(index);
+            if (index < messages.length) {
+            
+            index = (index + 1);
+            setTimeout(showNextMessage, 13000);
+
+            } else{
+            window.location.replace("mum2.html");
+            }
+
+
+        }
+        
+        showNextMessage();
+    </script>
+</body>
+</html>

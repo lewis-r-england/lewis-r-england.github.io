@@ -3,8 +3,6 @@ const urlsToCache = [
   "/",
   "/daadside/uploader.html",
   "/daadside/manifest.json",
-  "/daadside/styles.css",
-  "/daadside/script.js",
   "/daadside/DAADtravel192.png",
   "/daadside/DAADtravel512.png"
 ];

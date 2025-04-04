@@ -2,7 +2,7 @@
   "name": "DAAD Travel Costs Review",
   "short_name": "DAAD Review",
   "description": "A web app for reviewing and confirming DAAD travel costs data.",
-  "start_url": "/daadside/",
+  "start_url": "daadside/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",

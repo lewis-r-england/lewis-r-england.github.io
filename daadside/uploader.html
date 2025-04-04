@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shadcn/ui@latest/dist/shadcn-ui.css">
+    <link rel="manifest" href="/manifest.json">
+     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js');
+        }
+
+        if ('launchQueue' in window) {
+            window.launchQueue.setConsumer(async (launchParams) => {
+                if (!launchParams.files.length) {
+                    return;
+                }
+                const fileHandle = launchParams.files[0];
+                if (fileHandle.name.endsWith(".daadtravelcosts")) {
+                    processFile();
+                }
+            });
+        }
+    </script>
+</head>
+<body class="p-8 bg-gray-50 font-sans">
+    <div id="step1" class="flex flex-col items-center justify-center h-screen">
+        <div id="dropZone" class="border-2 border-dashed border-gray-300 p-10 w-1/2 text-center bg-white rounded-lg shadow-lg cursor-pointer hover:bg-gray-100">
+            <p class="text-lg text-gray-700">Drag and drop your <strong>.daadtravelcosts</strong> file here or click to upload</p>
+            <input type="file" id="fileInput" class="hidden" accept=".daadtravelcosts">
+        </div>
+    </div>
+    
+    <div id="step2" class="hidden max-w-4xl mx-auto mt-10">
+        <div class="mb-4">
+            <label class="block text-gray-700 font-medium mb-2">Search Data</label>
+            <input type="text" id="searchBox" class="border p-3 w-full rounded-lg shadow-sm focus:ring focus:ring-blue-300" placeholder="Search..." value="John Doe">
+        </div>
+        
+        <div class="bg-white p-6 shadow-lg rounded-lg">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-700">
+                        <th class="p-3">Name</th>
+                        <th class="p-3">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTable" class="divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+        
+        <div class="mt-6 p-6 bg-gray-100 shadow-lg rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800">Dummy Data</h3>
+            <table class="w-full text-left mt-2">
+                <tbody class="divide-y divide-gray-300">
+                    <tr><td class="p-3">Sample Row 1</td></tr>
+                    <tr><td class="p-3">Sample Row 2</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <button id="confirmButton" class="mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition">Confirm</button>
+    </div>
+    
+    <div id="step3" class="hidden max-w-4xl mx-auto mt-10">
+        <div contenteditable="true" class="bg-white p-8 shadow-lg rounded-lg w-[210mm] h-[297mm] mb-4">Page 1 Content</div>
+        <div contenteditable="true" class="bg-white p-8 shadow-lg rounded-lg w-[210mm] h-[297mm] mb-4">Page 2 Content</div>
+        <button id="doneButton" class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 transition block mx-auto">Done</button>
+    </div>
+    
+    <script>
+
+        const fileInput = document.querySelector("#fileInput");
+        const dropZone = document.querySelector("#dropZone");
+
+        dropZone.addEventListener("click", () => fileInput.click());
+        
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZone.classList.add("bg-gray-200");
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("bg-gray-200");
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropZone.classList.remove("bg-gray-200");
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                processFile();
+            }
+        });
+
+        fileInput.addEventListener("change", processFile);
+
+        function processFile() {
+            document.querySelector("#step1").classList.add("hidden");
+            document.querySelector("#step2").classList.remove("hidden");
+        }
+
+    const searchBox = document.querySelector("#searchBox");
+        const dataTable = document.querySelector("#dataTable");
+        let data = [
+            { name: "John Doe", amount: "$100" },
+            { name: "Jane Smith", amount: "$200" }
+        ];
+        
+        function updateTable() {
+            let searchTerm = searchBox.value.toLowerCase();
+            dataTable.innerHTML = data
+                .filter(row => row.name.toLowerCase().includes(searchTerm))
+                .map(row => `<tr><td class="p-3 text-gray-800">${row.name}</td><td class="p-3 text-gray-800">${row.amount}</td></tr>`)
+                .join("");
+        }
+        
+        searchBox.addEventListener("input", updateTable);
+        updateTable();
+        
+        document.querySelector("#confirmButton").addEventListener("click", () => {
+            document.querySelector("#step2").classList.add("hidden");
+            document.querySelector("#step3").classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>

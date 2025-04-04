@@ -1,0 +1,29 @@
+{
+  "name": "DAAD Travel Costs Review",
+  "short_name": "DAAD Review",
+  "description": "A web app for reviewing and confirming DAAD travel costs data.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/DAADtravel-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/DAADtravel-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "application/vnd.daad.travelcosts": [".daadtravelcosts"]
+      }
+    }
+  ]
+}

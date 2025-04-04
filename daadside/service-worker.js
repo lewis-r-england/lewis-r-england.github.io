@@ -1,12 +1,12 @@
 const CACHE_NAME = "daad-travel-costs-cache-v1";
 const urlsToCache = [
   "/",
-  "/index.html",
-  "/manifest.json",
-  "/styles.css",
-  "/script.js",
-  "/icons/icon-192x192.png",
-  "/icons/icon-512x512.png"
+  "/daadside/uploader.html",
+  "/daadside/manifest.json",
+  "/daadside/styles.css",
+  "/daadside/script.js",
+  "/daadside/DAADtravel192.png",
+  "/daadside/DAADtravel512.png"
 ];
 
 self.addEventListener("install", (event) => {

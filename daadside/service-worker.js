@@ -1,6 +1,5 @@
 const CACHE_NAME = "daad-travel-costs-cache-v1";
 const urlsToCache = [
-  "/",
   "/daadside/uploader.html",
   "/daadside/manifest.json",
   "/daadside/DAADtravel192.png",

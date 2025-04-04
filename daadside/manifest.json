@@ -21,7 +21,7 @@
   "file_handlers": [
     {
       "action": {
-        /uploader.html"
+        "/uploader.html"
       },
       "accept": {
         "application/vnd.daad.travelcosts": [".daadtravelcosts"]

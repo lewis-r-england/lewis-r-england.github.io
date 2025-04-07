@@ -143,44 +143,80 @@
     let selectedCanvas = null;
     let selectedPage = null;
 
-    fileInput.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file || file.type !== 'application/pdf') return;
 
-      const fileURL = URL.createObjectURL(file);
-      const loadingTask = pdfjsLib.getDocument(fileURL);
-      const pdf = await loadingTask.promise;
-      pdfGrid.innerHTML = '';
 
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const scale = 5;
-        const viewport = page.getViewport({ scale });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        await page.render({ canvasContext: context, viewport }).promise;
 
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.appendChild(canvas);
+if ('launchQueue' in window && 'files' in LaunchParams.prototype) {
+  launchQueue.setConsumer(async (launchParams) => {
+    if (!launchParams.files.length) return;
 
-        card.addEventListener('click', () => {
-          selectedCanvas = canvas;
-          selectedPage = i;
-          const previewContext = previewCanvas.getContext('2d');
-          previewCanvas.width = canvas.width;
-          previewCanvas.height = canvas.height;
-          previewContext.drawImage(canvas, 0, 0);
-          filenameInput.value = `page-${i}.pdf`;
-          overlay.style.display = 'flex';
-        });
-
-        card.dataset.page = i;
-        pdfGrid.appendChild(card);
+    for (const handle of launchParams.files) {
+      const file = await handle.getFile();
+      if (file.type === 'application/pdf') {
+        loadPDF(file); // 👈 Your custom function
       }
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    async function loadPDF(file) {
+  const fileURL = URL.createObjectURL(file);
+  const loadingTask = pdfjsLib.getDocument(fileURL);
+  const pdf = await loadingTask.promise;
+  pdfGrid.innerHTML = '';
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const scale = 5;
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    await page.render({ canvasContext: context, viewport }).promise;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.appendChild(canvas);
+
+    card.addEventListener('click', () => {
+      selectedCanvas = canvas;
+      selectedPage = i;
+      const previewContext = previewCanvas.getContext('2d');
+      previewCanvas.width = canvas.width;
+      previewCanvas.height = canvas.height;
+      previewContext.drawImage(canvas, 0, 0);
+      filenameInput.value = `page-${i}.pdf`;
+      overlay.style.display = 'flex';
     });
+
+    card.dataset.page = i;
+    pdfGrid.appendChild(card);
+  }
+}
+
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (file && file.type === 'application/pdf') {
+    loadPDF(file);
+  }
+});
+
+
 
     downloadButton.addEventListener('click', () => {
       if (!selectedCanvas || !selectedPage) return;
@@ -216,5 +252,12 @@
       });
     }
   </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('Service Worker Registered'));
+  }
+</script>
+
 </body>
 </html>

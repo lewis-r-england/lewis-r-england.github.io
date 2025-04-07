@@ -221,11 +221,33 @@ fileInput.addEventListener('change', async (e) => {
     downloadButton.addEventListener('click', () => {
       if (!selectedCanvas || !selectedPage) return;
       const { jsPDF } = window.jspdf;
-      const pdfDoc = new jsPDF({ unit: 'px', format: [selectedCanvas.width, selectedCanvas.height] });
-      const imgData = selectedCanvas.toDataURL('image/jpeg', 1.0);
-      const filename = filenameInput.value.trim() || `page-${selectedPage}.pdf`;
-      pdfDoc.addImage(imgData, 'JPEG', 0, 0, selectedCanvas.width, selectedCanvas.height);
-      pdfDoc.save(filename);
+const pdfDoc = new jsPDF({
+  orientation: selectedCanvas.width > selectedCanvas.height ? 'landscape' : 'portrait',
+  unit: 'pt',
+  format: 'a4' // or 'letter', or custom like [595, 842] for A4
+});
+
+const imgData = selectedCanvas.toDataURL('image/jpeg', 1.0);
+
+// Fit to A4 page size:
+const pageWidth = pdfDoc.internal.pageSize.getWidth();
+const pageHeight = pdfDoc.internal.pageSize.getHeight();
+
+const aspect = selectedCanvas.width / selectedCanvas.height;
+let imgWidth = pageWidth;
+let imgHeight = imgWidth / aspect;
+
+if (imgHeight > pageHeight) {
+  imgHeight = pageHeight;
+  imgWidth = imgHeight * aspect;
+}
+
+const x = (pageWidth - imgWidth) / 2;
+const y = (pageHeight - imgHeight) / 2;
+
+pdfDoc.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
+pdfDoc.save(filename);
+
       downloaded.add(selectedPage);
       overlay.style.display = 'none';
       updateCheckmarks();

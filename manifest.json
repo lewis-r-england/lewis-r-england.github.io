@@ -20,7 +20,7 @@
   ],
   "file_handlers": [
     {
-      "action": "/",
+      "action": "pdfupload.html",
       "accept": {
         "application/pdf": [".pdf"]
       }

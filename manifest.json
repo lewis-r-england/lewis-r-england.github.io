@@ -1,0 +1,29 @@
+{
+  "name": "PDF Page Splitter",
+  "short_name": "PDF Splitter",
+  "description": "Split and download individual pages from PDFs",
+  "start_url": "pdfupload.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "split192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "split512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "application/pdf": [".pdf"]
+      }
+    }
+  ]
+}

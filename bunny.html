@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Easter</title>
+ 
+
+<style>
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  position: relative;
+}
+
+.sky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to top, #87ceeb, #e0f7fa);
+  z-index: -1; /* stays behind everything */
+}
+
+.content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* puts hill at the bottom */
+}
+
+.easter-text {
+  text-align: center;
+  font-size: 3rem;
+  color: #fff;
+  margin-top: 40px;
+  text-shadow: 2px 2px #f48fb1;
+  z-index: 1;
+}
+
+.hill {
+  position: relative;
+  height: 40vh;
+  background: radial-gradient(circle at center, #4caf50 30%, #2e7d32 100%);
+  clip-path: ellipse(100% 100% at 50% 100%);
+  overflow: hidden;
+}
+
+#bunny {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  font-size: 3rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.egg {
+  position: absolute;
+  font-size: 2rem;
+}
+
+.falling-egg {
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(60vh);
+    opacity: 1;
+  }
+}
+
+#toggle-sound {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #fff8e1;
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+
+</style>
+</head>
+<body>
+
+
+  <div class="sky"></div>
+  <div class="content">
+    <h1 class="easter-text">Happy Easter</h1>
+    <div class="falling-eggs-container"></div>
+  
+
+  <div class="hill">
+    <div id="bunny">🐰</div>
+    <div id="dropped-eggs"></div>
+  </div>
+</div>
+<button id="toggle-sound">🔊</button>
+  <script>
+const bunny = document.getElementById('bunny');
+const droppedEggs = document.getElementById('dropped-eggs');
+const fallingEggsContainer = document.querySelector('.falling-eggs-container');
+
+let x = 0;
+let hopCount = 0;
+
+function hop() {
+  if (x >= window.innerWidth - 60) {
+    dropSkyEggs();
+    return;
+  }
+
+  bunny.style.transform = `translateX(${x}px) translateY(${hopCount % 2 === 0 ? '-20px' : '0px'})`;
+  
+  if (hopCount % 3 === 0) dropEgg(x + 15);
+
+  x += 30;
+  hopCount++;
+
+  setTimeout(hop, 400);
+}
+
+function dropEgg(positionX) {
+  const egg = document.createElement('div');
+  egg.className = 'egg';
+  egg.innerText = '🥚';
+  egg.style.left = `${positionX}px`;
+  egg.style.bottom = '20px';
+  droppedEggs.appendChild(egg);
+}
+
+function dropSkyEggs() {
+  for (let i = 0; i < 15; i++) {
+    setTimeout(() => {
+      const egg = document.createElement('div');
+      egg.className = 'egg falling-egg';
+      egg.innerText = '🥚';
+      egg.style.left = `${Math.random() * window.innerWidth}px`;
+      egg.style.top = `-20px`;
+      fallingEggsContainer.appendChild(egg);
+    }, i * 300);
+  }
+}
+
+hop();
+
+
+
+const audio = document.getElementById('spring-audio');
+const toggleBtn = document.getElementById('toggle-sound');
+
+toggleBtn.onclick = () => {
+  if (audio.paused) {
+    audio.play();
+    toggleBtn.textContent = '🔊';
+  } else {
+    audio.pause();
+    toggleBtn.textContent = '🔇';
+  }
+};
+
+
+</script>
+</body>
+</html>

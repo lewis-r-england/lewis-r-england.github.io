@@ -6,9 +6,9 @@
   <title>Location Based Redirect</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gradient-to-br from-blue-100 to-white flex items-center justify-center min-h-screen p-4">
 
-  <div id="message" class="hidden max-w-md w-full p-6 bg-white rounded-2xl shadow-lg text-center space-y-4">
+  <div id="message" class="hidden max-w-md w-full p-6 bg-white rounded-2xl shadow-xl text-center space-y-4 border border-gray-200">
     <h2 class="text-2xl font-semibold text-gray-800" id="status-title"></h2>
     <p class="text-gray-600" id="status-message"></p>
   </div>
@@ -16,13 +16,15 @@
   <script>
     const destinations = [
       {
-        lat: 52.123214,   // New York example
-        lng: 0.895048,
+        lat: 40.712776,
+        lng: -74.005974,
+        radius: 15, // meters
         url: "https://example.com/nyc"
       },
       {
-        lat: 34.052235,   // Los Angeles example
+        lat: 34.052235,
         lng: -118.243683,
+        radius: 5, // meters
         url: "https://example.com/la"
       }
     ];
@@ -56,19 +58,17 @@
 
           const nearby = destinations.find(dest => {
             const d = distanceInMeters(latitude, longitude, dest.lat, dest.lng);
-            return d <= 1000;
+            return d <= dest.radius;
           });
 
           if (nearby) {
             window.location.href = nearby.url;
           } else {
-            showMessage(latitude,
-              longitude);
+            showMessage("Almost there!", "You're not within the required radius yet. Travel to the location and refresh the page.");
           }
         },
         (error) => {
-          showMessage("Location permission needed",
-            "Please refresh the page and allow location access.");
+          showMessage("Location access denied", "Please refresh the page and allow location access to proceed.");
         },
         {
           enableHighAccuracy: true,
@@ -77,8 +77,7 @@
         }
       );
     } else {
-      showMessage("Geolocation not supported",
-        "Your browser doesn't support location tracking.");
+      showMessage("Geolocation unsupported", "Your browser doesn't support geolocation services.");
     }
   </script>
 </body>

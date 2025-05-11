@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Location Based Redirect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+  <div id="message" class="hidden max-w-md w-full p-6 bg-white rounded-2xl shadow-lg text-center space-y-4">
+    <h2 class="text-2xl font-semibold text-gray-800" id="status-title"></h2>
+    <p class="text-gray-600" id="status-message"></p>
+  </div>
+
+  <script>
+    const destinations = [
+      {
+        lat: 52.123214,   // New York example
+        lng: 0.895048,
+        url: "https://example.com/nyc"
+      },
+      {
+        lat: 34.052235,   // Los Angeles example
+        lng: -118.243683,
+        url: "https://example.com/la"
+      }
+    ];
+
+    const distanceInMeters = (lat1, lon1, lat2, lon2) => {
+      const R = 6371e3; // Earth radius in meters
+      const φ1 = lat1 * Math.PI/180;
+      const φ2 = lat2 * Math.PI/180;
+      const Δφ = (lat2 - lat1) * Math.PI/180;
+      const Δλ = (lon2 - lon1) * Math.PI/180;
+
+      const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+      return R * c;
+    };
+
+    const showMessage = (title, message) => {
+      const messageDiv = document.getElementById('message');
+      document.getElementById('status-title').innerText = title;
+      document.getElementById('status-message').innerText = message;
+      messageDiv.classList.remove('hidden');
+    };
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+
+          const nearby = destinations.find(dest => {
+            const d = distanceInMeters(latitude, longitude, dest.lat, dest.lng);
+            return d <= 1000;
+          });
+
+          if (nearby) {
+            window.location.href = nearby.url;
+          } else {
+            showMessage(latitude,
+              longitude);
+          }
+        },
+        (error) => {
+          showMessage("Location permission needed",
+            "Please refresh the page and allow location access.");
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    } else {
+      showMessage("Geolocation not supported",
+        "Your browser doesn't support location tracking.");
+    }
+  </script>
+</body>
+</html>

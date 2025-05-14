@@ -177,8 +177,8 @@
         if (!unlocked.includes(item.id)) {
           const dist = getDistanceFromLatLonInM(latitude, longitude, item.lat, item.lng);
           if (dist < item.radius && !eligible.includes(item.id)) {
-            //enableeeemeeeee
-            //eligible.push(item.id);
+
+            eligible.push(item.id);
           }
         }
       });

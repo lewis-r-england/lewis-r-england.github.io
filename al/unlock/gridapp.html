@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Location Unlock Grid</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
+  <style>
+    .shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(218,165,32,0.5) 50%, rgba(255,255,255,0) 100%);
+      background-size: 200% 100%;
+      animation: 2000ms linear -19.456ms infinite normal none running shimmer;
+    }
+    @keyframes shimmer {
+      0% { background-position: -100% 0; }
+      100% { background-position: 100% 0; }
+    }
+
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div id="grid" class="hidden place-items-center grid grid-cols-2 gap-4 p-4 w-full max-w-md">
+    <!-- Items will be rendered here -->
+  </div>
+
+  <!-- Modal for locked item -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <h2 id="modal-title" class="text-xl font-bold mb-2"></h2>
+      <p id="modal-message" class="text-gray-600"></p>
+      <button onclick="closeModal()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Close</button>
+    </div>
+  </div>
+
+  <video id="video" class="fixed inset-0 w-full h-full object-cover hidden z-50" controls></video>
+
+  <!-- Password Prompt -->
+  <div id="passwordPrompt" class="bg-white p-6 rounded shadow-md w-96">
+    <h2 class="text-lg font-semibold mb-4">Enter Password</h2>
+    <input type="password" id="passwordInput" class="w-full border border-gray-300 rounded px-3 py-2 mb-4" placeholder="Password">
+    <button id="submitPassword" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Unlock</button>
+    <p id="errorMsg" class="text-red-500 text-sm mt-2 hidden">Incorrect password or decryption failed.</p>
+  </div>
+
+  <script>
+    const encryptedKey = 'encryptedJS';
+    const passwordKey = 'jsPassword';
+    const ITEMS = []
+    const done = "no"
+
+    
+    const encryptedcode = 'U2FsdGVkX18TwkdNWHm/qznUXj3sWm4OmwWNDrkZAwJue29/Eu0q76at4Y5kh1/6IlTOdCU7QhlZTX/CxnivVd7QI2ss7Cbzsn/wGf60qhTkl32Dbazkvcuk+RkZCGTTYXXCggn7DM7Zwr3YFmtnczDt7FZM57WqTobk6m9rz1xsQNT5bPsheYXopScIx+dItRX/jVrCdPq9t4L52vlQ67x7Zu+N3/FZTpKi9S+i0Hri9TQ9A9hDXNIswpDhsdIAFK3sQ1SFY2Loldccd6f+r6GJk26TsRkSQ6k3RBe9hpZcWmbbkg5KokqIayfvVeUw5BW/u7eJS0VRasxdtRPVIOekxmDLKbLvCxYjM6Wylei9FmgkbqM24TloxCeH4EyFS+l2juwf2JAlaNGPq5tHY7HwKBq2FfU9XUeWMK293ZvPe+Jf9HQNLa3qHVSkNpBiPP5JChJUA0WtQOeyvptqO/I3Vw8F/zcx/eUWcJVi9Px68dL0Hpr3POQlAq2hselSx+3h9a8r67oWG/gprWVAu0ooypcmc62/Wb1U204+73n8wgkhLMk7BrJv/ACOjvuBq45F+0sLg5CsGh385uZzQuLA7tee4AlE4/22WsoxaLMYNs4+3FtFZXN2ot+qJ0R5Vol7j2C8MrkwJkZbMtGY4/dQGRA23yFj4sgncoH+C4MH/8EssDKjGdn/BItXaLSnHFFUvUCFc023KPTGwY8omtzFGRsQH/HTzNj60s+vBg6Jbl0dNEu1ti//YQppURMKFHclFjF1OvDTySfBrEcPqM+/aUaxaE+7GujvGsWBHbAqqi1caziFKn08+DstQDtylv9KMYJOlN18iMCx/jrvci8ap+Vwh7j08us18wIw+8C9d3sbV3dMfF7nS+M99pxDHROCviCQZY3/qKr/PXGMBoS51wmhN6T1+IyrKrZQ5Xom/efxe3StOpgIJfSHsP34oLicPpD5hvWkZmtq5Pxhrr8D1GyK9hz6gz46SuID9vi7Bw2Xwcz7i50OrgJHIrmvlIbZUNL/FXYnbZwB+54W/PPHGH4AOM8qui79vmGUxZBG/S6th2ildgY97anKu43K81BA8uGi0plVkEfO4hm/ljdvwoESU0vU6nc+1TDmVF7nJyzYuelU7Cy+lWxPolxxQln/2dL39gVHM9GXo96U3AcEOcApvZ1iog87RBnU0k+OgNyaB0CgwYh11h64tvU4TJiO05PP86PUE4szulf/ksc+bxAO8wa544lUoF+QkP6gnGjDohtBXDvQHX7DwMblwKAsHbWYYCOLnIiwi9dUN4Y2R96WzWP6VaCEOArdxU+Kae1qgiZq2UVTmWSrk+RbznZ+pu9la92B8q/Oa3bGIoVTlZaPkDwqiGKn+tmJPSYaQz5d+bZ5Qxm2cFfXsO8224uNhrUCF1NKp01eQSthLPxdvz2M1Zosjphf9sY+3PB+u2cWhjZvohjH7yXjj8IZzEePxT8+fiyRcuF1f1wxGWEOsBlntuEnn/xSloJRPwoII6Rr0B5VX8XQhubnrGpKAOVURq1ouCR+Ow1W03Lc3FyKV2TK+2wsyvSXNgTUCBmkb79d5L0OCYp+vLSqhXDPnNx2LRbEa8Xi2S8jaYNCgi77rgq5ho7Aps5k461pjONRbNeIt6PX9vfHlt4gEAq/vQAE530J4c3ZCHQosRxzwYfxPTZGC4E7eVq0IGZ1RBHxpT+4IPQ95r5hFjXOV2clFCZURsoMEztrEeARuLz4dQEzqaDDz/Q/likJ023/CPZoQfqoW279w6Qb+Dj6ZSG5NfJqX8XA6NzrfdTKg5C+3ZuLwgoa4koPz8apq+sZ9BfRXwsIxWq1GYCKjot5TU2unVhfo7NwLNGIQ5ddzsXUpZapfHK+MHTejZyciSFowlRuTlJi8AmbCdQ13tV7Sm0/Ft8zWyBl0VBkwewC4yBUnjtWzdjkmehxT2fjz1qjD2cbE1DZm1YTms8mVHwrBLzR';
+
+    function decryptJSCode(encryptedCode, password) {
+      const decrypted = CryptoJS.AES.decrypt(encryptedCode, password);
+      const plain = decrypted.toString(CryptoJS.enc.Utf8);
+      return plain || null;
+    }
+
+    function runDecryptedCode(code, localstorageexists) {
+      console.log(code);
+      const ITEMS = code
+      executeondecryption(code)
+      const done = "yes"
+
+    }
+
+    function handleDecryption(password, localstorageexists) {
+
+      const decryptedCode = decryptJSCode(encryptedcode, password);
+      if (!decryptedCode) return false;
+
+      if (!localstorageexists) localStorage.setItem(passwordKey, password);
+      
+      runDecryptedCode(decryptedCode, localstorageexists);
+      return true;
+    }
+
+    
+    // Optional: Demo only - store encrypted JS if not already present
+    (function storeSampleEncryptedCodeOnce() {
+      if (!localStorage.getItem(encryptedKey)) {
+        const password = "aleksandra_!_love_YOU_more_than_the_Ent1re_un1v3rs3_123";
+        //const code = `console.log("🔓 Secret JS executed!"); alert("Welcome!");`;
+        const code = `
+
+
+
+          const ITEMS = [
+      { id: 1, icon: 'clock.png', lat: 40.7128, lng: -74.0060, radius: 200, title: "Hive Co-living", message: "Open in your room :).", video: "clock.mp4", url: "https://example.com/nyc" },
+      { id: 2, icon: 'ferry.png', lat: 34.0522, lng: -118.2437, radius: 200, title: "Ferry", message: "Visit the iconic ferry building. (And why not take a ferry somewhere too!)", video: "ferry.mp4", url: "https://example.com/la" },
+      { id: 3, icon: 'bridge.png', lat: 51.5074, lng: -0.1278, radius: 1000, title: "Golden Gate Bridge", message: "Stand within sight of the Golden Gate Bridge.", video: "bridge.mp4", url: "https://example.com/london" },
+      { id: 4, icon: 'tower.png', lat: 48.8566, lng: 2.3522, radius: 30, title: "Coit Tower", message: "Climb the Coit Tower to unlock. ($7 -- I will reimburse)", video: "tower.mp4", url: "https://example.com/paris" },
+      { id: 5, icon: 'uni.png', lat: 35.6895, lng: 139.6917, radius: 200, title: "Hult", message: "Please visit the Hult SF campus to unlock!", video: "uni.mp4", url: "https://example.com/tokyo" },
+      { id: 6, icon: 'monk.png', lat: -33.8688, lng: 151.2093, radius: 200, title: "Fr. Peter", message: "Pay a visit to a franciscan priest (radius of 200m).", video: "video6.mp4", url: "https://example.com/sydney" },
+    ];
+
+
+
+        `;
+        const encrypted = CryptoJS.AES.encrypt(code, password).toString();
+        localStorage.setItem(encryptedKey, encrypted);
+        console.log("Sample encrypted code stored. Use password: secret123");
+      }
+    })();
+
+
+
+    function executeondecryption(ITEMS) {
+
+
+
+      ITEMS = JSON.parse(ITEMS);
+
+    //const ITEMS = [
+    //  { id: 1, icon: 'clock.png', lat: 40.7128, lng: -74.0060, radius: 200, title: "Hive Co-living", message: "Open in your room :).", video: "clock.mp4", url: "https://example.com/nyc" },
+    //  { id: 2, icon: 'ferry.png', lat: 34.0522, lng: -118.2437, radius: 200, title: "Ferry", message: "Visit the iconic ferry building. (And why not take a ferry somewhere too!)", video: "ferry.mp4", url: "https://example.com/la" },
+    //  { id: 3, icon: 'bridge.png', lat: 51.5074, lng: -0.1278, radius: 1000, title: "Golden Gate Bridge", message: "Stand within sight of the Golden Gate Bridge.", video: "bridge.mp4", url: "https://example.com/london" },
+    //  { id: 4, icon: 'tower.png', lat: 48.8566, lng: 2.3522, radius: 30, title: "Coit Tower", message: "Climb the Coit Tower to unlock. ($7 -- I will reimburse)", video: "tower.mp4", url: "https://example.com/paris" },
+    //  { id: 5, icon: 'uni.png', lat: 35.6895, lng: 139.6917, radius: 200, title: "Hult", message: "Please visit the Hult SF campus to unlock!", video: "uni.mp4", url: "https://example.com/tokyo" },
+   //   { id: 6, icon: 'monk.png', lat: -33.8688, lng: 151.2093, radius: 200, title: "Fr. Peter", message: "Pay a visit to a franciscan priest (radius of 200m).", video: "video6.mp4", url: "https://example.com/sydney" }
+   // ];
+
+    const localKey = 'unlockedItems';
+    let unlocked = JSON.parse(localStorage.getItem(localKey) || '[]');
+    let eligible = [];
+
+    const grid = document.getElementById('grid');
+
+    function renderGrid() {
+      grid.innerHTML = '';
+     
+      ITEMS.forEach(item => {
+        const isUnlocked = unlocked.includes(item.id);
+        const isEligible = eligible.includes(item.id);
+        const div = document.createElement('div');
+        div.className = `flex items-center justify-center w-240 h-240 rounded-xl cursor-pointer shadow bg-white ${isUnlocked ? '' : 'grayscale'}`;
+
+        const img = document.createElement('img');
+        img.src = item.icon;
+        img.className = `h-220 w-220 object-contain ${isUnlocked ? '' : 'opacity-60'}`;
+        div.appendChild(img);
+
+        if (isUnlocked) {
+          div.onclick = () => window.location.href = item.url;
+        } else if (isEligible) {
+          div.classList.add('shimmer');
+          div.classList.remove('grayscale');
+          div.onclick = () => playVideo(item);
+        } else {
+          div.onclick = () => showModal(item);
+        }
+
+        div.dataset.id = item.id;
+     
+
+        grid.appendChild(div);
+        document.getElementById("grid").classList.remove("hidden");
+      });
+    }
+    
+
+    function showModal(item) {
+      document.getElementById('modal-title').innerText = item.title;
+      document.getElementById('modal-message').innerText = item.message;
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function checkProximity(pos) {
+      const { latitude, longitude } = pos.coords;
+      ITEMS.forEach(item => {
+        if (!unlocked.includes(item.id)) {
+          const dist = getDistanceFromLatLonInM(latitude, longitude, item.lat, item.lng);
+          if (dist < item.radius && !eligible.includes(item.id)) {
+            //enableeeemeeeee
+            //eligible.push(item.id);
+          }
+        }
+      });
+      renderGrid();
+    }
+
+    function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
+      const R = 6371e3;
+      const φ1 = lat1 * Math.PI/180;
+      const φ2 = lat2 * Math.PI/180;
+      const Δφ = (lat2 - lat1) * Math.PI/180;
+      const Δλ = (lon2 - lon1) * Math.PI/180;
+      const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function playVideo(item) {
+      unlocked.push(item.id);
+      localStorage.setItem(localKey, JSON.stringify(unlocked));
+      const video = document.getElementById('video');
+      video.src = item.video;
+      video.style.display = 'block';
+      video.play();
+      video.onended = () => {
+        window.location.href = item.url;
+        //video.style.display = 'none';
+
+
+      //  
+      //  localStorage.setItem(localKey, JSON.stringify(unlocked));
+      //  renderGrid();
+      };
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(checkProximity);
+    } else {
+      alert('Geolocation is not supported.');
+    }
+
+    renderGrid();
+    }
+
+
+function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      const storedPassword = localStorage.getItem(passwordKey);
+
+      if (storedPassword && handleDecryption(storedPassword, true)) {
+        document.getElementById("passwordPrompt").classList.add("hidden");
+        return;
+      }
+
+      document.getElementById("submitPassword").addEventListener("click", () => {
+        const inputPassword = document.getElementById("passwordInput").value;
+        const success = handleDecryption(inputPassword, false);
+
+        if (success) {
+          document.getElementById("passwordPrompt").classList.add("hidden");
+          document.getElementById("errorMsg").classList.remove("hidden");
+        } else {
+          document.getElementById("errorMsg").classList.remove("hidden");
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>

@@ -985,7 +985,7 @@ class Component extends DCLogic {
         noteBtnColor: S.noteOpen?'#fff':'var(--muted,#71807a)',
         showTableControls:isTable, table:{count:0},
         showRangeToggle:false, toggleRange:()=>this.toggleRange(),
-        rangeLabel: S.rangeMode ? 'Single value' : 'Between dates',
+        rangeLabel: S.rangeMode ? 'Change to filter by single date' : 'Change to filter between date range',
         rangeBtnStyle:`font-family:inherit; font-size:11.5px; font-weight:600; padding:6px 11px; border:1px solid ${S.rangeMode?'var(--accent,#2e9c6d)':'var(--line,#e4e8e4)'}; background:${S.rangeMode?'var(--sactive,#e8f2ec)':'#fff'}; border-radius:8px; cursor:pointer; color:${S.rangeMode?'var(--brand,#14532d)':'var(--muted,#71807a)'};`,
         hasFilters:false, filters:[],
         toggleCompact:()=>this.toggleCompact(), compactLabel: S.compact?'Comfortable':'Compact',

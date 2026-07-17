@@ -1,1231 +1,1513 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body { font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #1c2620; -webkit-font-smoothing: antialiased; }
-  a { color: #2e7d5b; text-decoration: none; }
-  a:hover { color: #1f5c3d; }
-  ::-webkit-scrollbar { height: 10px; width: 10px; }
-  ::-webkit-scrollbar-thumb { background: #c4ccc6; border-radius: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  @keyframes bxfade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  @keyframes bxpop { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
-</style>
-</helmet>
-<div style="display:flex; height:100vh; width:100%; overflow:hidden; background:var(--bg,#f5f7f4); --brand:{{ v.brand }}; --accent:{{ v.accent }}; --bg:{{ v.bg }}; --sbg:{{ v.sbg }}; --sactive:{{ v.sactive }}; --ink:#1c2620; --muted:#71807a; --line:#e4e8e4;">
+// GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with `cd dc-runtime && bun run build`.
+"use strict";
+(() => {
+  var __defProp = Object.defineProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
-  <!-- SIDEBAR -->
-  <aside style="flex:0 0 auto; width:{{ v.sidebarW }}; transition:width .22s ease; background:var(--sbg,#ffffff); border-right:1px solid var(--line,#e4e8e4); display:flex; flex-direction:column; overflow:hidden; position:relative;">
-    <div style="display:flex; align-items:center; gap:10px; padding:18px 16px 12px 18px; min-height:64px;">
-      <div style="width:30px; height:30px; border-radius:8px; background:var(--brand,#14532d); flex:0 0 auto; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:15px;">B</div>
-      <div class="bx-lbl" style="display:{{ v.labelDisp }}; line-height:1.1;">
-        <div style="font-weight:700; font-size:15px; color:var(--brand,#14532d); letter-spacing:-.01em;">BSF</div>
-        <div style="font-size:11px; color:var(--muted,#71807a); margin-top:2px;">Flexifarm Report Mockup</div>
-      </div>
-    </div>
+  // src/react.ts
+  function getReact() {
+    const R = window.React;
+    if (!R) throw new Error("dc-runtime: window.React is not available yet");
+    return R;
+  }
+  function getReactDOM() {
+    const RD = window.ReactDOM;
+    if (!RD) throw new Error("dc-runtime: window.ReactDOM is not available yet");
+    return RD;
+  }
+  var h = ((...args) => getReact().createElement(
+    ...args
+  ));
 
-    <nav class="bx-nav" style="flex:1 1 auto; overflow-y:auto; padding:6px 10px 20px 10px; display:{{ v.labelDisp }};">
-      <sc-for list="{{ v.sections }}" as="sec" hint-placeholder-count="4">
-        <div style="margin-top:14px;">
-          <div style="font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted,#71807a); padding:0 10px 6px 10px;">{{ sec.name }}</div>
-          <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="3">
-            <button onClick="{{ it.onClick }}" style="{{ it.style }}">
-              <span style="width:6px; height:6px; border-radius:50%; flex:0 0 auto; background:{{ it.dot }};"></span>
-              <span style="flex:1 1 auto; text-align:left;">{{ it.label }}</span>
-            </button>
-          </sc-for>
-        </div>
-      </sc-for>
-    </nav>
-
-    <button onClick="{{ v.toggleSidebar }}" title="Collapse" style="position:absolute; top:20px; right:10px; width:26px; height:26px; border:1px solid var(--line,#e4e8e4); background:#fff; border-radius:7px; cursor:pointer; color:var(--muted,#71807a); font-size:14px; display:flex; align-items:center; justify-content:center;">{{ v.collapseIcon }}</button>
-  </aside>
-
-  <!-- MAIN -->
-  <main style="flex:1 1 auto; display:flex; flex-direction:column; overflow:hidden; min-width:0;">
-    <!-- TOP BAR -->
-    <header style="flex:0 0 auto; display:flex; align-items:center; gap:12px; padding:12px 24px; border-bottom:1px solid var(--line,#e4e8e4); background:#fff; flex-wrap:wrap;">
-      <sc-if value="{{ v.showExpandBtn }}" hint-placeholder-val="{{ false }}">
-        <button onClick="{{ v.toggleSidebar }}" style="width:34px; height:34px; border:1px solid var(--line,#e4e8e4); background:#fff; border-radius:8px; cursor:pointer; font-size:16px; color:var(--ink,#1c2620); flex:0 0 auto;">☰</button>
-      </sc-if>
-      <div style="min-width:0; flex:0 1 auto;">
-        <div style="font-size:11px; color:var(--muted,#71807a); font-weight:500;">Reports · {{ v.active.section }}</div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <h1 style="margin:1px 0 0 0; font-size:21px; font-weight:700; letter-spacing:-.02em; color:var(--ink,#1c2620); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ v.active.title }}</h1>
-          <sc-if value="{{ v.active.note }}" hint-placeholder-val="{{ false }}">
-            <div style="position:relative; flex:0 0 auto;">
-              <button onClick="{{ v.toggleNote }}" title="About this report" style="width:21px; height:21px; border-radius:50%; border:1px solid {{ v.noteBtnBorder }}; background:{{ v.noteBtnBg }}; color:{{ v.noteBtnColor }}; cursor:pointer; font-size:12px; font-weight:700; font-family:Georgia,serif; font-style:italic; line-height:1; display:flex; align-items:center; justify-content:center; padding:0;">i</button>
-              <sc-if value="{{ v.noteOpen }}" hint-placeholder-val="{{ false }}">
-                <div style="position:absolute; top:calc(100% + 9px); left:0; z-index:40; width:340px; background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:11px; box-shadow:0 14px 34px rgba(20,40,30,.16); padding:15px 17px; font-size:12.5px; line-height:1.6; color:#3c473f; animation:bxpop .14s ease;">
-                  <div style="font-size:10px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--accent,#2e9c6d); margin-bottom:7px;">About this report</div>
-                  {{ v.active.note }}
-                </div>
-              </sc-if>
-            </div>
-          </sc-if>
-        </div>
-      </div>
-      <div style="flex:1 1 auto; min-width:10px;"></div>
-
-      <sc-if value="{{ v.hasFilters }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-          <span style="display:flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--muted,#71807a);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></span>
-          <sc-for list="{{ v.filters }}" as="f" hint-placeholder-count="3">
-            <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:9px; padding:4px 5px 4px 11px;">
-              <span style="font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted,#71807a);">{{ f.label }}</span>
-              <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ true }}">
-                <div style="position:relative; display:flex; align-items:center;">
-                  <select value="{{ f.value }}" onChange="{{ f.onChange }}" style="appearance:none; -webkit-appearance:none; font-family:inherit; font-size:12.5px; font-weight:600; padding:5px 25px 5px 10px; border:1px solid var(--line,#e4e8e4); border-radius:7px; background:var(--bg,#f5f7f4); color:var(--ink,#1c2620); cursor:pointer;">
-                    <sc-for list="{{ f.options }}" as="opt" hint-placeholder-count="3"><option value="{{ opt }}">{{ opt }}</option></sc-for>
-                  </select>
-                  <span style="position:absolute; right:9px; pointer-events:none; font-size:7px; color:var(--muted,#71807a);">▼</span>
-                </div>
-              </sc-if>
-              <sc-if value="{{ f.isSelRange }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex; align-items:center; gap:6px;">
-                  <div style="position:relative; display:flex; align-items:center;">
-                    <select value="{{ f.fromValue }}" onChange="{{ f.onFrom }}" style="appearance:none; -webkit-appearance:none; font-family:inherit; font-size:12.5px; font-weight:600; padding:5px 24px 5px 10px; border:1px solid var(--line,#e4e8e4); border-radius:7px; background:var(--bg,#f5f7f4); color:var(--ink,#1c2620); cursor:pointer;">
-                      <sc-for list="{{ f.options }}" as="opt" hint-placeholder-count="3"><option value="{{ opt }}">{{ opt }}</option></sc-for>
-                    </select>
-                    <span style="position:absolute; right:8px; pointer-events:none; font-size:7px; color:var(--muted,#71807a);">▼</span>
-                  </div>
-                  <span style="font-size:11px; color:var(--muted,#71807a);">→</span>
-                  <div style="position:relative; display:flex; align-items:center;">
-                    <select value="{{ f.toValue }}" onChange="{{ f.onTo }}" style="appearance:none; -webkit-appearance:none; font-family:inherit; font-size:12.5px; font-weight:600; padding:5px 24px 5px 10px; border:1px solid var(--line,#e4e8e4); border-radius:7px; background:var(--bg,#f5f7f4); color:var(--ink,#1c2620); cursor:pointer;">
-                      <sc-for list="{{ f.options }}" as="opt" hint-placeholder-count="3"><option value="{{ opt }}">{{ opt }}</option></sc-for>
-                    </select>
-                    <span style="position:absolute; right:8px; pointer-events:none; font-size:7px; color:var(--muted,#71807a);">▼</span>
-                  </div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ f.isDateRange }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex; align-items:center; gap:6px;">
-                  <input type="date" value="{{ f.from }}" onChange="{{ f.onFrom }}" style="font-family:inherit; font-size:12px; font-weight:600; padding:4px 8px; border:1px solid var(--line,#e4e8e4); border-radius:7px; background:var(--bg,#f5f7f4); color:var(--ink,#1c2620);">
-                  <span style="font-size:11px; color:var(--muted,#71807a);">→</span>
-                  <input type="date" value="{{ f.to }}" onChange="{{ f.onTo }}" style="font-family:inherit; font-size:12px; font-weight:600; padding:4px 8px; border:1px solid var(--line,#e4e8e4); border-radius:7px; background:var(--bg,#f5f7f4); color:var(--ink,#1c2620);">
-                </div>
-              </sc-if>
-            </div>
-          </sc-for>
-          <sc-if value="{{ v.showRangeToggle }}" hint-placeholder-val="{{ false }}">
-            <button onClick="{{ v.toggleRange }}" title="Switch between single value and a between-two-dates range" style="{{ v.rangeBtnStyle }}">{{ v.rangeLabel }}</button>
-          </sc-if>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ v.showTableControls }}" hint-placeholder-val="{{ true }}">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:11.5px; color:var(--muted,#71807a); font-family:'IBM Plex Mono',monospace; white-space:nowrap;">{{ v.table.count }} rows</span>
-          <button onClick="{{ v.toggleCompact }}" style="{{ v.compactBtnStyle }}">{{ v.compactLabel }}</button>
-          <div style="position:relative;">
-            <button onClick="{{ v.toggleColMenu }}" style="font-family:inherit; font-size:12.5px; font-weight:500; padding:7px 12px; border:1px solid var(--line,#e4e8e4); background:#fff; border-radius:8px; cursor:pointer; color:var(--ink,#1c2620); display:flex; align-items:center; gap:6px;">Columns <span style="color:var(--muted,#71807a); font-size:7px;">▼</span></button>
-            <sc-if value="{{ v.colMenuOpen }}" hint-placeholder-val="{{ false }}">
-              <div style="position:absolute; top:calc(100% + 6px); right:0; z-index:30; background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:10px; box-shadow:0 12px 30px rgba(20,40,30,.14); padding:8px; width:230px; max-height:320px; overflow:auto; animation:bxpop .14s ease;">
-                <sc-for list="{{ v.colToggles }}" as="c" hint-placeholder-count="5">
-                  <label style="display:flex; align-items:center; gap:9px; padding:7px 8px; border-radius:7px; cursor:pointer; font-size:12.5px;">
-                    <input type="checkbox" checked="{{ c.visible }}" onChange="{{ c.onToggle }}" style="accent-color:var(--accent,#2e9c6d); width:15px; height:15px;">
-                    <span>{{ c.label }}</span>
-                  </label>
-                </sc-for>
-              </div>
-            </sc-if>
-          </div>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ v.active.spend }}" hint-placeholder-val="{{ false }}">
-        <div style="text-align:right; padding:4px 14px; background:var(--bg,#f5f7f4); border-radius:10px;">
-          <div style="font-size:10.5px; color:var(--muted,#71807a); font-weight:500;">{{ v.active.spendLabel }}</div>
-          <div style="font-size:19px; font-weight:700; color:var(--brand,#14532d); font-family:'IBM Plex Mono',monospace;">{{ v.active.spend }}</div>
-        </div>
-      </sc-if>
-    </header>
-
-    <!-- SCROLL BODY -->
-    <div style="flex:1 1 auto; min-height:0; overflow:auto; padding:20px 24px 40px 24px; display:flex; flex-direction:column;">
-
-      <!-- ===================== GENERIC TABLE ===================== -->
-      <sc-if value="{{ v.isTable }}" hint-placeholder-val="{{ true }}">
-        <div style="animation:bxfade .3s ease; flex:1 1 auto; min-height:0; display:flex; flex-direction:column;">
-          <sc-if value="{{ v.isPicker }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex; gap:8px; margin-bottom:16px;">
-              <button onClick="{{ v.pickerTableView }}" style="{{ v.pickerTableBtn }}">League Table</button>
-              <button onClick="{{ v.pickerBoxView }}" style="{{ v.pickerBoxBtn }}">Box Plot by Supervisor</button>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{ v.isPickerBox }}" hint-placeholder-val="{{ false }}">
-            <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:12px; padding:22px 24px 18px 24px;">
-              <div style="font-size:13px; color:var(--muted,#71807a); margin-bottom:4px;">Distribution of Avg Pay/Hr by supervisor</div>
-              <div style="font-size:11.5px; color:var(--muted,#71807a); margin-bottom:14px;">Box = interquartile range (25th–75th percentile) · centre line = median · whiskers = min/max · dots = individual pickers</div>
-              <div>{{ v.pickerBoxSvg }}</div>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{ v.showGrid }}" hint-placeholder-val="{{ true }}">
-          <!-- table -->
-          <div style="border:1px solid var(--line,#e4e8e4); border-radius:12px; overflow:auto; background:#fff; flex:1 1 auto; min-height:0;">
-            <table style="border-collapse:separate; border-spacing:0; width:max-content; min-width:100%; font-size:13px;">
-              <thead>
-                <tr>
-                  <sc-for list="{{ v.table.cols }}" as="col" hint-placeholder-count="6">
-                    <th onClick="{{ col.onSort }}" style="{{ col.thStyle }}">
-                      <span style="display:inline-flex; align-items:center; gap:5px;">{{ col.label }}<span style="color:rgba(255,255,255,.7); font-size:10px;">{{ col.arrow }}</span></span>
-                    </th>
-                  </sc-for>
-                </tr>
-              </thead>
-              <tbody>
-                <sc-for list="{{ v.table.rows }}" as="row" hint-placeholder-count="10">
-                  <sc-if value="{{ row.group }}" hint-placeholder-val="{{ false }}">
-                    <tr><td colspan="{{ row.span }}" style="{{ row.style }}">{{ row.label }}</td></tr>
-                  </sc-if>
-                  <sc-if value="{{ row.normal }}" hint-placeholder-val="{{ true }}">
-                    <tr style="{{ row.rowStyle }}">
-                      <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="6">
-                        <td onClick="{{ cell.onClick }}" rowspan="{{ cell.rowSpan }}" style="{{ cell.s }}">{{ cell.d }}</td>
-                      </sc-for>
-                    </tr>
-                  </sc-if>
-                </sc-for>
-              </tbody>
-            </table>
-          </div>
-          </sc-if>
-        </div>
-      </sc-if>
-
-      <!-- ===================== SIGNATURE ===================== -->
-      <sc-if value="{{ v.isSignature }}" hint-placeholder-val="{{ false }}">
-        <div style="border:1px solid var(--line,#e4e8e4); border-radius:12px; overflow:hidden; background:#fff; animation:bxfade .3s ease; flex:0 0 auto;">
-          <div style="display:grid; grid-template-columns:1.4fr 1.6fr .8fr 56px; background:#6b3fa0; color:#fff; font-weight:600; font-size:13px;">
-            <div style="padding:14px 18px;">Worker</div>
-            <div style="padding:14px 18px;">Task(s)</div>
-            <div style="padding:14px 18px; text-align:center;">Signatures</div>
-            <div style="padding:14px 10px; text-align:center;">Expand</div>
-          </div>
-          <sc-for list="{{ v.signature }}" as="w" hint-placeholder-count="6">
-            <div style="border-top:1px solid var(--line,#e4e8e4);">
-              <div onClick="{{ w.onToggle }}" style="display:grid; grid-template-columns:1.4fr 1.6fr .8fr 56px; align-items:center; cursor:pointer; font-size:13.5px;">
-                <div style="padding:14px 18px; font-weight:600;">{{ w.worker }}</div>
-                <div style="padding:14px 18px; color:var(--muted,#71807a);">{{ w.tasks }}</div>
-                <div style="padding:14px 18px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:15px;">{{ w.sigs }}</div>
-                <div style="padding:14px 10px; text-align:center; color:#6b3fa0; font-size:15px; transition:transform .2s; transform:{{ w.chev }};">▾</div>
-              </div>
-              <sc-if value="{{ w.open }}" hint-placeholder-val="{{ false }}">
-                <div style="padding:4px 18px 20px 18px; background:#faf8fd;">
-                  <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
-                    <thead><tr style="color:var(--muted,#71807a); text-align:left;">
-                      <th style="padding:8px 10px; font-weight:600;">Supervisor</th>
-                      <th style="padding:8px 10px; font-weight:600;">Date / Time</th>
-                      <th style="padding:8px 10px; font-weight:600;">Field</th>
-                      <th style="padding:8px 10px; font-weight:600;">Task</th>
-                      <th style="padding:8px 10px; font-weight:600;">Reason</th>
-                    </tr></thead>
-                    <tbody>
-                      <sc-for list="{{ w.details }}" as="d" hint-placeholder-count="3">
-                        <tr style="border-top:1px solid #ece6f5;">
-                          <td style="padding:8px 10px;">{{ d.sup }}</td>
-                          <td style="padding:8px 10px; font-family:'IBM Plex Mono',monospace;">{{ d.date }}</td>
-                          <td style="padding:8px 10px;">{{ d.field }}</td>
-                          <td style="padding:8px 10px;">{{ d.task }}</td>
-                          <td style="padding:8px 10px; color:var(--muted,#71807a);">{{ d.reason }}</td>
-                        </tr>
-                      </sc-for>
-                    </tbody>
-                  </table>
-                  <div style="margin-top:12px; background:#d64545; color:#fff; padding:9px 14px; border-radius:8px; font-size:12.5px; font-weight:500;">{{ w.warning }}</div>
-                </div>
-              </sc-if>
-            </div>
-          </sc-for>
-        </div>
-      </sc-if>
-
-      <!-- ===================== BLUE PLASTER ===================== -->
-      <sc-if value="{{ v.isPlaster }}" hint-placeholder-val="{{ false }}">
-        <div style="border:1px solid var(--line,#e4e8e4); border-radius:12px; overflow:hidden; background:#fff; animation:bxfade .3s ease; flex:0 0 auto;">
-          <div style="display:grid; grid-template-columns:.7fr .8fr 1.4fr 1fr .9fr .9fr .7fr; background:#7089c4; color:#fff; font-weight:600; font-size:12.5px;">
-            <div style="padding:13px 14px;">Field</div>
-            <div style="padding:13px 14px;">Supervisor</div>
-            <div style="padding:13px 14px;">Task</div>
-            <div style="padding:13px 14px;">Times</div>
-            <div style="padding:13px 14px; text-align:center;">Start count</div>
-            <div style="padding:13px 14px; text-align:center;">End count</div>
-            <div style="padding:13px 14px; text-align:center;">All ok?</div>
-          </div>
-          <sc-for list="{{ v.plaster }}" as="p" hint-placeholder-count="4">
-            <div style="border-top:1px solid var(--line,#e4e8e4);">
-              <div onClick="{{ p.onToggle }}" style="display:grid; grid-template-columns:.7fr .8fr 1.4fr 1fr .9fr .9fr .7fr; align-items:center; cursor:pointer; font-size:13px; background:{{ p.rowBg }};">
-                <div style="padding:13px 14px; font-weight:600; font-family:'IBM Plex Mono',monospace;">{{ p.field }}</div>
-                <div style="padding:13px 14px; font-family:'IBM Plex Mono',monospace;">{{ p.sup }}</div>
-                <div style="padding:13px 14px;">{{ p.task }}</div>
-                <div style="padding:13px 14px; font-family:'IBM Plex Mono',monospace; color:var(--muted,#71807a);">{{ p.times }}</div>
-                <div style="padding:13px 14px; text-align:center; font-family:'IBM Plex Mono',monospace;">{{ p.start }}</div>
-                <div style="padding:13px 14px; text-align:center; font-family:'IBM Plex Mono',monospace;">{{ p.end }}</div>
-                <div style="padding:11px 14px; text-align:center;"><span style="display:inline-block; padding:3px 11px; border-radius:999px; font-size:11px; font-weight:600; {{ p.okBadgeStyle }}">{{ p.okBadge }}</span></div>
-              </div>
-              <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
-                <div style="padding:16px 18px 20px 18px; background:#f7faf9; border-top:1px solid var(--line,#e4e8e4);">
-
-                  <!-- reconciliation summary strip -->
-                  <div style="display:flex; align-items:stretch; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-                    <div style="flex:1 1 130px; background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:11px; padding:13px 15px;">
-                      <div style="font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted,#71807a);">Start-up count</div>
-                      <div style="font-size:27px; font-weight:700; font-family:'IBM Plex Mono',monospace; color:var(--brand,#14532d); line-height:1.2;">{{ p.start }}</div>
-                      <div style="font-size:11px; color:var(--muted,#71807a);">plasters logged in</div>
-                    </div>
-                    <div style="display:flex; align-items:center; color:#b9c2bd; font-size:22px;">→</div>
-                    <div style="flex:1 1 130px; background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:11px; padding:13px 15px;">
-                      <div style="font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted,#71807a);">Finish-up count</div>
-                      <div style="font-size:27px; font-weight:700; font-family:'IBM Plex Mono',monospace; color:{{ p.endColor }}; line-height:1.2;">{{ p.end }}</div>
-                      <div style="font-size:11px; color:var(--muted,#71807a);">plasters accounted for</div>
-                    </div>
-                    <div style="flex:1 1 150px; background:{{ p.recBg }}; border:1px solid {{ p.recBorder }}; border-radius:11px; padding:13px 15px;">
-                      <div style="font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:{{ p.recColor }};">Reconciliation</div>
-                      <div style="font-size:20px; font-weight:700; color:{{ p.recColor }}; line-height:1.3;">{{ p.recValue }}</div>
-                      <div style="font-size:11px; color:{{ p.recColor }};">{{ p.recLabel }}</div>
-                    </div>
-                  </div>
-
-                  <!-- start / end breakdown -->
-                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                    <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:11px; overflow:hidden;">
-                      <div style="padding:9px 14px; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--brand,#14532d); background:#eef7f1; border-bottom:1px solid var(--line,#e4e8e4);">Held at start-up</div>
-                      <sc-for list="{{ p.startTotals }}" as="s" hint-placeholder-count="3">
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 14px; border-bottom:1px solid #f0f3f0; font-size:12.5px;"><span>{{ s.who }}</span><span style="font-family:'IBM Plex Mono',monospace; font-weight:600;">{{ s.n }}</span></div>
-                      </sc-for>
-                    </div>
-                    <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:11px; overflow:hidden;">
-                      <div style="padding:9px 14px; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--brand,#14532d); background:#eef7f1; border-bottom:1px solid var(--line,#e4e8e4);">Held at finish-up</div>
-                      <sc-for list="{{ p.endTotals }}" as="s" hint-placeholder-count="3">
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 14px; border-bottom:1px solid #f0f3f0; font-size:12.5px; color:{{ s.color }}; font-weight:{{ s.weight }};"><span>{{ s.who }}</span><span style="font-family:'IBM Plex Mono',monospace;">{{ s.n }}</span></div>
-                      </sc-for>
-                    </div>
-                  </div>
-
-                  <!-- events timeline -->
-                  <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:11px; overflow:hidden; margin-top:12px;">
-                    <div style="padding:9px 14px; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--brand,#14532d); background:#eef7f1; border-bottom:1px solid var(--line,#e4e8e4);">Plaster events during shift</div>
-                    <sc-for list="{{ p.events }}" as="e" hint-placeholder-count="1">
-                      <div style="display:flex; gap:14px; align-items:center; padding:10px 14px; border-bottom:1px solid #f0f3f0; font-size:12.5px;"><span style="font-family:'IBM Plex Mono',monospace; color:#fff; background:var(--brand,#14532d); padding:2px 8px; border-radius:5px; font-size:11px; flex:0 0 auto;">{{ e.time }}</span><span>{{ e.text }}</span></div>
-                    </sc-for>
-                  </div>
-
-                  <!-- notes -->
-                  <sc-for list="{{ p.notes }}" as="n" hint-placeholder-count="1">
-                    <div style="display:flex; gap:9px; align-items:flex-start; background:#fef6e0; border:1px solid #f5e2ad; color:#5c4a11; padding:10px 13px; font-size:12.5px; line-height:1.5; border-radius:9px; margin-top:10px;"><span style="flex:0 0 auto; font-weight:700;">⚠</span><span>{{ n }}</span></div>
-                  </sc-for>
-                </div>
-              </sc-if>
-            </div>
-          </sc-for>
-        </div>
-      </sc-if>
-
-      <!-- ===================== YIELD CHART ===================== -->
-      <sc-if value="{{ v.isYield }}" hint-placeholder-val="{{ false }}">
-        <div style="animation:bxfade .3s ease; flex:0 0 auto;">
-          <div style="display:flex; gap:8px; margin-bottom:16px;">
-            <button onClick="{{ v.yieldGraphView }}" style="{{ v.yieldGraphBtn }}">Graph View</button>
-            <button onClick="{{ v.yieldTableView }}" style="{{ v.yieldTableBtn }}">Forecast KPI Table</button>
-          </div>
-          <sc-if value="{{ v.yieldShowTable }}" hint-placeholder-val="{{ false }}">
-            <div style="border:1px solid var(--line,#e4e8e4); border-radius:12px; overflow:auto; background:#fff;">
-              <table style="border-collapse:separate; border-spacing:0; width:max-content; min-width:100%; font-size:13px;">
-                <thead><tr>
-                  <sc-for list="{{ v.yieldTbl.cols }}" as="col" hint-placeholder-count="6"><th style="{{ col.thStyle }}">{{ col.label }}</th></sc-for>
-                </tr></thead>
-                <tbody>
-                  <sc-for list="{{ v.yieldTbl.rows }}" as="row" hint-placeholder-count="6">
-                    <tr><sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="6"><td style="{{ cell.s }}">{{ cell.d }}</td></sc-for></tr>
-                  </sc-for>
-                </tbody>
-              </table>
-            </div>
-          </sc-if>
-          <sc-if value="{{ v.yieldShowGraph }}" hint-placeholder-val="{{ true }}">
-            <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:12px; padding:22px 24px;">
-              <div style="font-size:13px; color:var(--muted,#71807a); margin-bottom:6px;">Yield (kg) — Strawberry · Driscoll's Lusa · All Fields</div>
-              <div>{{ v.yieldSvg }}</div>
-              <div style="display:flex; gap:26px; justify-content:center; margin-top:14px; font-size:12.5px;">
-                <span style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#166a4a; border-radius:2px;"></span>Actual</span>
-                <span style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#3fbf8f; border-radius:2px;"></span>12 Week</span>
-                <span style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:0; border-top:3px dashed #b9c2bd;"></span>Budget</span>
-              </div>
-            </div>
-          </sc-if>
-        </div>
-      </sc-if>
-
-      <!-- ===================== DASHBOARD DAY ===================== -->
-      <sc-if value="{{ v.isDashDay }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; animation:bxfade .3s ease; flex:0 0 auto;">
-          <!-- workers card -->
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a);">Workers</div>
-            <div style="display:flex; align-items:baseline; gap:10px; margin-top:8px;"><span style="font-size:48px; font-weight:700; color:var(--brand,#14532d); line-height:1;">135</span><span style="font-size:16px; color:var(--muted,#71807a);">pickers in <b style="color:var(--ink,#1c2620);">6</b> teams</span></div>
-            <div style="display:flex; gap:0; margin-top:18px; border-top:1px solid var(--line,#e4e8e4); border-bottom:1px solid var(--line,#e4e8e4);">
-              <div style="flex:1; padding:14px 0; text-align:center; border-right:1px solid var(--line,#e4e8e4);"><div style="font-size:26px; font-weight:700;">90</div><div style="font-size:12px; color:var(--muted,#71807a);">picking</div></div>
-              <div style="flex:1; padding:14px 0; text-align:center;"><div style="font-size:26px; font-weight:700;">45</div><div style="font-size:12px; color:var(--muted,#71807a);">husbandry</div></div>
-            </div>
-            <div style="display:flex; height:26px; border-radius:6px; overflow:hidden; margin-top:18px; font-size:11px; font-weight:600; color:#fff;">
-              <div style="width:15%; background:#e07b39; display:flex; align-items:center; justify-content:center;">20</div>
-              <div style="flex:1; background:#4a9d5b; display:flex; align-items:center; justify-content:center;">115 working</div>
-            </div>
-            <div style="margin-top:14px; font-size:12.5px; color:var(--muted,#71807a); line-height:1.6;">▲ 20% more than last week average<br>▲ 10% more than this week last year</div>
-          </div>
-          <!-- supervisor bars -->
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a); margin-bottom:16px;">Team size by supervisor</div>
-            <div>{{ v.dashDayBars }}</div>
-          </div>
-          <!-- yield pie -->
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a); margin-bottom:16px;">Yield by crop (value)</div>
-            <div style="display:flex; align-items:center; gap:24px;">
-              <div style="width:150px; height:150px; border-radius:50%; flex:0 0 auto; background:conic-gradient(#d94f8a 0 45%, #e0713f 45% 75%, #5aa84a 75% 100%);"></div>
-              <div style="font-size:13px; line-height:2;">
-                <div><span style="display:inline-block; width:11px; height:11px; background:#d94f8a; border-radius:2px; margin-right:8px;"></span>Strawberries 45%</div>
-                <div><span style="display:inline-block; width:11px; height:11px; background:#e0713f; border-radius:2px; margin-right:8px;"></span>Raspberry 30%</div>
-                <div><span style="display:inline-block; width:11px; height:11px; background:#5aa84a; border-radius:2px; margin-right:8px;"></span>Apple 25%</div>
-              </div>
-            </div>
-          </div>
-          <!-- supervisor table -->
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a); margin-bottom:14px;">By supervisor</div>
-            <table style="width:100%; border-collapse:collapse; font-size:13px;">
-              <thead><tr style="text-align:left; color:var(--muted,#71807a);"><th style="padding:8px 6px; font-weight:600;">Supervisor</th><th style="padding:8px 6px; font-weight:600; text-align:right;">% above min</th><th style="padding:8px 6px; font-weight:600; text-align:right;">Avg £/hr</th></tr></thead>
-              <tbody>
-                <sc-for list="{{ v.dashDaySup }}" as="r" hint-placeholder-count="4">
-                  <tr style="border-top:1px solid var(--line,#e4e8e4);"><td style="padding:9px 6px; font-family:'IBM Plex Mono',monospace;">{{ r.id }}</td><td style="padding:9px 6px; text-align:right; font-family:'IBM Plex Mono',monospace;">{{ r.pct }}</td><td style="padding:9px 6px; text-align:right; font-family:'IBM Plex Mono',monospace; font-weight:600;">{{ r.avg }}</td></tr>
-                </sc-for>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </sc-if>
-
-      <!-- ===================== DASHBOARD WEEK ===================== -->
-      <sc-if value="{{ v.isDashWeek }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; animation:bxfade .3s ease; flex:0 0 auto;">
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a); margin-bottom:14px;">Workers this week</div>
-            <div>{{ v.weekLineSvg }}</div>
-          </div>
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a); margin-bottom:14px;">Cumulative spend</div>
-            <div>{{ v.weekSpendSvg }}</div>
-          </div>
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a); margin-bottom:16px;">Picked status</div>
-            <div>{{ v.pickedBars }}</div>
-          </div>
-          <div style="background:#fff; border:1px solid var(--line,#e4e8e4); border-radius:14px; padding:22px 24px;">
-            <div style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted,#71807a); margin-bottom:16px;">Yield by crop (value)</div>
-            <div style="display:flex; align-items:center; gap:24px;">
-              <div style="width:150px; height:150px; border-radius:50%; flex:0 0 auto; background:conic-gradient(#d94f8a 0 45%, #e0713f 45% 75%, #5aa84a 75% 100%);"></div>
-              <div style="font-size:13px; line-height:2;">
-                <div><span style="display:inline-block; width:11px; height:11px; background:#d94f8a; border-radius:2px; margin-right:8px;"></span>Strawberries 45%</div>
-                <div><span style="display:inline-block; width:11px; height:11px; background:#e0713f; border-radius:2px; margin-right:8px;"></span>Raspberry 30%</div>
-                <div><span style="display:inline-block; width:11px; height:11px; background:#5aa84a; border-radius:2px; margin-right:8px;"></span>Apple 25%</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </sc-if>
-
-    </div>
-  </main>
-
-  <!-- ===================== MODAL (field checks) ===================== -->
-  <sc-if value="{{ v.modal.open }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ v.closeModal }}" style="position:fixed; inset:0; background:rgba(20,35,28,.4); display:flex; align-items:center; justify-content:center; z-index:100; padding:24px;">
-      <div style="background:#fff; border-radius:14px; width:560px; max-width:100%; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.3); animation:bxpop .18s ease; border:2px solid var(--accent,#2e9c6d);">
-        <div style="padding:18px 22px; border-bottom:1px solid var(--line,#e4e8e4);">
-          <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px;"><span style="color:var(--muted,#71807a);">Submitted</span><span style="font-weight:600;">{{ v.modal.by }}</span></div>
-          <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; background:#eef7f1; padding:6px 8px; border-radius:6px;"><span style="color:var(--muted,#71807a);">Type</span><span style="font-weight:600;">{{ v.modal.type }}</span></div>
-          <div style="display:flex; justify-content:space-between; font-size:14px;"><span style="color:var(--muted,#71807a);">Field</span><span style="font-weight:600; font-family:'IBM Plex Mono',monospace;">{{ v.modal.field }}</span></div>
-        </div>
-        <div style="background:#16a34a; color:#fff; display:grid; grid-template-columns:1fr 70px; font-size:12.5px; font-weight:600;"><div style="padding:10px 22px;">Item</div><div style="padding:10px; text-align:center;">Status</div></div>
-        <sc-for list="{{ v.modal.items }}" as="it" hint-placeholder-count="4">
-          <div style="display:grid; grid-template-columns:1fr 70px; border-bottom:1px solid var(--line,#e4e8e4); background:{{ it.bg }};"><div style="padding:12px 22px; font-size:13px;">{{ it.q }}</div><div style="padding:12px; text-align:center; font-size:16px; color:{{ it.color }};">{{ it.icon }}</div></div>
-        </sc-for>
-        <div style="padding:14px 22px; font-size:12.5px; background:#f4f6f4;"><span style="color:var(--muted,#71807a); font-weight:600;">Notes: </span>{{ v.modal.notes }}</div>
-        <div style="padding:14px 22px; text-align:right;"><button onClick="{{ v.closeModal }}" style="font-family:inherit; padding:8px 18px; background:var(--brand,#14532d); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;">Close</button></div>
-      </div>
-    </div>
-  </sc-if>
-
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:840},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Boxford Green&quot;,&quot;options&quot;:[&quot;Boxford Green&quot;,&quot;Slate&quot;,&quot;Warm Paper&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Appearance&quot;}}">
-class Component extends DCLogic {
-  state = {
-    active: 'dash_day',
-    sidebarOpen: true,
-    sortCol: null, sortDir: 1,
-    hidden: {},
-    compact: false,
-    colMenuOpen: false,
-    filters: {},
-    expanded: {},
-    modal: { open: false },
-    yieldGraph: true,
-    noteOpen: false,
-    pickerView: 'table',
-    rangeMode: false,
-  };
-
-  // ---------- helpers ----------
-  fmtMoney(v){ if(v==null||v==='') return ''; return '£'+Number(v).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-  fmtNum(v){ if(v==null||v==='') return ''; return Number(v).toLocaleString('en-GB'); }
-  fmtPct(v){ if(v==null||v==='') return ''; return Number(v).toFixed(2)+'%'; }
-  heatBg(t){ t=Math.max(0,Math.min(1,t));
-    const red=[247,179,179], mid=[250,232,150], grn=[169,214,178];
-    const mix=(a,b,k)=>a.map((x,i)=>Math.round(x+(b[i]-x)*k));
-    const c = t<0.5 ? mix(red,mid,t*2) : mix(mid,grn,(t-0.5)*2);
-    return `rgb(${c[0]},${c[1]},${c[2]})`; }
-
-  themeVars(){
-    const th = this.props.theme || 'Boxford Green';
-    if(th==='Slate') return { brand:'#1f2d3a', accent:'#0d9488', bg:'#eef1f4', sbg:'#ffffff', sactive:'#e4eef0' };
-    if(th==='Warm Paper') return { brand:'#6b4423', accent:'#b06f2e', bg:'#f6f2ea', sbg:'#fffdf8', sactive:'#f2e9db' };
-    return { brand:'#14532d', accent:'#2e9c6d', bg:'#f5f7f4', sbg:'#ffffff', sactive:'#e8f2ec' };
+  // src/parse.ts
+  function parseDcDocument(doc) {
+    const dc = doc.querySelector("x-dc");
+    if (!dc) return null;
+    const scriptEl = doc.querySelector("script[data-dc-script]");
+    const { props, preview } = parseDataProps(
+      scriptEl?.getAttribute("data-props") ?? null
+    );
+    return {
+      template: dc.innerHTML,
+      js: scriptEl ? scriptEl.textContent || "" : "",
+      props,
+      preview
+    };
+  }
+  function parseDcText(src) {
+    const openMatch = /<x-dc(?:\s[^>]*)?>/.exec(src);
+    if (!openMatch) return null;
+    const close = src.lastIndexOf("</x-dc>");
+    if (close === -1 || close < openMatch.index) return null;
+    const template = src.slice(openMatch.index + openMatch[0].length, close);
+    const doc = new DOMParser().parseFromString(src, "text/html");
+    const scriptEl = doc.querySelector("script[data-dc-script]");
+    const { props, preview } = parseDataProps(
+      scriptEl?.getAttribute("data-props") ?? null
+    );
+    return {
+      template,
+      js: scriptEl ? scriptEl.textContent || "" : "",
+      props,
+      preview
+    };
+  }
+  function parseDataProps(raw) {
+    if (!raw) return { props: null, preview: null };
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return { props: null, preview: null };
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { props: null, preview: null };
+    }
+    const obj = parsed;
+    const preview = obj.$preview && typeof obj.$preview === "object" ? obj.$preview : null;
+    const rest = {};
+    for (const k of Object.keys(obj)) {
+      if (k[0] !== "$") rest[k] = obj[k];
+    }
+    return { props: Object.keys(rest).length ? rest : null, preview };
+  }
+  function dcNameFromPath(pathname) {
+    let p = pathname || "";
+    try {
+      p = decodeURIComponent(p);
+    } catch {
+    }
+    const base = p.split("/").pop() || "Root";
+    return base.replace(/\.dc\.html$/, "").replace(/\.html?$/, "") || "Root";
   }
 
-  // ---------- report registry ----------
-  meta(){ return [
-    { sec:'Overview', items:[ ['dash_day','Dashboard — Day'], ['dash_week','Dashboard — Week'] ] },
-    { sec:'Compliance', items:[ ['signature','Signature Report'], ['plaster','Blue Plaster Report'], ['checks','Field Checks Report'], ['absence','Absence Report'] ] },
-    { sec:'KPIs', items:[ ['husbandry','Husbandry KPIs'], ['yield','Yield KPIs'], ['field','Field KPIs'], ['recon','Yield Reconciliation'] ] },
-    { sec:'Analysis', items:[ ['task','Task Summary'], ['picker','Picker League Table'], ['supervisor','League Table (Supervisor)'], ['fieldleague','League Table (Field)'] ] },
-  ]; }
-  titleOf(id){ for(const s of this.meta()) for(const it of s.items) if(it[0]===id) return it[1]; return ''; }
-  sectionOf(id){ for(const s of this.meta()) for(const it of s.items) if(it[0]===id) return s.sec; return ''; }
-
-  // ---------- data ----------
-  husbandryData(){
-    const cols=[
-      {k:'field',l:'Field Name',a:'l'},{k:'task',l:'Task',a:'l'},
-      {k:'hours',l:'Total Hours',a:'r',mono:1,f:'num'},
-      {k:'pay',l:'Total Pay + MU',a:'r',mono:1,f:'money'},
-      {k:'mu',l:'Est Make Up',a:'r',mono:1,f:'money'},
-      {k:'bonus',l:'Est Bonus',a:'r',mono:1,f:'money'},
-      {k:'pmu',l:'% Make Up',a:'r',mono:1,f:'pct',heat:'low'},
-      {k:'pbon',l:'% Bonus',a:'r',mono:1,f:'pct'},
-      {k:'avg',l:'Avg Pay/Hr',a:'r',mono:1,f:'money',minWage:1},
-      {k:'max',l:'Max Pay/Hr',a:'r',mono:1,f:'money'},
-      {k:'min',l:'Min Pay/Hr',a:'r',mono:1,f:'money'},
-      {k:'units',l:'Total Units',a:'r',mono:1,f:'num'},
-      {k:'cpu',l:'Est Cost/Unit',a:'r',mono:1,f:'money'},
-      {k:'team',l:'Team Size',a:'r',mono:1,f:'num'},
-      {k:'above',l:'Num > £12.71',a:'r',mono:1,f:'num'},
-      {k:'ptm',l:'% Team > £12.71',a:'r',mono:1,f:'pct',heat:'high'},
-      {k:'shift',l:'Avg Shift (Hrs)',a:'r',mono:1,f:'num'},
-      {k:'pwpay',l:'Piecework Pay',a:'r',mono:1,f:'money'},
-      {k:'ppw',l:'% Piecework',a:'r',mono:1,f:'pct'},
-    ];
-    const R=(field,task,hours,pay,mu,bonus,pmu,pbon,avg,max,min,units,cpu,team,above,ptm,shift,pwpay,ppw)=>({field,task,hours,pay,mu,bonus,pmu,pbon,avg,max,min,units,cpu,team,above,ptm,shift,pwpay,ppw});
-    const rows=[
-      R('14 Acre','Husbandry Supervision',18.92,285.75,0,45.32,0,15.86,15.10,15.24,14.97,0,0,2,2,100,9.46,0,0),
-      R('14 Acre','Pruning',84.32,1088.42,91.07,16.55,8.37,1.52,11.83,13.69,10.63,4965,0.2192,16,10,62.50,5.27,963.22,96.58),
-      R('14 Acre','Pruning Platform Driving',2.42,31.66,0,0.94,0,2.98,13.08,13.16,12.72,0,0,3,3,100,0.81,0,0),
-      R('14 Acre','Pruning Tops Apples',47.48,636.57,23.88,32.85,3.75,5.16,12.90,14.42,11.20,4669,0.1363,6,4,66.67,7.91,612.69,100),
-      R('Field 22','Polytunnel Maintenance',45.50,630.26,0,51.96,0,8.24,13.85,14.97,13.64,0,0,10,10,100,4.55,0,0),
-      R('Field 22','Polytunnel Skinning',38.50,638.00,0,148.67,0,23.30,16.57,16.57,16.57,638,1.0000,11,11,100,3.50,638.00,100),
-      R('Plot 100','Irrigation Major Repairs',9.00,120.51,0,6.12,0,5.08,13.39,13.39,13.39,0,0,1,1,100,9.00,0,0),
-      R('Plot 400','Husbandry Supervision',6.67,99.80,0,15.07,0,15.10,14.96,14.97,14.97,0,0,1,1,100,6.67,0,0),
-      R('Plot 400','Strawberry Flower Teasing',37.85,573.87,5.61,93.01,0.98,16.21,15.01,18.72,11.62,10332,0.0555,7,6,85.71,5.41,568.26,100),
-      R('Stoke Road Cherries','Bee Handling etc',2.00,29.18,0,3.76,0,12.89,14.59,14.59,14.59,0,0,1,1,100,2.00,0,0),
-      R('Topcroft','General Husbandry',6.67,90.93,0,6.20,0,6.81,13.63,13.64,13.64,0,0,1,1,100,6.67,0,0),
-      R('Monroes Main Heritage','Cherry Rain Covers Open',17.00,233.89,0,17.82,0,7.62,13.76,14.34,12.71,0,0,4,4,100,4.25,0,0),
-      R('Home Farm All Fields','Cleaning Yard',3.50,52.40,0,7.92,0,15.10,14.97,14.97,14.97,0,0,1,1,100,3.50,0,0),
-      R('Golf','Planting Trees/Bushes',22.50,285.98,0.02,0,0.01,0,12.71,12.71,12.71,280,1.0213,6,6,100,3.75,0,0),
-      R('Hawk Orchard','Planting Gap up trees',28.56,363.30,0,0.01,0,0,12.72,12.71,12.71,206,1.7636,7,7,100,4.08,0,0),
-      R('Monroes Cherries','Cherry Rain Covers Open',18.00,247.64,0,18.86,0,7.62,13.76,14.34,12.71,0,0,4,4,100,4.50,0,0),
-    ];
-    return { cols, rows, filters:['week','date','supervisor'], note:'Daily husbandry KPIs by field and task. % Make Up shaded green when low; Avg Pay/Hr shown red when below the £12.71 minimum.' };
+  // src/boot.ts
+  var BASE_CSS = `
+    .sc-placeholder{background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;overflow:hidden}
+    @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    html.sc-dc-streaming .sc-placeholder,
+    html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
+      background:color-mix(in srgb,currentColor 5%,transparent);
+      border-color:transparent}
+    html.sc-dc-streaming .sc-placeholder::before,
+    html.sc-dc-streaming .sc-interp.sc-missing::before{content:'';
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(217,119,87,0) 25%,rgba(247,225,211,.95) 37%,rgba(217,119,87,0) 63%);
+      background-size:400% 100%;animation:sc-shine 1.4s ease infinite}
+    html.sc-dc-streaming .sc-placeholder:nth-child(n+9 of .sc-placeholder)::before,
+    html.sc-dc-streaming .sc-interp.sc-missing:nth-child(n+9 of .sc-interp.sc-missing)::before{animation:none;
+      background:color-mix(in srgb,currentColor 8%,transparent)}
+    .sc-placeholder-error{padding:4px 8px;font:11px/1.4 ui-monospace,monospace;
+      color:rgba(0,0,0,.7);word-break:break-word}
+    .sc-interp.sc-missing{display:inline-block;width:2em;height:1em;overflow:hidden;
+      vertical-align:text-bottom;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;color:transparent;
+      user-select:none}
+    .sc-interp.sc-unresolved{font-family:ui-monospace,monospace;font-size:.85em;
+      color:rgba(0,0,0,.5);background:rgba(0,0,0,.05);border-radius:3px;
+      padding:0 3px}
+    .sc-host.sc-has-error{position:relative}
+    .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
+      padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
+      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+    /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts \u2014 keep both
+       in sync until dc-runtime regains a build step. */
+    @media print {
+      @page { margin: 0.5cm; }
+      section, article, figure, table { break-inside: avoid; }
+      *, *::before, *::after {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+        animation-delay: -99s !important; animation-duration: .001s !important;
+        animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+        animation-play-state: running !important; transition-duration: 0s !important;
+      }
+    }
+  `;
+  var FULL_PAGE_CSS = "html,body{height:100%;margin:0}#dc-root,#dc-root>.sc-host{height:100%}";
+  function rootNameForDocument(doc, loc) {
+    let bootPath = loc.pathname || "";
+    if (!/\.dc\.html?$/i.test(safeDecode(bootPath))) {
+      try {
+        bootPath = new URL(doc.baseURI || "/").pathname;
+      } catch {
+      }
+    }
+    return dcNameFromPath(bootPath);
+  }
+  function safeDecode(s) {
+    try {
+      return decodeURIComponent(s);
+    } catch {
+      return s;
+    }
+  }
+  function boot(runtime, doc = document) {
+    const parsed = parseDcDocument(doc);
+    if (!parsed) return null;
+    const React = getReact();
+    const rootName = rootNameForDocument(doc, location);
+    runtime.markFetched(rootName);
+    runtime.adoptParsed(rootName, parsed);
+    fetch(location.href).then((res) => res.ok ? res.text() : "").then((t) => {
+      const raw = t ? parseDcText(t) : null;
+      if (raw?.template) runtime.updateHtml(rootName, raw.template);
+    }).catch(() => {
+    });
+    const dc = doc.querySelector("x-dc");
+    const hostEl = doc.createElement("div");
+    hostEl.id = "dc-root";
+    dc.replaceWith(hostEl);
+    if (!parsed.preview) {
+      const s = doc.createElement("style");
+      s.textContent = FULL_PAGE_CSS;
+      doc.head.appendChild(s);
+    }
+    const Root = runtime.getDC(rootName);
+    const entry = runtime.registry.get(rootName);
+    function StandaloneRoot() {
+      const [, setTick] = React.useState(0);
+      React.useEffect(() => {
+        const sub = () => setTick((n) => n + 1);
+        entry.subs.add(sub);
+        return () => {
+          entry.subs.delete(sub);
+        };
+      }, []);
+      return h(Root, entry.propOverrides || null);
+    }
+    const ReactDOM = getReactDOM();
+    if (ReactDOM.createRoot)
+      ReactDOM.createRoot(hostEl).render(h(StandaloneRoot));
+    else ReactDOM.render(h(StandaloneRoot), hostEl);
+    return rootName;
   }
 
-  fieldData(){
-    const cols=[
-      {k:'product',l:'Product',a:'l',merge:1},{k:'field',l:'Field Name',a:'l'},{k:'plot',l:'Plot',a:'l'},
-      {k:'hours',l:'Total Hours',a:'r',mono:1,f:'num'},
-      {k:'pay',l:'Total Pay + MU',a:'r',mono:1,f:'money'},
-      {k:'mu',l:'Est MU',a:'r',mono:1,f:'money'},
-      {k:'bonus',l:'Est Bonus',a:'r',mono:1,f:'money'},
-      {k:'pmu',l:'% MU',a:'r',mono:1,f:'pct',heat:'low'},
-      {k:'avg',l:'Avg Pay/Hr',a:'r',mono:1,f:'money',minWage:1},
-      {k:'kg',l:'Total KG',a:'r',mono:1,f:'num',heat:'high'},
-      {k:'c12',l:'C1+C2',a:'r',mono:1,f:'num'},
-      {k:'c3',l:'C3',a:'r',mono:1,f:'num'},
-      {k:'pc3',l:'% C3',a:'r',mono:1,f:'pct',heat:'low'},
-      {k:'ckg',l:'Est Cost/KG',a:'r',mono:1,f:'money',heat:'low'},
-      {k:'team',l:'Team',a:'r',mono:1,f:'num'},
-      {k:'ptm',l:'% Team > £12.71',a:'r',mono:1,f:'pct',heat:'high'},
-      {k:'shift',l:'Avg Shift',a:'r',mono:1,f:'num'},
-      {k:'ppw',l:'% Piecework',a:'r',mono:1,f:'pct'},
-    ];
-    const R=(product,field,plot,hours,pay,mu,bonus,pmu,avg,kg,c12,c3,pc3,ckg,team,ptm,shift,ppw)=>({product,field,plot,hours,pay,mu,bonus,pmu,avg,kg,c12,c3,pc3,ckg,team,ptm,shift,ppw});
-    const rows=[
-      R('Asparagus','Asparagus Grader Room','ASP Room',2.82,34.60,0,0,0,12.27,0,0,0,0,0,2,100,1.41,0),
-      R('Asparagus','Field 34','F34-Mondeo',4.98,61.78,0,0.73,0,12.41,33.49,30.04,3.45,10.30,2.06,6,100,0.83,0),
-      R('Asparagus','Field 35','F35-Mondeo',4.01,49.43,0,0.59,0,12.33,14.16,12.26,1.90,13.42,4.03,6,100,0.67,0),
-      R('Strawberry','Field 11','F11-M.Ace',96.20,1284.10,42.66,168.20,3.32,13.35,3820,3512,308,8.06,0.34,18,88.9,5.34,92.1),
-      R('Strawberry','Field 25','F25-Blush UK',54.75,712.40,18.30,71.40,2.57,13.01,1990,1712,278,13.97,0.36,12,83.3,4.56,88.4),
-      R('Strawberry','New Glass House','NGH-Blush',61.79,845.20,0,96.30,0,13.68,2540,2380,160,6.30,0.33,9,100,6.86,79.5),
-      R('Raspberry','Field 14','F14-Lagorai',44.10,560.70,12.10,44.20,2.16,12.71,1240,1096,144,11.61,0.45,10,90,4.41,76.2),
-      R('Raspberry','Field 20','F20-Lagorai',31.20,392.30,5.40,28.10,1.38,12.57,890,812,78,8.76,0.44,8,87.5,3.90,71.0),
-      R('Blueberry','Field 10','F10-Crunch',46.47,588.10,0,41.30,0,12.66,1120,1044,76,6.79,0.53,11,90.9,4.22,68.3),
-      R('Blueberry','Field 53','F53-Jolene',21.43,268.90,0,19.80,0,12.55,540,498,42,7.78,0.50,6,83.3,3.57,64.0),
-    ];
-    return { cols, rows, filters:['week','date','category'], note:'Task summary by field and plot (harvest). Total KG shaded green when high; % C3 and Est Cost/KG shaded green when low.' };
+  // src/expr.ts
+  var IDENT_RE = /^[A-Za-z_$][A-Za-z0-9_$]*/;
+  var NUMBER_RE = /^-?\d+(\.\d+)?$/;
+  function resolve(vals, src) {
+    const expr = String(src).trim();
+    if (!expr) return void 0;
+    if (expr[0] === "(" && expr[expr.length - 1] === ")" && parensWrapWhole(expr)) {
+      return resolve(vals, expr.slice(1, -1));
+    }
+    const eq = findTopLevelEquality(expr);
+    if (eq) {
+      const lv = resolve(vals, expr.slice(0, eq.index));
+      const rv = resolve(vals, expr.slice(eq.index + eq.op.length));
+      switch (eq.op) {
+        case "===":
+          return lv === rv;
+        case "!==":
+          return lv !== rv;
+        case "==":
+          return lv == rv;
+        default:
+          return lv != rv;
+      }
+    }
+    if (expr[0] === "!") return !resolve(vals, expr.slice(1));
+    if (expr === "true") return true;
+    if (expr === "false") return false;
+    if (expr === "null") return null;
+    if (expr === "undefined") return void 0;
+    if (NUMBER_RE.test(expr)) return Number(expr);
+    if (expr.length >= 2 && (expr[0] === '"' || expr[0] === "'") && expr[expr.length - 1] === expr[0]) {
+      return expr.slice(1, -1);
+    }
+    return resolvePath(vals, expr);
   }
-
-  taskData(){
-    const cols=[
-      {k:'product',l:'Product',a:'l',merge:1},{k:'variety',l:'Variety',a:'l',merge:1},{k:'category',l:'Category',a:'l'},
-      {k:'field',l:'Field Name',a:'l'},{k:'task',l:'Task',a:'l'},
-      {k:'piece',l:'Piecework (£)',a:'r',mono:1,f:'money'},
-      {k:'hourly',l:'Hourly (£)',a:'r',mono:1,f:'money'},
-      {k:'pay',l:'Total Emp. Pay',a:'r',mono:1,f:'money'},
-      {k:'hours',l:'Total Hours',a:'r',mono:1,f:'num'},
-      {k:'c1',l:'C1 Kg',a:'r',mono:1,f:'num'},
-      {k:'c2',l:'C2 Kg',a:'r',mono:1,f:'num'},
-      {k:'c3',l:'C3 Kg',a:'r',mono:1,f:'num'},
-      {k:'wt',l:'Total Weight',a:'r',mono:1,f:'num'},
-    ];
-    const raw=[
-      ['Blueberry','Duke','Husbandry','Airfield','Strimming',31.51],
-      ['Blueberry','Duke','Husbandry','Airfield','SWD Traps',4.00],
-      ['Blueberry','Duke','Husbandry','Airfield','Grass Cutting',4.66],
-      ['Blueberry','Crunch','Husbandry','Field 10','Hand Weeding',23.70],
-      ['Blueberry','Crunch','Husbandry','Field 10','Husbandry Supervision',1.92],
-      ['Blueberry','Crunch','Husbandry','Field 10','Polytunnel Venting',6.34],
-      ['Blueberry','Last Call','Husbandry','Field 50','Hand Weeding',25.50],
-      ['Blueberry','Last Call','Husbandry','Field 50','Irrigation Maint',2.50],
-      ['Blueberry','Jolene','Husbandry','Field 53','Insect Netting',21.43],
-      ['Raspberry','Lagorai','Husbandry','Field 14','Raspberry Cane Support Tying',8.00],
-      ['Raspberry','Lagorai','Husbandry','Field 14','Polytunnel Venting',7.92],
-      ['Raspberry','Isabella','Husbandry','Field 19','Cleaning Yard',15.50],
-      ['Raspberry','Glen Eden','Husbandry','Field 21','Polytunnel Venting',17.43],
-      ['Raspberry','Nobility','Husbandry','Field Group 12&26','Tucking in Raspberry',16.70],
-      ['Raspberry','Nobility','Husbandry','Field Group 12&26','Insect Netting',7.57],
-      ['Strawberry','M.Ace','Husbandry','Field 11','De-runner',153.00],
-      ['Strawberry','M.Ace','Husbandry','Field 11','Leaf Removal',110.52],
-      ['Strawberry','M.Ace','Husbandry','Field 11','Husbandry Supervision',26.59],
-      ['Strawberry','Florice','Husbandry','Field Group 7,8&9','Crown Thinning',85.61],
-      ['Strawberry','Florice','Husbandry','Field Group 7,8&9','De-runner',43.47],
-      ['Strawberry','Aurora Karima','Husbandry','Plot 100','Leaf Removal',86.08],
-      ['Strawberry','Aurora Karima','Husbandry','Plot 100','Applying Biologicals',36.30],
-      ['Strawberry','Centenary','Husbandry','Plot 400','Field/Orchard End of Life',31.37],
-      ['Blackberries','Sweet Royalla','Husbandry','Field 19','Cane Support Tying',40.00],
-    ];
-    const rows=raw.map(r=>{ const hrs=r[5]; const pay=+(hrs*13.1).toFixed(2); return {product:r[0],variety:r[1],category:r[2],field:r[3],task:r[4],piece:0,hourly:pay,pay:pay,hours:hrs,c1:0,c2:0,c3:0,wt:0}; });
-    return { cols, rows, filters:['week','date','category','product'], note:'Pivot preview — Task Summary by Field & Plot (husbandry hours from the current data extract). Column visibility and density mirror the export.' };
+  function parensWrapWhole(expr) {
+    let depth = 0;
+    for (let i = 0; i < expr.length - 1; i++) {
+      if (expr[i] === "(") depth++;
+      else if (expr[i] === ")") {
+        depth--;
+        if (depth === 0) return false;
+      }
+    }
+    return true;
   }
-
-  pickerData(){
-    const cols=[
-      {k:'name',l:'Employee Name',a:'l'},{k:'no',l:'Payroll No',a:'l',mono:1},
-      {k:'pay',l:'Total Pay',a:'r',mono:1,f:'money'},
-      {k:'hours',l:'Total Hours',a:'r',mono:1,f:'num'},
-      {k:'avg',l:'Avg Pay/Hr',a:'r',mono:1,f:'money',minWage:1},
-      {k:'mu',l:'Est Make Up',a:'r',mono:1,f:'money'},
-      {k:'pmu',l:'% Make Up',a:'r',mono:1,f:'pct',heat:'low'},
-      {k:'bonus',l:'Est Bonus',a:'r',mono:1,f:'money'},
-      {k:'sup',l:'Supervisor',a:'l'},
-    ];
-    const R=(name,no,pay,hours,avg,mu,pmu,bonus,sup)=>({name,no,pay,hours,avg,mu,pmu,bonus,sup});
-    const rows=[
-      R('Janelle Espinoza','5391',335.27,35.91,9.33,103.28,30.80,0,'Kyla Crosby'),
-      R('Dallas Lawson','5380',334.77,33.91,9.87,79.35,23.70,0,'Kyla Crosby'),
-      R('Phoebe Hoffman','5363',403.71,40.49,9.97,90.80,22.49,0,'Kyla Crosby'),
-      R('Steven Phelps','5394',294.17,27.84,10.57,45.68,15.53,0,'Kyla Crosby'),
-      R('Laney Cain','5444',505.73,46.00,10.99,55.93,11.06,0,'Kyla Crosby'),
-      R('Benson Bryant','5358',403.56,34.92,11.56,22.77,5.64,0,'Kyla Crosby'),
-      R('Parker Burke','5446',532.74,46.00,11.58,28.92,5.43,0,'Kyla Crosby'),
-      R('Jax Kramer','5456',533.28,46.00,11.59,28.38,5.32,0,'Tristen Spence'),
-      R('Hanna Rosas','5367',511.78,44.06,11.61,26.48,5.17,0,'Tristen Spence'),
-      R('Remi Horne','5289',534.61,46.00,11.62,27.05,5.06,0,'Tristen Spence'),
-      R('Colton Reid','5401',548.90,46.00,11.93,18.40,3.24,0,'Tristen Spence'),
-      R('Ayla Frost','5422',561.20,46.00,12.20,9.80,1.72,0,'Aislinn Kaur'),
-      R('Ronan Wells','5433',572.10,46.00,12.44,4.20,0.73,0,'Aislinn Kaur'),
-      R('Mila Booker','5450',589.30,46.00,12.81,0,0,12.40,'Aislinn Kaur'),
-    ];
-    return { cols, rows, filters:['year','week','supervisor'], supKey:'sup', note:'Payroll performance — Avg Pay/Hr shown red below the £12.71 minimum wage; % Make Up on a green→red scale (low make-up is healthy).' };
-  }
-
-  supervisorData(){ const d=this.pickerData(); return { ...d, note:'League table broken down by how each worker performed under each supervisor. Filter by supervisor above.' }; }
-
-  fieldLeagueData(){
-    const cols=[
-      {k:'rank',l:'Rank',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'name',l:'Employee Name',a:'l'},
-      {k:'no',l:'Payroll No',a:'l',mono:1},
-      {k:'earned',l:'Total Pay',a:'r',mono:1,f:'money'},
-      {k:'hrs',l:'Total Hours',a:'r',mono:1,f:'num'},
-      {k:'cash',l:'Avg Pay/Hr',a:'r',mono:1,f:'money',minWage:1},
-      {k:'mu',l:'Est Make Up',a:'r',mono:1,f:'money'},
-      {k:'pmu',l:'% Make Up',a:'r',mono:1,f:'pct',heat:'low'},
-      {k:'bonus',l:'Est Bonus',a:'r',mono:1,f:'money'},
-      {k:'sup',l:'Supervisor',a:'l'},
-    ];
-    const sups=['Kyla Crosby','Tristen Spence','Aislinn Kaur'];
-    const mk=(r,i)=>{ const no=r[0].split(' - ')[0]; const name=r[0].split(' - ')[1]||r[0]; const hrs=r[1], earned=r[2], cash=r[3];
-      const mu=+Math.max(0,(12.71-cash)*hrs).toFixed(2); const pmu=earned?+(mu/earned*100).toFixed(2):0; const bonus=cash>12.71?+((cash-12.71)*hrs).toFixed(2):0;
-      return {rank:i+1,name,no,hrs,earned,cash,mu,pmu,bonus,sup:sups[i%sups.length]}; };
-    const rows=[];
-    const g1='2026-05-11 — Warners Blueberry — Warners-Bluecrop';
-    const g2='2026-05-12 — Warners Blueberry — Warners-Bluecrop';
-    const n1=[['108 - Jamie Hansen',4.25,52.20,12.28],['408 - Leonard Hahn',4.25,50.10,11.79],['3121 - Denver McGuire',4.25,48.90,11.51],['3167 - Radeo Arellano',4.25,47.30,11.13],['3230 - Tru Blackwell',4.25,45.80,10.78],['3329 - Marcel Dascalu',4.25,44.20,10.40],['3500 - Iker Thompson',4.25,42.60,10.02],['3511 - Sincere Lara',4.25,40.90,9.62],['3519 - Meadow Peralta',4.25,39.10,9.20],['3521 - Autumn Rhodes',4.25,37.87,8.91]];
-    rows.push({group:1,label:g1});
-    n1.forEach((r,i)=>rows.push(mk(r,i)));
-    const n2=[['108 - Kayla Patterson',6.00,76.80,12.80],['408 - Tyler Barajas',6.00,73.20,12.20],['3121 - Weston Drake',6.00,70.10,11.68],['3167 - Leonard Hahn',6.00,66.40,11.07],['3329 - Donald Morton',6.00,62.90,10.48],['3500 - Taturn Russell',6.00,58.30,9.72]];
-    rows.push({group:1,label:g2});
-    n2.forEach((r,i)=>rows.push(mk(r,i)));
-    return { cols, rows, grouped:true, filters:['year','week','field'], note:'Performance league table by task, field & plot, with full payroll breakdown per worker. Rank shaded green for the top performers each day.' };
-  }
-
-  reconData(){
-    const cols=[
-      {k:'crop',l:'Crop',a:'l'},
-      {k:'forecast',l:'Forecast (kg)',a:'r',mono:1,f:'num'},
-      {k:'actual',l:'Actual (kg)',a:'r',mono:1,f:'num'},
-      {k:'delivered',l:'Delivered (kg)',a:'r',mono:1,f:'num'},
-      {k:'af',l:'Actual vs Forecast',a:'r',mono:1,f:'pct',heat:'high'},
-      {k:'da',l:'Delivered vs Actual',a:'r',mono:1,f:'pct',heat:'high'},
-      {k:'waste',l:'Waste (kg)',a:'r',mono:1,f:'num',heat:'low'},
-    ];
-    const R=(crop,forecast,actual,delivered)=>({crop,forecast,actual,delivered,af:+(actual/forecast*100).toFixed(1),da:+(delivered/actual*100).toFixed(1),waste:actual-delivered});
-    const rows=[R('Strawberry',12000,9500,8800),R('Raspberry',6400,5900,5610),R('Blueberry',3200,3100,2980),R('Apple',5000,4200,4050),R('Blackberry',900,760,700),R('Cherry',1500,1320,1250)];
-    return { cols, rows, filters:['week','date'], note:'Yield reconciliation across the pipeline: forecast → actual harvested → delivered. Waste shaded green when low.' };
-  }
-
-  absenceData(){
-    const cols=[
-      {k:'crit',l:'Criteria',a:'l'},
-      {k:'mon',l:'Mon',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'tue',l:'Tue',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'wed',l:'Wed',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'thu',l:'Thu',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'fri',l:'Fri',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'sat',l:'Sat',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'sun',l:'Sun',a:'r',mono:1,f:'num',heat:'low'},
-      {k:'total',l:'Total',a:'r',mono:1,f:'num'},
-    ];
-    const R=(crit,d)=>({crit,mon:d[0],tue:d[1],wed:d[2],thu:d[3],fri:d[4],sat:d[5],sun:d[6],total:d.reduce((a,b)=>a+b,0)});
-    const rows=[
-      R('Sickness',[3,4,2,5,3,1,0]),R('Injury',[0,1,1,0,2,0,0]),R('Personal / family',[1,2,3,1,2,4,2]),
-      R('Weather (go home early)',[0,0,4,6,0,2,1]),R('Transport issue',[2,1,0,1,1,0,0]),R('No reason given',[1,0,1,2,1,3,1]),
-    ];
-    // total per day footer row
-    const days=['mon','tue','wed','thu','fri','sat','sun'];
-    const foot={crit:'Total per day', foot:1};
-    days.forEach(dk=>{ foot[dk]=rows.reduce((a,r)=>a+r[dk],0); });
-    foot.total=days.reduce((a,dk)=>a+foot[dk],0);
-    rows.push(foot);
-    return { cols, rows, filters:['week'], note:'"Go home early" and absence criteria down the side, days along the top — count of individuals off. Fewer absences shaded green.' };
-  }
-
-  checksData(){
-    const cols=[
-      {k:'field',l:'Field',a:'l',mono:1},{k:'tasks',l:'Tasks',a:'l'},{k:'times',l:'Times',a:'l',mono:1},{k:'sup',l:'Supervisor',a:'l',mono:1},
-      {k:'start',l:'Start Up done?',a:'c',check:1,click:'start'},
-      {k:'finish',l:'Finish Up done?',a:'c',check:1,click:'finish'},
-      {k:'issues',l:'Issues',a:'l',issue:1},
-    ];
-    const R=(field,tasks,times,sup,start,finish,issue)=>({field,tasks,times,sup,start,finish,issue});
-    const rows=[
-      R('1007','Strawberry Picking, General Husbandry','06:30 – 10:00','5434','ok','x','✕ Task finished, but finish-up checks not completed'),
-      R('1019','General Husbandry','10:05 – 12:00','4345','ok','ok',''),
-      R('1015','Raspberry Picking','10:15 – 12:00','5645','ok','warn','⚠ Wash hands sign not evident'),
-      R('1023','General Husbandry','10:05 – 12:00','4345','ok','ok',''),
-      R('1026','General Husbandry, Polytunnel Maintenance','14:00 – 16:00','4346','ok','ok',''),
-      R('1028','Polytunnel Maintenance','16:00 – 18:00','4347','ok','ok',''),
-    ];
-    return { cols, rows, filters:['week','date','supervisor'], note:'Field startup & finish-up compliance. Click a Start Up / Finish Up cell to open the submitted checklist.' };
-  }
-
-  yieldTable(){
-    const cols=[
-      {k:'wc',l:'Week Commencing',a:'l',mono:1},
-      {k:'wk1',l:'1st Wk of 12Wk Forecast',a:'r',mono:1,f:'num'},
-      {k:'wf',l:'Weekly Forecast (Fri)',a:'r',mono:1,f:'num'},
-      {k:'act',l:'Actual',a:'r',mono:1,f:'num'},
-      {k:'twa',l:'12Wk vs Actual',a:'r',mono:1,f:'pct',heat:'high'},
-      {k:'wva',l:'Weekly vs Actual',a:'r',mono:1,f:'pct',heat:'high'},
-      {k:'twk',l:'12Wk vs Weekly',a:'r',mono:1,f:'pct',heat:'high'},
-    ];
-    const R=(wc,wk1,wf,act,twa,wva,twk)=>({wc,wk1,wf,act,twa,wva,twk});
-    const rows=[
-      R('29/03/2026',150,null,40.9,27.27,0,0),
-      R('05/04/2026',2800,1530,1174,41.93,76.73,54.64),
-      R('12/04/2026',10100,8700,8015,79.36,92.13,86.14),
-      R('19/04/2026',21000,15800,12999,61.90,82.27,75.24),
-      R('26/04/2026',36100,25700,null,0,0,71.19),
-      R('03/05/2026',28500,null,null,0,0,0),
-    ];
-    return { cols, rows };
-  }
-
-  getTable(id){
-    if(id==='husbandry') return this.husbandryData();
-    if(id==='field') return this.fieldData();
-    if(id==='task') return this.taskData();
-    if(id==='picker') return this.pickerData();
-    if(id==='supervisor') return this.supervisorData();
-    if(id==='fieldleague') return this.fieldLeagueData();
-    if(id==='recon') return this.reconData();
-    if(id==='absence') return this.absenceData();
-    if(id==='checks') return this.checksData();
-    if(id==='yield') return this.yieldTable();
+  function findTopLevelEquality(expr) {
+    let depth = 0;
+    for (let i = 0; i < expr.length; i++) {
+      const c = expr[i];
+      if (c === "[" || c === "(") depth++;
+      else if (c === "]" || c === ")") depth--;
+      else if (depth === 0 && (c === "=" || c === "!") && expr[i + 1] === "=") {
+        if (i > 0 && (expr[i - 1] === "=" || expr[i - 1] === "!")) continue;
+        if (!expr.slice(0, i).trim()) continue;
+        const op = expr[i + 2] === "=" ? c + "==" : c + "=";
+        return { index: i, op };
+      }
+    }
     return null;
   }
-
-  // ---------- actions ----------
-  select(id){ this.setState({ active:id, sortCol:null, hidden:{}, colMenuOpen:false, expanded:{}, filters:{}, noteOpen:false, pickerView:'table', rangeMode:false }); }
-  toggleNote(){ this.setState(s=>({ noteOpen:!s.noteOpen })); }
-  toggleRange(){ this.setState(s=>({ rangeMode:!s.rangeMode })); }
-  toggleSidebar(){ this.setState(s=>({ sidebarOpen:!s.sidebarOpen })); }
-  toggleCompact(){ this.setState(s=>({ compact:!s.compact })); }
-  toggleColMenu(){ this.setState(s=>({ colMenuOpen:!s.colMenuOpen })); }
-  toggleCol(k){ this.setState(s=>({ hidden:{...s.hidden,[k]:!s.hidden[k]} })); }
-  sortBy(k){ this.setState(s=>({ sortCol:k, sortDir: s.sortCol===k ? -s.sortDir : 1 })); }
-  setFilter(k,val){ this.setState(s=>({ filters:{...s.filters,[k]:val} })); }
-  toggleExpand(k){ this.setState(s=>({ expanded:{...s.expanded,[k]:!s.expanded[k]} })); }
-  openModal(field, kind){
-    kind = kind || 'start';
-    if(kind==='finish'){
-      const fm={
-        '1015':{by:'Priya Nair (5645) at 12:08',type:'Finish-Up Checklist',field:'1015',items:[['Area left clean and tidy?','ok'],['All tools & equipment returned to store?','ok'],['Waste and packaging removed from field?','warn'],['Handwash stations restocked for next shift?','ok']],notes:'Some packaging left at row ends — collected on second pass.'},
-      };
-      const d=fm[field]||{by:'Sam Doyle (5612) at 12:05',type:'Finish-Up Checklist',field,items:[['Area left clean and tidy?','ok'],['All tools & equipment returned to store?','ok'],['Waste and packaging removed from field?','ok'],['Handwash stations restocked for next shift?','ok']],notes:'Field signed off — no issues at finish-up.'};
-      const items = d.items.map((it,i)=>({ q:it[0], icon: it[1]==='ok'?'✔':(it[1]==='warn'?'⚠':'✕'), color: it[1]==='ok'?'#16a34a':(it[1]==='warn'?'#c08a15':'#d64545'), bg: i%2?'#f4f6f4':'#ffffff' }));
-      this.setState({ modal:{ open:true, by:d.by, type:d.type, field:d.field, items, notes:d.notes } });
-      return;
-    }
-    const m={
-      '1007':{by:'Amy Hessington (5606) at 10:56',type:'Start-Up Checklist',field:'1007',items:[['Are handwash stations present, fully stocked?','ok'],['Wash signs evident?','x'],['Is a suitable rest area available?','ok'],['No evidence of jewellery.','ok']],notes:'The soap is running out — should be replaced today! Wash sign broken — laying on floor.'},
-      '1015':{by:'Sam Doyle (5612) at 10:20',type:'Start-Up Checklist',field:'1015',items:[['Are handwash stations present, fully stocked?','ok'],['Wash signs evident?','x'],['Is a suitable rest area available?','ok'],['No evidence of jewellery.','ok']],notes:'Wash hands sign not evident on entry to field.'},
-    };
-    const d=m[field]||{by:'Amy Hessington (5606) at 10:56',type:'Start-Up Checklist',field,items:[['Are handwash stations present, fully stocked?','ok'],['Wash signs evident?','ok'],['Is a suitable rest area available?','ok'],['No evidence of jewellery.','ok']],notes:'All checks passed.'};
-    const items = d.items.map((it,i)=>({ q:it[0], icon: it[1]==='ok'?'✔':(it[1]==='warn'?'⚠':'✕'), color: it[1]==='ok'?'#16a34a':(it[1]==='warn'?'#c08a15':'#d64545'), bg: i%2?'#f4f6f4':'#ffffff' }));
-    this.setState({ modal:{ open:true, by:d.by, type:d.type, field:d.field, items, notes:d.notes } });
-  }
-  closeModal(){ this.setState({ modal:{ open:false } }); }
-
-  // ---------- filter options ----------
-  filterConfig(id, tbl){
-    const opts={
-      week:['Week 20','Week 19','Week 18','Week 17','All'],
-      date:['19/05/2026','18/05/2026','17/05/2026'],
-      supervisor:['All','Kyla Crosby','Tristen Spence','Aislinn Kaur'],
-      year:['2026','2025'],
-      category:['Harvest','Husbandry','All'],
-      field:['All Fields','Field 11','Field 25'],
-      product:['All','Strawberry','Raspberry','Blueberry','Blackberries'],
-    };
-    const labels={ week:'Week', date:'Day', supervisor:'Supervisor', year:'Year', category:'Category', field:'Field', product:'Product' };
-    const rangeable={ date:1, week:1 };
-    const keys = tbl && tbl.filters ? tbl.filters : [];
-    const F=this.state.filters;
-    const range=this.state.rangeMode;
-    return keys.map(k=>{
-      if(range && rangeable[k]){
-        if(k==='date'){
-          return { label:labels[k], isDateRange:true, isSelect:false, isSelRange:false,
-            from:F[k+'_from']||'2026-05-13', to:F[k+'_to']||'2026-05-19',
-            onFrom:(e)=>this.setFilter(k+'_from',e.target.value), onTo:(e)=>this.setFilter(k+'_to',e.target.value) };
+  function resolvePath(vals, expr) {
+    const head = expr.match(IDENT_RE);
+    if (!head) return void 0;
+    let cur = vals == null ? void 0 : vals[head[0]];
+    let i = head[0].length;
+    while (i < expr.length) {
+      if (expr[i] === ".") {
+        const m = expr.slice(i + 1).match(IDENT_RE) || expr.slice(i + 1).match(/^\d+/);
+        if (!m) return void 0;
+        cur = cur == null ? void 0 : cur[m[0]];
+        i += 1 + m[0].length;
+      } else if (expr[i] === "[") {
+        let depth = 1;
+        let j = i + 1;
+        while (j < expr.length && depth > 0) {
+          if (expr[j] === "[") depth++;
+          else if (expr[j] === "]") {
+            depth--;
+            if (depth === 0) break;
+          }
+          j++;
         }
-        return { label:labels[k], isSelRange:true, isSelect:false, isDateRange:false, options:opts[k],
-          fromValue:F[k+'_from']||opts[k][opts[k].length-1], toValue:F[k+'_to']||opts[k][0],
-          onFrom:(e)=>this.setFilter(k+'_from',e.target.value), onTo:(e)=>this.setFilter(k+'_to',e.target.value) };
+        if (depth !== 0) return void 0;
+        const key = resolve(vals, expr.slice(i + 1, j));
+        cur = cur == null ? void 0 : cur[key];
+        i = j + 1;
+      } else {
+        return void 0;
       }
-      return { label:labels[k], isSelect:true, isSelRange:false, isDateRange:false, value:F[k]||opts[k][0], options:opts[k], onChange:(e)=>this.setFilter(k,e.target.value) };
-    });
+    }
+    return cur;
   }
 
-  // ---------- charts ----------
-  barsHtml(data, color, max){
-    const bars = data.map(d=>{
-      const h = Math.round(d.v/max*140);
-      const col = d.color || color;
-      return React.createElement('div',{key:d.label,style:{flex:'1',display:'flex',flexDirection:'column',alignItems:'center',gap:'6px',justifyContent:'flex-end'}},
-        React.createElement('div',{style:{fontFamily:"'IBM Plex Mono',monospace",fontSize:'11px',fontWeight:600}}, d.disp||d.v),
-        React.createElement('div',{style:{width:'70%',height:h+'px',background:col,borderRadius:'5px 5px 0 0',transition:'height .4s'}}),
-        React.createElement('div',{style:{fontSize:'10.5px',color:'#71807a',textAlign:'center',lineHeight:1.2}}, d.label));
-    });
-    return React.createElement('div',{style:{display:'flex',alignItems:'flex-end',gap:'8px',height:'190px'}}, bars);
-  }
-  lineHtml(series, w, h, ymax, dashed){
-    const pad={l:44,r:14,t:12,b:26};
-    const iw=w-pad.l-pad.r, ih=h-pad.t-pad.b;
-    const els=[];
-    // gridlines
-    for(let i=0;i<=5;i++){ const y=pad.t+ih*i/5; const val=Math.round(ymax*(1-i/5));
-      els.push(React.createElement('line',{key:'g'+i,x1:pad.l,y1:y,x2:w-pad.r,y2:y,stroke:'#eef1ee',strokeWidth:1}));
-      els.push(React.createElement('text',{key:'t'+i,x:pad.l-6,y:y+3,textAnchor:'end',fontSize:9,fill:'#9aa79f'}, val.toLocaleString()));
+  // src/encode.ts
+  var CAMEL_ATTR = "sc-camel-";
+  var RAW_WRAP = {
+    select: "sc-raw-select",
+    table: "sc-raw-table",
+    tbody: "sc-raw-tbody",
+    thead: "sc-raw-thead",
+    tfoot: "sc-raw-tfoot",
+    tr: "sc-raw-tr",
+    td: "sc-raw-td",
+    th: "sc-raw-th",
+    caption: "sc-raw-caption"
+  };
+  var RAW_UNWRAP = Object.fromEntries(
+    Object.entries(RAW_WRAP).map(([k, v]) => [v, k])
+  );
+  var EVENT_MAP = {
+    onclick: "onClick",
+    onchange: "onChange",
+    oninput: "onInput",
+    onsubmit: "onSubmit",
+    onkeydown: "onKeyDown",
+    onkeyup: "onKeyUp",
+    onkeypress: "onKeyPress",
+    onmousedown: "onMouseDown",
+    onmouseup: "onMouseUp",
+    onmouseenter: "onMouseEnter",
+    onmouseleave: "onMouseLeave",
+    onfocus: "onFocus",
+    onblur: "onBlur",
+    ondoubleclick: "onDoubleClick",
+    oncontextmenu: "onContextMenu"
+  };
+  var ATTRS = `(?:[^>"']|"[^"]*"|'[^']*')*`;
+  var IMPORT_SELF_CLOSE_RE = new RegExp(
+    "<(x-import|dc-import)(" + ATTRS + ")/>",
+    "gi"
+  );
+  var CAMEL_ATTR_RE = /(\s)([a-z]+[A-Z][A-Za-z0-9]*)(\s*=)/g;
+  function encodeCase(html) {
+    html = html.replace(
+      IMPORT_SELF_CLOSE_RE,
+      (_, t, a) => "<" + t + a + "></" + t + ">"
+    );
+    html = html.replace(/<helmet(\s|>)/gi, "<sc-helmet$1");
+    html = html.replace(/<\/helmet\s*>/gi, "</sc-helmet>");
+    html = html.replace(
+      CAMEL_ATTR_RE,
+      (_, sp, name, eq) => sp + CAMEL_ATTR + name.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase()) + eq
+    );
+    for (const [real, alias] of Object.entries(RAW_WRAP)) {
+      html = html.replace(
+        new RegExp("(</?)" + real + "(?=[\\s>])", "gi"),
+        "$1" + alias
+      );
     }
-    series.forEach((s,si)=>{
-      const n=s.pts.length;
-      const pts=s.pts.map((p,i)=>[pad.l+iw*(i/(n-1)), pad.t+ih*(1-p/ymax)]);
-      const dstr=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
-      els.push(React.createElement('path',{key:'p'+si,d:dstr,fill:'none',stroke:s.color,strokeWidth:s.width||2.5,strokeDasharray:s.dash||'0',strokeLinecap:'round',strokeLinejoin:'round'}));
-      if(!s.dash) pts.forEach((p,i)=>els.push(React.createElement('circle',{key:'c'+si+i,cx:p[0],cy:p[1],r:3,fill:'#fff',stroke:s.color,strokeWidth:2})));
-    });
-    return React.createElement('svg',{viewBox:`0 0 ${w} ${h}`,style:{width:'100%',height:'auto',display:'block'}}, els);
+    return html;
   }
-  quantile(sorted,p){ const n=sorted.length; if(n===0) return 0; if(n===1) return sorted[0]; const idx=(n-1)*p, lo=Math.floor(idx), hi=Math.ceil(idx); if(lo===hi) return sorted[lo]; return sorted[lo]+(sorted[hi]-sorted[lo])*(idx-lo); }
-  boxPlotHtml(groups, ymin, ymax, refLine, refLabel){
-    const w=760, h=380, pad={l:56,r:20,t:18,b:64};
-    const iw=w-pad.l-pad.r, ih=h-pad.t-pad.b;
-    const yOf=(v)=>pad.t+ih*(1-(v-ymin)/(ymax-ymin));
-    const els=[];
-    // gridlines + y labels
-    const steps=6;
-    for(let i=0;i<=steps;i++){ const val=ymin+(ymax-ymin)*i/steps; const y=yOf(val);
-      els.push(React.createElement('line',{key:'g'+i,x1:pad.l,y1:y,x2:w-pad.r,y2:y,stroke:'#eef1ee',strokeWidth:1}));
-      els.push(React.createElement('text',{key:'yl'+i,x:pad.l-8,y:y+3,textAnchor:'end',fontSize:10,fill:'#9aa79f',fontFamily:"'IBM Plex Mono',monospace"},'£'+val.toFixed(2)));
-    }
-    // reference line (min wage)
-    if(refLine!=null){ const y=yOf(refLine);
-      els.push(React.createElement('line',{key:'ref',x1:pad.l,y1:y,x2:w-pad.r,y2:y,stroke:'#c0392b',strokeWidth:1.5,strokeDasharray:'6 4'}));
-      els.push(React.createElement('text',{key:'refl',x:w-pad.r,y:y-6,textAnchor:'end',fontSize:10.5,fill:'#c0392b',fontWeight:600},refLabel||('£'+refLine.toFixed(2))));
-    }
-    const n=groups.length, slot=iw/n, bw=Math.min(72, slot*0.44);
-    groups.forEach((g,gi)=>{
-      const cx=pad.l+slot*(gi+0.5);
-      const col=g.color||'#2e7d5b';
-      const yMin=yOf(g.min), yMax=yOf(g.max), yQ1=yOf(g.q1), yQ3=yOf(g.q3), yMed=yOf(g.med);
-      // whisker
-      els.push(React.createElement('line',{key:'w'+gi,x1:cx,y1:yMax,x2:cx,y2:yMin,stroke:col,strokeWidth:1.5}));
-      els.push(React.createElement('line',{key:'wt'+gi,x1:cx-bw*0.28,y1:yMax,x2:cx+bw*0.28,y2:yMax,stroke:col,strokeWidth:1.5}));
-      els.push(React.createElement('line',{key:'wb'+gi,x1:cx-bw*0.28,y1:yMin,x2:cx+bw*0.28,y2:yMin,stroke:col,strokeWidth:1.5}));
-      // box
-      els.push(React.createElement('rect',{key:'b'+gi,x:cx-bw/2,y:yQ3,width:bw,height:Math.max(2,yQ1-yQ3),fill:col,fillOpacity:0.16,stroke:col,strokeWidth:1.5,rx:3}));
-      // median
-      els.push(React.createElement('line',{key:'m'+gi,x1:cx-bw/2,y1:yMed,x2:cx+bw/2,y2:yMed,stroke:col,strokeWidth:2.5}));
-      // individual points (jittered)
-      (g.points||[]).forEach((p,pi)=>{ const jx=cx+((pi%2)?1:-1)*(bw*0.5+7); els.push(React.createElement('circle',{key:'pt'+gi+pi,cx:jx,cy:yOf(p),r:2.6,fill:'#fff',stroke:col,strokeWidth:1.4})); });
-      // x label
-      const words=g.label.split(' ');
-      els.push(React.createElement('text',{key:'xl'+gi,x:cx,y:h-pad.b+20,textAnchor:'middle',fontSize:11.5,fill:'#3c473f',fontWeight:600},words[0]));
-      if(words[1]) els.push(React.createElement('text',{key:'xl2'+gi,x:cx,y:h-pad.b+35,textAnchor:'middle',fontSize:11.5,fill:'#3c473f',fontWeight:600},words.slice(1).join(' ')));
-      els.push(React.createElement('text',{key:'nl'+gi,x:cx,y:h-pad.b+51,textAnchor:'middle',fontSize:9.5,fill:'#9aa79f'},'n='+(g.points?g.points.length:0)));
-    });
-    return React.createElement('svg',{viewBox:`0 0 ${w} ${h}`,style:{width:'100%',height:'auto',display:'block'}}, els);
+  function kebabToCamel(s) {
+    return s.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
   }
-  buildStatic(tbl){
-    const range={};
-    tbl.cols.forEach(c=>{ if(c.heat){ const vals=tbl.rows.filter(r=>typeof r[c.k]==='number'&&!isNaN(r[c.k])&&r[c.k]!==0).map(r=>r[c.k]); if(vals.length) range[c.k]=[Math.min(...vals),Math.max(...vals)]; } });
-    const cols=tbl.cols.map((c,i)=>({ label:c.l, thStyle:`position:sticky; top:0; ${i===0?'left:0; z-index:4;':'z-index:2;'} background:var(--brand,#14532d); color:#fff; text-align:${c.a==='r'?'right':'left'}; padding:12px 16px; font-weight:600; font-size:12px; white-space:nowrap;` }));
-    const rows=tbl.rows.map((r,ri)=>{ const zebra=ri%2?'#fbfcfb':'#fff'; return { cells:tbl.cols.map((c,ci)=>{
-      let raw=r[c.k];
-      let disp = c.f==='money'?this.fmtMoney(raw): c.f==='pct'?((raw==null||raw===''||raw===0)?'—':this.fmtPct(raw)): c.f==='num'?((raw==null||raw==='')?'—':this.fmtNum(raw)):(raw==null?'':String(raw));
-      let bg=zebra;
-      if(c.heat&&typeof raw==='number'&&raw!==0&&range[c.k]){ const[mn,mx]=range[c.k]; let t=mx===mn?0.5:(raw-mn)/(mx-mn); if(c.heat==='low')t=1-t; bg=this.heatBg(t); }
-      let s=`padding:11px 16px; text-align:${c.a==='r'?'right':'left'}; white-space:nowrap; border-bottom:1px solid var(--line,#e4e8e4); font-size:13px; ${c.mono?"font-family:'IBM Plex Mono',monospace;":''} background:${bg};`;
-      if(ci===0) s+=`position:sticky; left:0; z-index:1; box-shadow:1px 0 0 var(--line,#e4e8e4);`;
-      return {d:disp,s};
-    }) }; });
-    return {cols,rows};
+  function cssToObj(css) {
+    const o = {};
+    for (const decl of css.split(";")) {
+      const i = decl.indexOf(":");
+      if (i < 0) continue;
+      const prop = decl.slice(0, i).trim();
+      o[prop.startsWith("--") ? prop : kebabToCamel(prop)] = decl.slice(i + 1).trim();
+    }
+    return o;
+  }
+  function compileAttr(raw) {
+    const whole = raw.match(/^\s*\{\{([\s\S]+?)\}\}\s*$/);
+    if (whole) {
+      const path = whole[1];
+      return (vals) => resolve(vals, path);
+    }
+    if (raw.includes("{{")) {
+      const parts = raw.split(/\{\{([\s\S]+?)\}\}/g);
+      return (vals) => parts.map((s, i) => i & 1 ? resolve(vals, s) ?? "" : s).join("");
+    }
+    return () => raw;
   }
 
-  renderVals(){
-    const S=this.state;
-    const id=S.active;
-    const tv=this.themeVars();
-    // sidebar
-    const sections = this.meta().map(sec=>({
-      name:sec.sec,
-      items: sec.items.map(it=>{
-        const activeI = it[0]===id;
-        return { label:it[1], onClick:()=>this.select(it[0]),
-          dot: activeI ? 'var(--accent,#2e9c6d)' : 'transparent',
-          style:`display:flex; align-items:center; gap:9px; width:100%; text-align:left; border:none; cursor:pointer; font-family:inherit; font-size:13px; padding:8px 10px; margin:1px 0; border-radius:8px; color:${activeI?'var(--brand,#14532d)':'#3c473f'}; background:${activeI?'var(--sactive,#e8f2ec)':'transparent'}; font-weight:${activeI?'600':'400'};` };
+  // src/compile.ts
+  function collectProps(node, isComponent, host) {
+    const propGetters = [];
+    const pseudoClasses = [];
+    let hintSize = null;
+    for (const { name, value } of [...node.attributes]) {
+      if (name === "sc-name" || name === "data-dc-tpl") continue;
+      let key = name;
+      if (key.startsWith(CAMEL_ATTR))
+        key = kebabToCamel(key.slice(CAMEL_ATTR.length));
+      if (key === "hint-size") {
+        hintSize = value;
+        continue;
+      }
+      if (key.startsWith("style-")) {
+        pseudoClasses.push(host.pseudoClass(key.slice(6), value));
+        continue;
+      }
+      if (isComponent) {
+        if (key.includes("-")) key = kebabToCamel(key);
+      } else {
+        if (key === "class") key = "className";
+        else if (key === "for") key = "htmlFor";
+        else if (key.startsWith("on"))
+          key = EVENT_MAP[key] || "on" + key[2].toUpperCase() + key.slice(3);
+      }
+      propGetters.push([key, compileAttr(value)]);
+    }
+    return { propGetters, pseudoClasses, hintSize };
+  }
+  var HOST_STYLE_PROPS = /* @__PURE__ */ new Set([
+    "position",
+    "left",
+    "right",
+    "top",
+    "bottom",
+    "inset",
+    "width",
+    "height",
+    "z-index",
+    "transform"
+  ]);
+  function hostPositionStyle(style) {
+    const all = typeof style === "string" ? cssToObj(style) : style != null && typeof style === "object" ? style : null;
+    if (!all) return void 0;
+    const out = {};
+    for (const [k, v] of Object.entries(all)) {
+      const kebab = k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
+      if (HOST_STYLE_PROPS.has(kebab)) out[k] = v;
+    }
+    return Object.keys(out).length ? out : void 0;
+  }
+  function compileTemplate(html, host) {
+    const tpl = document.createElement("template");
+    //! nosemgrep: direct-inner-html-assignment
+    tpl.innerHTML = encodeCase(html);
+    let tplN = 0;
+    (function stamp(node) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        node.setAttribute("data-dc-tpl", String(tplN++));
+      }
+      for (const c of node.childNodes) stamp(c);
+    })(tpl.content);
+    const builders = walkChildren(tpl.content, host);
+    const render = ((vals, ctx) => builders.map((b, i) => b(vals || {}, ctx, i)));
+    render.__annotated = tpl.innerHTML;
+    return render;
+  }
+  function walkChildren(node, host) {
+    return [...node.childNodes].map((c) => walk(c, host)).filter((b) => b != null);
+  }
+  function walk(node, host) {
+    if (node.nodeType === Node.TEXT_NODE) return walkText(node);
+    if (node.nodeType !== Node.ELEMENT_NODE) return null;
+    const el = node;
+    const tag = el.tagName.toLowerCase();
+    if (tag === "sc-for") return walkFor(el, host);
+    if (tag === "sc-if") return walkIf(el, host);
+    if (tag === "x-import") return walkXImport(el, host);
+    if (tag === "sc-helmet") return host.helmet(el);
+    if (tag === "dc-import") return walkComponent(el, host);
+    return walkElement(el, host);
+  }
+  var warnedHoles = /* @__PURE__ */ new Set();
+  function warnUnresolved(ctx, what) {
+    const key = (ctx?.__name || "?") + "\0" + what;
+    if (warnedHoles.has(key)) return;
+    warnedHoles.add(key);
+    console.warn("[dc-runtime] " + (ctx?.__name || "template") + ": " + what);
+  }
+  function walkText(node) {
+    const txt = node.nodeValue ?? "";
+    if (!txt.includes("{{")) {
+      if (!txt.trim() && !txt.includes(" ")) return null;
+      return () => txt;
+    }
+    const parts = txt.split(/\{\{([\s\S]+?)\}\}/g);
+    return (vals, ctx, key) => h(
+      getReact().Fragment,
+      { key },
+      ...parts.map((p, i) => {
+        if (!(i & 1)) return p;
+        const v = resolve(vals, p);
+        if (v === void 0) {
+          if (!ctx?.__streamingNow) {
+            if (document.body?.hasAttribute("data-dc-editor-on")) {
+              return h(
+                "span",
+                { key: i, className: "sc-interp sc-unresolved" },
+                "{{ " + p.trim() + " }}"
+              );
+            }
+            warnUnresolved(
+              ctx,
+              "{{ " + p.trim() + " }} never resolved \u2014 rendered as empty"
+            );
+            return null;
+          }
+          return h(
+            "span",
+            { key: i, className: "sc-interp sc-missing" },
+            p.trim()
+          );
+        }
+        if (getReact().isValidElement(v) || Array.isArray(v)) {
+          return h(getReact().Fragment, { key: i }, v);
+        }
+        if (v === null || typeof v === "boolean") return null;
+        return h("span", { key: i, className: "sc-interp" }, String(v));
       })
-    }));
-
-    const tableTypes=['husbandry','field','task','picker','supervisor','fieldleague','recon','absence','checks'];
-    const isTable = tableTypes.includes(id);
-    const spendMap={ dash_day:['£6,000','Spent so far today'], dash_week:['£48,300','Spent so far this week'] };
-
-    const out = {
-      v: {
-        ...tv,
-        sidebarW: S.sidebarOpen ? '246px' : '58px',
-        labelDisp: S.sidebarOpen ? 'block' : 'none',
-        collapseIcon: S.sidebarOpen ? '‹' : '›',
-        showExpandBtn: !S.sidebarOpen,
-        toggleSidebar: ()=>this.toggleSidebar(),
-        sections,
-        active: { title:this.titleOf(id), section:this.sectionOf(id), spend: spendMap[id]?spendMap[id][0]:null, spendLabel: spendMap[id]?spendMap[id][1]:'', note:'' },
-        isTable, isSignature:id==='signature', isPlaster:id==='plaster', isYield:id==='yield',
-        isDashDay:id==='dash_day', isDashWeek:id==='dash_week',
-        modal: S.modal,
-        closeModal: ()=>this.closeModal(),
-        noteOpen: S.noteOpen, toggleNote:()=>this.toggleNote(),
-        noteBtnBorder: S.noteOpen?'var(--accent,#2e9c6d)':'var(--line,#e4e8e4)',
-        noteBtnBg: S.noteOpen?'var(--accent,#2e9c6d)':'#fff',
-        noteBtnColor: S.noteOpen?'#fff':'var(--muted,#71807a)',
-        showTableControls:isTable, table:{count:0},
-        showRangeToggle:false, toggleRange:()=>this.toggleRange(),
-        rangeLabel: S.rangeMode ? 'Change to filter by single date' : 'Change to filter between date range',
-        rangeBtnStyle:`font-family:inherit; font-size:11.5px; font-weight:600; padding:6px 11px; border:1px solid ${S.rangeMode?'var(--accent,#2e9c6d)':'var(--line,#e4e8e4)'}; background:${S.rangeMode?'var(--sactive,#e8f2ec)':'#fff'}; border-radius:8px; cursor:pointer; color:${S.rangeMode?'var(--brand,#14532d)':'var(--muted,#71807a)'};`,
-        hasFilters:false, filters:[],
-        toggleCompact:()=>this.toggleCompact(), compactLabel: S.compact?'Comfortable':'Compact',
-        compactBtnStyle:`font-family:inherit; font-size:12.5px; font-weight:500; padding:7px 12px; border:1px solid ${S.compact?'var(--accent,#2e9c6d)':'var(--line,#e4e8e4)'}; background:${S.compact?'var(--sactive,#e8f2ec)':'#fff'}; border-radius:8px; cursor:pointer; color:var(--ink,#1c2620);`,
-        toggleColMenu:()=>this.toggleColMenu(), colMenuOpen:S.colMenuOpen, colToggles:[],
-      }
-    };
-
-    // dashboards
-    if(id==='dash_day'){
-      out.v.dashDayBars = this.barsHtml([
-        {label:'Marcus Webb',v:12,disp:'12',color:'#9aa79f'},
-        {label:'Priya Nair',v:11,disp:'11',color:'#9aa79f'},
-        {label:'Daniel Cho',v:13,disp:'13'},
-        {label:'Elena Vasquez',v:10,disp:'10'},
-        {label:'Tomás Ferrera',v:12,disp:'12'},
-        {label:'Aisha Bello',v:11,disp:'11'},
-      ], '#3b82c4', 14);
-      out.v.dashDaySup = [
-        {id:'1306',pct:'90%',avg:'£14.06'},
-        {id:'5387',pct:'95%',avg:'£13.92'},
-        {id:'1265',pct:'79%',avg:'£13.09'},
-        {id:'3465',pct:'90%',avg:'£12.29'},
-      ];
-    }
-    if(id==='dash_week'){
-      out.v.weekLineSvg = this.lineHtml([
-        {pts:[92,118,105,126,113],color:'#2f7fd0',width:2.5},
-        {pts:[84,100,92,113,100],color:'#1f9d6a',width:2.5,dash:'5 4'},
-      ], 440, 220, 140);
-      out.v.weekSpendSvg = this.lineHtml([
-        {pts:[0,10000,27000,38000,48300],color:'#5b56c4',width:2.5},
-      ], 440, 220, 50000);
-      out.v.pickedBars = this.barsHtml([
-        {label:'Forecast',v:1200,disp:'1,200',color:'#3b82c4'},
-        {label:'Actual',v:950,disp:'950',color:'#1f9d76'},
-        {label:'Delivered',v:880,disp:'880',color:'#e0913a'},
-      ], '#3b82c4', 1300);
-    }
-
-    // ----- generic table -----
-    if(isTable){
-      const tbl=this.getTable(id);
-      out.v.active.note = tbl.note||'';
-      out.v.showGrid = true; out.v.isPicker = false; out.v.isPickerBox = false;
-      const fc=this.filterConfig(id,tbl);
-      out.v.hasFilters = fc.length>0; out.v.filters=fc;
-      out.v.showRangeToggle = (tbl.filters||[]).some(k=>k==='date'||k==='week');
-
-      // filter rows (supervisor)
-      let rows = tbl.rows.slice();
-      const supFilter = S.filters.supervisor;
-      if(tbl.supKey && supFilter && supFilter!=='All'){ rows = rows.filter(r=>r[tbl.supKey]===supFilter); }
-
-      // heat ranges
-      const range={};
-      tbl.cols.forEach(c=>{ if(c.heat){ const vals=rows.filter(r=>!r.group && !r.foot && typeof r[c.k]==='number' && !isNaN(r[c.k])).map(r=>r[c.k]); if(vals.length){ range[c.k]=[Math.min(...vals),Math.max(...vals)]; } } });
-
-      // sort
-      if(S.sortCol && !tbl.grouped){
-        const k=S.sortCol, dir=S.sortDir;
-        rows.sort((a,b)=>{ const av=a[k], bv=b[k]; if(typeof av==='number'&&typeof bv==='number') return (av-bv)*dir; return String(av==null?'':av).localeCompare(String(bv==null?'':bv))*dir; });
-      }
-
-      const visCols = tbl.cols.filter(c=>!S.hidden[c.k]);
-      const pad = S.compact ? '6px 12px' : '11px 16px';
-      const thPad = S.compact ? '9px 12px' : '12px 16px';
-
-      // vertical rowspan-merge for repeated values in merge columns
-      const mergeKeys = visCols.filter(c=>c.merge).map(c=>c.k);
-      const doMerge = mergeKeys.length>0 && (!S.sortCol || mergeKeys.includes(S.sortCol));
-      const spanInfo = rows.map(()=>({}));
-      if(doMerge){ mergeKeys.forEach(k=>{ let i=0; while(i<rows.length){ if(rows[i].group){i++;continue;} let j=i+1; while(j<rows.length && !rows[j].group && rows[j][k]===rows[i][k]) j++; spanInfo[i][k]=j-i; for(let x=i+1;x<j;x++) spanInfo[x][k]=0; i=j; } }); }
-
-      out.v.table = {
-        count: rows.filter(r=>!r.group).length,
-        cols: visCols.map(c=>({
-          label:c.l,
-          onSort: tbl.grouped ? null : ()=>this.sortBy(c.k),
-          arrow: S.sortCol===c.k ? (S.sortDir>0?'▲':'▼') : '',
-          thStyle:`position:sticky; top:0; z-index:${c===visCols[0]?3:2}; ${c===visCols[0]?'left:0; z-index:4;':''} background:var(--brand,#14532d); color:#fff; text-align:${c.a==='r'?'right':(c.a==='c'?'center':'left')}; padding:${thPad}; font-weight:600; font-size:12px; white-space:nowrap; cursor:${tbl.grouped?'default':'pointer'}; user-select:none; ${c===visCols[0]?'':''}`
-        })),
-        rows: rows.map((r,ri)=>{
-          if(r.group){ return { group:true, normal:false, span:visCols.length, label:r.label, style:`padding:8px 16px; background:var(--sactive,#e8f2ec); color:var(--brand,#14532d); font-weight:600; font-size:12px; position:sticky; left:0;` }; }
-          const zebra = ri%2 ? '#fbfcfb' : '#ffffff';
-          return {
-            normal:true, group:false, rowStyle:'',
-            cells: visCols.map((c,ci)=>{
-              if(c.merge && spanInfo[ri][c.k]===0) return null; // covered by a rowspan above
-              let raw=r[c.k];
-              const clickable = c.click && !(c.click==='finish' && raw==='x');
-              let disp='';
-              if(c.check){ disp = raw==='ok'?'✔':(raw==='x'?'✕':(raw==='warn'?'⚠':'')); if(clickable) disp += '  ⤢'; }
-              else if(c.f==='money') disp=this.fmtMoney(raw);
-              else if(c.f==='pct') disp=(raw==null||raw==='')?'':this.fmtPct(raw);
-              else if(c.f==='num') disp=(raw==null||raw==='')?'':this.fmtNum(raw);
-              else disp = raw==null?'':String(raw);
-              let s=`padding:${pad}; text-align:${c.a==='r'?'right':(c.a==='c'?'center':'left')}; white-space:nowrap; border-bottom:1px solid var(--line,#e4e8e4); font-size:${S.compact?'12px':'13px'}; ${c.mono?"font-family:'IBM Plex Mono',monospace;":''}`;
-              let bg = r.foot ? '#eef7f1' : zebra;
-              if(c.heat && !r.foot && typeof raw==='number' && !isNaN(raw) && range[c.k]){ const [mn,mx]=range[c.k]; let t=mx===mn?0.5:(raw-mn)/(mx-mn); if(c.heat==='low') t=1-t; bg=this.heatBg(t); }
-              if(r.foot) s+='font-weight:700; border-top:2px solid var(--brand,#14532d);';
-              if(c.check){ s+= raw==='x' ? 'background:#fbe0e0; color:#d64545; font-size:16px;' : (raw==='warn'?'background:#fef3d6; color:#c08a15; font-size:15px;':'color:#16a34a; font-size:16px;'); }
-              else { s+=`background:${bg};`; }
-              if(c.minWage && typeof raw==='number' && raw<12.71) s+='color:#c0392b; font-weight:600;';
-              if(c.issue && raw){ s+= raw.indexOf('⚠')>=0 ? 'color:#c08a15;' : 'color:#d64545;'; s+='white-space:normal; min-width:200px; font-size:12px;'; }
-              if(ci===0){ s+=`position:sticky; left:0; z-index:1; background:${c.check?'':bg}; box-shadow:1px 0 0 var(--line,#e4e8e4);`; }
-              let rowSpan=1;
-              if(c.merge && spanInfo[ri][c.k]>0){ rowSpan=spanInfo[ri][c.k]; s+=`text-align:center; vertical-align:middle; font-weight:600; background:#ffffff; border-right:1px solid var(--line,#e4e8e4); border-bottom:1px solid var(--line,#e4e8e4);`; }
-              let onClick=null;
-              if(clickable){ onClick=()=>this.openModal(r.field, c.click); s+='cursor:pointer;'; }
-              return { d:disp, s, onClick, rowSpan };
-            }).filter(Boolean)
-          };
-        })
-      };
-      out.v.colToggles = tbl.cols.map(c=>({ label:c.l, visible:!S.hidden[c.k], onToggle:()=>this.toggleCol(c.k) }));
-
-      // picker league — table / box plot toggle
-      if(id==='picker'){
-        const view = S.pickerView||'table';
-        out.v.isPicker = true;
-        out.v.isPickerBox = view==='box';
-        out.v.showGrid = view!=='box';
-        out.v.showTableControls = view!=='box';
-        const onBtn='font-family:inherit; font-size:13px; font-weight:600; padding:8px 18px; border-radius:9px; cursor:pointer; border:1px solid var(--line,#e4e8e4);';
-        out.v.pickerTableView=()=>this.setState({pickerView:'table'});
-        out.v.pickerBoxView=()=>this.setState({pickerView:'box'});
-        out.v.pickerTableBtn=onBtn+(view!=='box'?'background:var(--brand,#14532d); color:#fff;':'background:#fff; color:var(--ink,#1c2620);');
-        out.v.pickerBoxBtn=onBtn+(view==='box'?'background:var(--brand,#14532d); color:#fff;':'background:#fff; color:var(--ink,#1c2620);');
-        if(view==='box'){
-          const pd=this.pickerData();
-          const bySup={};
-          pd.rows.forEach(r=>{ (bySup[r.sup]=bySup[r.sup]||[]).push(r.avg); });
-          const palette=['#2e7d5b','#3b82c4','#b06f2e','#8a5cd1'];
-          const groups=Object.keys(bySup).map((sup,i)=>{ const vals=bySup[sup].slice().sort((a,b)=>a-b); return { label:sup, color:palette[i%palette.length], points:vals, min:vals[0], max:vals[vals.length-1], q1:this.quantile(vals,0.25), med:this.quantile(vals,0.5), q3:this.quantile(vals,0.75) }; });
-          out.v.pickerBoxSvg=this.boxPlotHtml(groups, 8, 14, 12.71, '£12.71 min wage');
+    );
+  }
+  function walkFor(el, host) {
+    const listGet = compileAttr(el.getAttribute("list") || "");
+    const asName = el.getAttribute("as") || "item";
+    const hintN = parseInt(el.getAttribute("hint-placeholder-count") || "0", 10);
+    const kids = walkChildren(el, host);
+    const listSrc = el.getAttribute("list") || "";
+    return (vals, ctx, key) => {
+      let list = listGet(vals);
+      if (!Array.isArray(list)) {
+        if (!ctx?.__streamingNow) {
+          if (list !== void 0 && list !== null) {
+            warnUnresolved(
+              ctx,
+              'sc-for list="' + listSrc + '" is not an array (' + typeof list + ")"
+            );
+          }
+          list = [];
+        } else {
+          list = hintN > 0 ? Array(hintN).fill(void 0) : [];
         }
       }
-    }
-
-    // ----- signature -----
-    if(id==='signature'){
-      out.v.active.note = 'Timesheet signature audit. Each worker row expands to show the individual sign-off events, the supervisor who recorded them, and any warnings accrued.';
-      out.v.hasFilters = true;
-      out.v.filters = this.filterConfig('signature', { filters:['week','date','supervisor'] });
-      out.v.showRangeToggle = true;
-      const base=[
-        ['5123 – Susan Elter','Strawberry Picking',17,3],
-        ['5324 – Jim Carney','Raspberry Picking, General Husbandry',19,2],
-        ['5311 – Valda Elser','General Husbandry',26,3],
-        ['5465 – Heidi Schande','General Husbandry',25,2],
-        ['5123 – James Jimmer','Strawberry Picking',17,2],
-        ['5324 – Blim Carnner','Raspberry Picking',19,2],
-      ];
-      out.v.signature = base.map((w,i)=>{
-        const key='sig'+i, open=!!S.expanded[key];
-        const details=[]; const nd=w[3];
-        const fields=['Field 14','Field 20','Field 21','Field 11']; const tasks=['General Husbandry','Picking','Tipping','Strawberry Picking'];
-        for(let j=0;j<nd;j++) details.push({ sup:'Samantha Heffington - 5645', date:`1${7+j}.06.2026 1${4+j}:32`, field:fields[j%4], task:tasks[j%4], reason:'Repeated late arrival' });
-        return { worker:w[0], tasks:w[1], sigs:w[2], open, onToggle:()=>this.toggleExpand(key), chev: open?'rotate(180deg)':'rotate(0)', warning:`This individual has received ${w[2]} warnings in total during their time at the farm.` };
-      });
-    }
-
-    // ----- plaster -----
-    if(id==='plaster'){
-      out.v.active.note = 'Blue plaster reconciliation. Each field row shows the plaster count at start-up vs finish-up. Expand a row to trace every plaster event and any discrepancies flagged in red.';
-      out.v.hasFilters = true;
-      out.v.filters = this.filterConfig('plaster', { filters:['week','date','supervisor'] });
-      out.v.showRangeToggle = true;
-      const rows=[
-        {field:'1007',sup:'5123',task:'Strawberry Picking',times:'06:30 – 10:00',start:17,end:17,ok:true},
-        {field:'1015',sup:'5324',task:'Raspberry Picking, General Husbandry',times:'10:15 – 12:00',start:19,end:19,ok:true},
-        {field:'1019',sup:'5311',task:'General Husbandry',times:'10:05 – 12:00',start:26,end:24,ok:false},
-        {field:'1020',sup:'5465',task:'General Husbandry',times:'14:00 – 16:00',start:25,end:25,ok:true},
-      ];
-      out.v.plaster = rows.map((p,i)=>{
-        const key='pl'+i, open=!!S.expanded[key];
-        const bad=!p.ok;
-        const diff=p.end-p.start;
-        return {
-          field:p.field, sup:p.sup, task:p.task, times:p.times, start:p.start, end:p.end,
-          okIcon: p.ok?'☑':'✕', okColor: p.ok?'#16a34a':'#d64545', rowBg: bad?'#fdeaea':'#fff',
-          okBadge: p.ok?'Balanced':'Discrepancy', okBadgeStyle: p.ok?'background:#eef7f1; color:#16a34a;':'background:#fdeaea; color:#d64545;',
-          endColor: diff===0?'var(--brand,#14532d)':'#d64545',
-          recValue: diff===0?'Balanced':(diff>0?'+'+diff:String(diff)),
-          recLabel: diff===0?'all plasters accounted for':(Math.abs(diff)+' plaster'+(Math.abs(diff)===1?'':'s')+' unaccounted'),
-          recColor: diff===0?'#16a34a':'#d64545', recBg: diff===0?'#eef7f1':'#fdeaea', recBorder: diff===0?'#bfe3cd':'#f3c9c9',
-          open, onToggle:()=>this.toggleExpand(key),
-          startTotals: bad?[{who:'Supervisor 1039',n:'8 plasters'},{who:'Picker 1923',n:'1 plaster'},{who:'Picker 1842',n:'1 plaster'},{who:'Picker 1932',n:'1 plaster'}]:[{who:'Supervisor '+p.sup,n:p.start+' plasters'}],
-          events: bad?[{time:'10:52',text:'Supervisor 1039 gives plaster to Picker 1543'}]:[{time:p.times.split('–')[0].trim(),text:'All plasters accounted for at start'}],
-          endTotals: bad?[{who:'Supervisor 1039',n:'6 plasters',color:'#d64545',weight:600},{who:'Picker 1923',n:'1 plaster',color:'inherit',weight:400},{who:'Picker 1842',n:'0 plasters',color:'#d64545',weight:600},{who:'Picker 1932',n:'1 plaster',color:'inherit',weight:400},{who:'Picker 1543',n:'1 plaster',color:'inherit',weight:400}]:[{who:'Supervisor '+p.sup,n:p.end+' plasters',color:'inherit',weight:400}],
-          missing: bad?'2 plasters missing':null,
-          notes: bad?['Picker 1842 entered field with 1 plaster, and left with 0 plasters.','Supervisor 1039 gave out 2 plasters, but only accounted for 1 of them.']:[],
-        };
-      });
-    }
-
-    // ----- checks modal already in table via click -----
-
-    // ----- yield -----
-    if(id==='yield'){
-      out.v.active.note = 'Yield KPI tracking against the rolling 12-week forecast and the weekly (Friday) forecast. Toggle between the trend graph and the forecast reconciliation table.';
-      out.v.hasFilters=true;
-      out.v.filters=[
-        {label:'Fruit',isSelect:true,value:'Strawberry',options:['Strawberry','Raspberry','Blueberry'],onChange:()=>{}},
-        {label:'Variety',isSelect:true,value:"Driscoll's Lusa",options:["Driscoll's Lusa","Malling Centenary"],onChange:()=>{}},
-        {label:'Field',isSelect:true,value:'All Fields',options:['All Fields','Field 11','Field 25'],onChange:()=>{}},
-      ];
-      out.v.yieldShowGraph = S.yieldGraph;
-      out.v.yieldGraphView = ()=>this.setState({yieldGraph:true});
-      out.v.yieldTableView = ()=>this.setState({yieldGraph:false});
-      const onBtn='font-family:inherit; font-size:13px; font-weight:600; padding:8px 18px; border-radius:9px; cursor:pointer; border:1px solid var(--line,#e4e8e4);';
-      out.v.yieldGraphBtn = onBtn + (S.yieldGraph?'background:var(--brand,#14532d); color:#fff;':'background:#fff; color:var(--ink,#1c2620);');
-      out.v.yieldTableBtn = onBtn + (!S.yieldGraph?'background:var(--brand,#14532d); color:#fff;':'background:#fff; color:var(--ink,#1c2620);');
-      if(S.yieldGraph){
-        const actual=[0,200,1174,8015,12999,3200];
-        const twelve=[100,900,8015,20000,40000,42000,38000,46000,40000,44000,46000,40000,35000,30000];
-        const budget=[0,500,3000,12000,25000,35000,58000,40000,45000,50000,52000,44000,38000,42000,36000,44000,46000,40000,35000,30000,25000,22000,18000,15000,12000,10000];
-        const w=760,h=300,ymax=60000;
-        out.v.yieldSvg = this.lineHtml([
-          {pts:budget,color:'#b9c2bd',width:2,dash:'6 5'},
-          {pts:twelve,color:'#3fbf8f',width:2.5},
-          {pts:actual,color:'#166a4a',width:3},
-        ], w, h, ymax);
+      return h(
+        getReact().Fragment,
+        { key },
+        list.map((item, i) => {
+          const sub = { ...vals, [asName]: item, $index: i };
+          return h(
+            getReact().Fragment,
+            { key: i },
+            kids.map((b, j) => b(sub, ctx, j))
+          );
+        })
+      );
+    };
+  }
+  function walkIf(el, host) {
+    const valGet = compileAttr(el.getAttribute("value") || "");
+    const hintRaw = el.getAttribute("hint-placeholder-val");
+    const hintGet = hintRaw != null ? compileAttr(hintRaw) : null;
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      let v = valGet(vals);
+      if (v === void 0 && hintGet && ctx?.__streamingNow) v = hintGet(vals);
+      return v ? h(
+        getReact().Fragment,
+        { key },
+        kids.map((b, j) => b(vals, ctx, j))
+      ) : null;
+    };
+  }
+  function walkComponent(el, host) {
+    const name = el.getAttribute("name") || el.getAttribute("component") || "";
+    el.removeAttribute("name");
+    el.removeAttribute("component");
+    const tplId = el.getAttribute("data-dc-tpl");
+    const styleRaw = el.getAttribute("style");
+    el.removeAttribute("style");
+    const styleGet = styleRaw != null ? compileAttr(styleRaw) : null;
+    const { propGetters, hintSize } = collectProps(el, true, host);
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      const props = {
+        key,
+        __hintSize: hintSize,
+        __tplId: tplId,
+        __hostStyle: styleGet ? hostPositionStyle(styleGet(vals)) : void 0
+      };
+      for (const [k, g] of propGetters) props[k] = g(vals);
+      if (kids.length) props.children = kids.map((b, j) => b(vals, ctx, j));
+      return h(host.component(name), props);
+    };
+  }
+  function walkXImport(el, host) {
+    const globalNameGet = compileAttr(
+      el.getAttribute("component-from-global-scope") || ""
+    );
+    const exportNameGet = compileAttr(
+      el.getAttribute("component") || el.getAttribute("name") || ""
+    );
+    const url = el.getAttribute("from") || el.getAttribute("src") || el.getAttribute("import") || "";
+    const kind = /\.(jsx|tsx)(\?|#|$)/i.test(url) ? "jsx" : "js";
+    const tplId = el.getAttribute("data-dc-tpl");
+    const styleRaw = el.getAttribute("style");
+    el.removeAttribute("style");
+    const styleGet = styleRaw != null ? compileAttr(styleRaw) : null;
+    const wrap = tplId != null || styleGet != null;
+    const { propGetters, hintSize } = collectProps(el, true, host);
+    const hasContent = el.children.length > 0 || !!(el.textContent || "").trim();
+    const kids = hasContent ? walkChildren(el, host) : [];
+    const urlBindable = url.includes("{{");
+    if (url && !urlBindable) host.loadExternal(kind, url);
+    const evalName = (g, vals) => {
+      const v = g(vals);
+      const s = v == null ? "" : String(v);
+      return s.includes("{{") ? "" : s;
+    };
+    return (vals, ctx, key) => {
+      const globalName = evalName(globalNameGet, vals);
+      const name = globalName || evalName(exportNameGet, vals);
+      const C = !name || urlBindable ? null : globalName ? host.resolveExternalGlobal(url, globalName) : host.resolveExternal(url, name);
+      const hostStyle = styleGet ? hostPositionStyle(styleGet(vals)) : void 0;
+      const wrapper = wrap ? {
+        key,
+        className: "sc-host-x",
+        "data-dc-tpl": tplId,
+        style: hostStyle || { display: "contents" }
+      } : null;
+      if (!C) {
+        const error = urlBindable ? "x-import `from` cannot contain {{ \u2026 }} \u2014 module URLs are resolved at parse time; use a literal URL" : host.resolveExternalError(url, name);
+        const ph = host.placeholder({
+          key: wrapper ? void 0 : key,
+          name,
+          hintSize,
+          error
+        });
+        return wrapper ? h("div", wrapper, ph) : ph;
       }
-      out.v.yieldShowTable = !S.yieldGraph;
-      if(!S.yieldGraph) out.v.yieldTbl = this.buildStatic(this.yieldTable());
-    } else {
-      out.v.yieldShowGraph=false; out.v.yieldShowTable=false;
-    }
-
-    // supervisor breakdown (uses table path via 'supervisor' id) -- already handled by isTable? no, supervisor is in tableTypes
-    return out;
+      const props = wrapper ? {} : { key };
+      let unresolvedHole = false;
+      for (const [k, g] of propGetters) {
+        if (k === "component" || k === "componentFromGlobalScope" || k === "name" || k === "from" || k === "src" || k === "import") {
+          continue;
+        }
+        const v = g(vals);
+        if (v === void 0) unresolvedHole = true;
+        props[k] = v;
+      }
+      if (unresolvedHole && ctx?.__htmlStreamingNow) {
+        const ph = host.placeholder({
+          key: wrapper ? void 0 : key,
+          name,
+          hintSize,
+          error: null
+        });
+        return wrapper ? h("div", wrapper, ph) : ph;
+      }
+      if (kids.length) props.children = kids.map((b, j) => b(vals, ctx, j));
+      return wrapper ? h("div", wrapper, h(C, props)) : h(C, props);
+    };
+  }
+  function walkElement(el, host) {
+    const realTag = RAW_UNWRAP[el.localName] || el.localName;
+    const tplId = el.getAttribute("data-dc-tpl");
+    const { propGetters, pseudoClasses } = collectProps(el, false, host);
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      const props = { key, "data-dc-tpl": tplId };
+      for (const [k, g] of propGetters) {
+        let v = g(vals);
+        if (k === "style" && typeof v === "string") v = cssToObj(v);
+        if ((k === "value" || k === "checked") && v === void 0) {
+          v = k === "checked" ? false : "";
+        }
+        props[k] = v;
+      }
+      if (pseudoClasses.length) {
+        props.className = [props.className, ...pseudoClasses].filter(Boolean).join(" ");
+      }
+      return h(realTag, props, ...kids.map((b, j) => b(vals, ctx, j)));
+    };
   }
 
-  // Because template uses {{ v.yieldSvgWrap }} as a style hole placeholder we instead inject svg via ref
-  componentDidUpdate(){ this._injectSvgs(); }
-  componentDidMount(){ this._injectSvgs(); }
-  _injectSvgs(){ /* handled by portals below */ }
-}
-</script>
-</body>
-</html>
+  // src/logic.ts
+  var StreamableLogic = class {
+    constructor(props) {
+      __publicField(this, "props");
+      __publicField(this, "state", {});
+      /** Back-pointer to the wrapper component, installed after construction. */
+      __publicField(this, "__host");
+      this.props = props || {};
+    }
+    setState(update, cb) {
+      this.__host && this.__host.__setLogicState(update, cb);
+    }
+    forceUpdate() {
+      this.__host && this.__host.forceUpdate();
+    }
+    componentDidMount() {
+    }
+    componentDidUpdate(_prevProps) {
+    }
+    componentWillUnmount() {
+    }
+    /** The flat object the template renders against (merged over props). */
+    renderVals() {
+      return {};
+    }
+  };
+  function evalDcLogic(src) {
+    //! nosemgrep: eval-and-function-constructor
+    const fn = new Function(
+      "DCLogic",
+      "StreamableLogic",
+      "React",
+      src + '\n;return (typeof Component!=="undefined"&&Component)||undefined;'
+    );
+    return fn(StreamableLogic, StreamableLogic, getReact());
+  }
+
+  // src/component.ts
+  function shallowEqual(a, b) {
+    if (!b) return false;
+    const ak = Object.keys(a).filter((k) => k !== "children");
+    const bk = Object.keys(b).filter((k) => k !== "children");
+    if (ak.length !== bk.length) return false;
+    for (const k of ak) if (a[k] !== b[k]) return false;
+    return true;
+  }
+  function Placeholder({
+    name,
+    hintSize,
+    streaming,
+    error
+  }) {
+    const [w, hgt] = (hintSize || "100%,60px").split(",");
+    return h(
+      "div",
+      {
+        className: "sc-placeholder" + (streaming ? " sc-streaming" : ""),
+        style: { width: w.trim(), height: hgt && hgt.trim() },
+        title: name
+      },
+      error ? h(
+        "div",
+        { className: "sc-placeholder-error" },
+        (name ? name + ": " : "") + error
+      ) : null
+    );
+  }
+  function hintToMin(hint) {
+    if (!hint) return void 0;
+    const [w, hgt] = hint.split(",");
+    return { minWidth: w.trim(), minHeight: hgt && hgt.trim() };
+  }
+  function createComponentFactory(registry, ensureFetched) {
+    const React = getReact();
+    const AncestorContext = React.createContext([]);
+    class StreamableComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        __publicField(this, "__name");
+        __publicField(this, "__sub");
+        __publicField(this, "__needsDidMount", false);
+        /** Snapshot of the registry's streaming flags taken at render time —
+         *  builders read it off the RenderCtx (this) to pick placeholder vs
+         *  render-nothing for unresolved values. */
+        __publicField(this, "__streamingNow", false);
+        __publicField(this, "__htmlStreamingNow", false);
+        /** When a construct throws, remember the (class, registry.ver, props)
+         *  triple so render-time reconcile doesn't re-attempt it on every parent
+         *  re-render. A registry bump (new class, template, external module
+         *  resolving via bumpAll) changes `ver` and breaks the memo so an
+         *  env-dependent constructor can self-heal. */
+        __publicField(this, "__failedLogic", null);
+        __publicField(this, "__failedUserProps", null);
+        __publicField(this, "__failedVer", -1);
+        /** Per-instance constructor error — kept here (not on the registry entry)
+         *  so one instance's successful construct can't hide a sibling's failure,
+         *  and a construct can never wipe an eval error `updateJs` recorded on
+         *  `r.logicError`. */
+        __publicField(this, "__ctorError", null);
+        __publicField(this, "logic");
+        this.__name = props.__name;
+        this.state = { __v: 0, __err: null };
+        this.__sub = () => {
+          if (this.state.__err) this.setState({ __err: null });
+          this.forceUpdate();
+        };
+        this.__makeLogic(registry.get(this.__name).Logic, null);
+        ensureFetched(this.__name);
+      }
+      /** Error-boundary hook: a render crash anywhere in this DC's subtree
+       *  (its own template, an x-import'd component, a child DC without its
+       *  own deeper boundary) lands here instead of unmounting the page. */
+      static getDerivedStateFromError(e) {
+        return { __err: e instanceof Error && e.message ? e.message : String(e) };
+      }
+      componentDidCatch(e, info) {
+        console.error(
+          "[dc-runtime] render error in <" + this.__name + ">:",
+          e,
+          info?.componentStack || ""
+        );
+      }
+      /** Instantiate the logic class (or the no-op base) and adopt `prevState`
+       *  over its initial state — used both at mount and on hot-swap. */
+      __makeLogic(Logic, prevState) {
+        const L = Logic || StreamableLogic;
+        try {
+          this.logic = new L(this.__userProps());
+          this.__failedLogic = null;
+          this.__failedUserProps = null;
+          this.__ctorError = null;
+        } catch (e) {
+          console.error(e);
+          this.__failedLogic = Logic;
+          this.__failedUserProps = this.__userProps();
+          this.__failedVer = registry.get(this.__name).ver;
+          this.__ctorError = this.__name + ": " + (e instanceof Error && e.message ? e.message : String(e));
+          this.logic = new StreamableLogic(
+            this.__userProps()
+          );
+        }
+        this.logic.__host = this;
+        if (prevState)
+          this.logic.state = { ...this.logic.state || {}, ...prevState };
+      }
+      /** The props the author's logic + template see — internal __-prefixed
+       *  wiring stripped. */
+      __userProps() {
+        const { __name, __hintSize, __tplId, __hostStyle, ...rest } = this.props;
+        return rest;
+      }
+      __setLogicState(update, cb) {
+        const prev = this.logic.state;
+        const patch = typeof update === "function" ? update(prev) : update;
+        this.logic.state = { ...prev, ...patch };
+        this.setState((s) => ({ __v: s.__v + 1 }), cb);
+      }
+      /** Swap the logic instance when the registry's Logic class changed
+       *  (streaming completion, hot reload). State carries over; didMount
+       *  re-fires after the swap commits so refs exist. */
+      __reconcileLogic() {
+        const r = registry.get(this.__name);
+        const Next = r.Logic;
+        const Cur = this.logic.constructor;
+        if (Next === Cur || !Next && Cur === StreamableLogic || Next === this.__failedLogic && r.ver === this.__failedVer && shallowEqual(this.__userProps(), this.__failedUserProps)) {
+          return;
+        }
+        if (!this.__needsDidMount) {
+          try {
+            this.logic.componentWillUnmount();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        this.__makeLogic(Next, this.logic.state);
+        this.__needsDidMount = true;
+      }
+      componentDidMount() {
+        registry.get(this.__name).subs.add(this.__sub);
+        try {
+          this.logic.componentDidMount();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      componentDidUpdate(prevProps) {
+        this.logic.props = this.__userProps();
+        if (this.__needsDidMount) {
+          if (this.state.__err || !registry.get(this.__name).tpl) return;
+          this.__needsDidMount = false;
+          try {
+            this.logic.componentDidMount();
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          try {
+            this.logic.componentDidUpdate(prevProps);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+      componentWillUnmount() {
+        registry.get(this.__name).subs.delete(this.__sub);
+        if (!this.__needsDidMount) {
+          try {
+            this.logic.componentWillUnmount();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+      render() {
+        const r = registry.get(this.__name);
+        const cls = "sc-host" + (r.htmlStreaming ? " sc-streaming-html" : "") + (r.jsStreaming ? " sc-streaming-js" : "");
+        const hintStyle = r.htmlStreaming ? hintToMin(this.props.__hintSize) : void 0;
+        const hostStyle = this.props.__hostStyle || hintStyle ? { ...hintStyle || {}, ...this.props.__hostStyle || {} } : void 0;
+        const hostBase = {
+          className: cls,
+          style: hostStyle,
+          "data-sc-name": this.__name,
+          "data-dc-tpl": this.props.__tplId
+        };
+        const chain = Array.isArray(this.context) ? this.context : [];
+        if (chain.includes(this.__name)) {
+          const cycle = [
+            ...chain.slice(chain.indexOf(this.__name)),
+            this.__name
+          ].join(" \u2192 ");
+          return h(
+            "div",
+            { ...hostBase, className: cls + " sc-has-error" },
+            h(Placeholder, {
+              name: this.__name,
+              hintSize: this.props.__hintSize,
+              error: "circular import: " + cycle
+            })
+          );
+        }
+        if (this.state.__err) {
+          return h(
+            "div",
+            { ...hostBase, className: cls + " sc-has-error" },
+            h(
+              "div",
+              { className: "sc-logic-error" },
+              this.__name + ": " + this.state.__err
+            ),
+            h(Placeholder, {
+              name: this.__name,
+              hintSize: this.props.__hintSize,
+              error: this.state.__err
+            })
+          );
+        }
+        this.__reconcileLogic();
+        if (!r.tpl) {
+          return h(
+            "div",
+            hostBase,
+            h(Placeholder, { name: this.__name, hintSize: this.props.__hintSize })
+          );
+        }
+        const userProps = this.__userProps();
+        this.logic.props = userProps;
+        let vals = userProps;
+        let renderErr = r.logicError || this.__ctorError;
+        try {
+          vals = { ...userProps, ...this.logic.renderVals() || {} };
+        } catch (e) {
+          console.error(e);
+          renderErr = this.__name + ".renderVals(): " + (e instanceof Error && e.message ? e.message : String(e));
+        }
+        this.__streamingNow = !!(r.htmlStreaming || r.jsStreaming);
+        this.__htmlStreamingNow = !!r.htmlStreaming;
+        return h(
+          "div",
+          { ...hostBase, className: cls + (renderErr ? " sc-has-error" : "") },
+          renderErr && h("div", { className: "sc-logic-error" }, renderErr),
+          h(
+            AncestorContext.Provider,
+            { value: [...chain, this.__name] },
+            r.tpl(vals, this)
+          )
+        );
+      }
+    }
+    __publicField(StreamableComponent, "contextType", AncestorContext);
+    const named = /* @__PURE__ */ new Map();
+    function getDC(name) {
+      const hit = named.get(name);
+      if (hit) return hit;
+      function Dispatcher(p) {
+        const [, setTick] = React.useState(0);
+        React.useEffect(() => {
+          const sub = () => setTick((n) => n + 1);
+          registry.get(name).subs.add(sub);
+          return () => {
+            registry.get(name).subs.delete(sub);
+          };
+        }, []);
+        ensureFetched(name);
+        return h(StreamableComponent, { ...p, __name: name });
+      }
+      Dispatcher.displayName = name;
+      named.set(name, Dispatcher);
+      return Dispatcher;
+    }
+    return {
+      getDC,
+      StreamableComponent
+    };
+  }
+
+  // src/external.ts
+  var isCustomElementName = (n) => !n.includes(".") && n.includes("-");
+  function isRenderableType(g) {
+    if (typeof g === "function") return !isElementClass(g);
+    return typeof g === "object" && g !== null && typeof g.$$typeof === "symbol";
+  }
+  function resolveDottedPath(root, name) {
+    let cur = root;
+    for (const seg of name.split(".")) {
+      if (cur == null) return void 0;
+      cur = cur[seg];
+    }
+    return cur;
+  }
+  var BABEL_URL = "https://unpkg.com/@babel/standalone@7.26.4/babel.min.js";
+  var GLOBAL_POLL_INTERVAL_MS = 50;
+  var GLOBAL_POLL_TIMEOUT_MS = 3e4;
+  function createExternalModules(onResolved) {
+    const cache = /* @__PURE__ */ new Map();
+    let babelLoading = null;
+    const reportedMissing = /* @__PURE__ */ new Map();
+    const polling = /* @__PURE__ */ new Set();
+    function ensureBabel() {
+      if (window.Babel) return Promise.resolve();
+      if (babelLoading) return babelLoading;
+      babelLoading = new Promise((res, rej) => {
+        const s = document.createElement("script");
+        s.src = BABEL_URL;
+        s.crossOrigin = "anonymous";
+        s.onload = () => res();
+        s.onerror = rej;
+        document.head.appendChild(s);
+      });
+      return babelLoading;
+    }
+    function load(kind, url) {
+      if (cache.has(url)) return;
+      cache.set(url, null);
+      console.info("[dc-runtime] x-import: loading", url, "(" + kind + ")");
+      const ready = kind === "jsx" ? ensureBabel() : Promise.resolve();
+      ready.then(() => fetch(url)).then((r) => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+      }).then((src) => {
+        const code = kind === "jsx" ? window.Babel.transform(src, {
+          filename: url,
+          presets: ["react", "typescript"]
+        }).code : src;
+        const module = { exports: {} };
+        const before = new Set(Object.keys(window));
+        //! nosemgrep: eval-and-function-constructor
+        new Function("React", "module", "exports", "require", code)(
+          getReact(),
+          module,
+          module.exports,
+          () => ({})
+        );
+        const globals = {};
+        for (const k of Object.keys(window)) {
+          if (!before.has(k) && typeof window[k] === "function") {
+            globals[k] = window[k];
+          }
+        }
+        cache.set(url, { mod: module.exports, globals });
+        console.info(
+          "[dc-runtime] x-import: loaded",
+          url,
+          "\u2014 exports:",
+          Object.keys(module.exports),
+          "window globals:",
+          Object.keys(globals)
+        );
+        onResolved();
+      }).catch((e) => {
+        cache.set(url, {
+          mod: {},
+          globals: {},
+          error: "failed to load: " + (e instanceof Error && e.message ? e.message : String(e))
+        });
+        console.error(
+          "[dc-runtime] x-import: FAILED to load",
+          url,
+          "(" + kind + ")",
+          e
+        );
+        onResolved();
+      });
+    }
+    function resolve2(url, name) {
+      const entry = cache.get(url);
+      if (!entry) return null;
+      const { mod, globals } = entry;
+      const C = mod && mod[name] || globals && globals[name] || typeof window !== "undefined" && window[name] || mod && mod.default;
+      if (typeof C === "function") return C;
+      const key = url + "\0" + name;
+      if (!reportedMissing.has(key)) {
+        reportedMissing.set(
+          key,
+          entry.error || 'no export named "' + name + '" (has: ' + Object.keys(mod).join(", ") + ")"
+        );
+        console.error(
+          "[dc-runtime] x-import: module",
+          url,
+          "loaded but has no component named",
+          JSON.stringify(name),
+          "\u2014 available exports:",
+          Object.keys(mod),
+          "window globals:",
+          Object.keys(globals),
+          ". The module must `module.exports = {" + name + "}` or set `window." + name + "`."
+        );
+      }
+      return null;
+    }
+    function waitForGlobal(name) {
+      if (polling.has(name)) return;
+      polling.add(name);
+      const started = Date.now();
+      const isCE = isCustomElementName(name);
+      const tick = () => {
+        const found = isCE ? customElements.get(name) : isRenderableType(resolveDottedPath(window, name));
+        if (found) {
+          polling.delete(name);
+          onResolved();
+          return;
+        }
+        if (Date.now() - started >= GLOBAL_POLL_TIMEOUT_MS) {
+          console.warn(
+            "[dc-runtime] x-import: global",
+            JSON.stringify(name),
+            "never appeared on window after " + GLOBAL_POLL_TIMEOUT_MS + "ms"
+          );
+          return;
+        }
+        setTimeout(tick, GLOBAL_POLL_INTERVAL_MS);
+      };
+      setTimeout(tick, GLOBAL_POLL_INTERVAL_MS);
+    }
+    function resolveGlobal(url, name) {
+      const isCE = isCustomElementName(name);
+      if (!url) {
+        if (isCE) {
+          if (customElements.get(name)) return name;
+          waitForGlobal(name);
+          return null;
+        }
+        const g2 = resolveDottedPath(window, name);
+        if (isRenderableType(g2)) return g2;
+        waitForGlobal(name);
+        return null;
+      }
+      const entry = cache.get(url);
+      if (!entry) return null;
+      if (isCE && customElements.get(name)) return name;
+      const g = entry.globals[name] ?? resolveDottedPath(window, name);
+      if (isRenderableType(g)) return g;
+      if (name.includes(".")) return null;
+      const key = url + "\0global\0" + name;
+      if (!reportedMissing.has(key)) {
+        reportedMissing.set(key, null);
+        if (isCE && !customElements.get(name)) {
+          console.warn(
+            "[dc-runtime] x-import:",
+            url,
+            "loaded but no custom element",
+            JSON.stringify(name),
+            "is registered and window." + name + " is not a function \u2014 rendering <" + name + "> as an unknown element."
+          );
+        }
+      }
+      return name;
+    }
+    function getError(url, name) {
+      const entry = cache.get(url);
+      if (entry?.error) return entry.error;
+      return reportedMissing.get(url + "\0" + name) || null;
+    }
+    return { load, resolve: resolve2, resolveGlobal, getError };
+  }
+  function isElementClass(g) {
+    try {
+      return typeof g === "function" && typeof HTMLElement !== "undefined" && g.prototype instanceof HTMLElement;
+    } catch {
+      return false;
+    }
+  }
+
+  // src/helmet.ts
+  function createHelmetManager(doc, isStreaming) {
+    const mounted = /* @__PURE__ */ new Set();
+    const live = /* @__PURE__ */ new Map();
+    function compile(node) {
+      const raw = [...node.children];
+      const helmetClosed = node.nextSibling != null || node.parentNode?.nextSibling != null;
+      return (_vals, ctx) => {
+        const name = ctx && ctx.__name || "";
+        const streaming = !!(name && isStreaming(name));
+        for (let i = 0; i < raw.length; i++) {
+          const child = raw[i];
+          const tag = child.tagName;
+          const mayBePartial = streaming && !helmetClosed && i === raw.length - 1;
+          if (tag === "SCRIPT") {
+            if (mayBePartial) continue;
+            const key = "SCRIPT|" + (child.getAttribute("src") || child.textContent || "");
+            if (mounted.has(key)) continue;
+            mounted.add(key);
+            const el = doc.createElement("script");
+            for (const { name: an, value } of [...child.attributes])
+              el.setAttribute(an, value);
+            if (child.textContent) el.textContent = child.textContent;
+            doc.head.appendChild(el);
+          } else if (tag === "LINK" || tag === "META") {
+            if (mayBePartial) continue;
+            const key = tag + "|" + (child.getAttribute("href") || child.getAttribute("src") || child.outerHTML);
+            if (mounted.has(key)) continue;
+            mounted.add(key);
+            doc.head.appendChild(child.cloneNode(true));
+          } else {
+            const key = name + "|" + i;
+            let el = live.get(key);
+            if (!el || el.tagName !== tag) {
+              if (el) el.remove();
+              el = doc.createElement(tag.toLowerCase());
+              live.set(key, el);
+              doc.head.appendChild(el);
+            }
+            for (const { name: an, value } of [...child.attributes]) {
+              if (el.getAttribute(an) !== value) el.setAttribute(an, value);
+            }
+            if (el.textContent !== child.textContent)
+              el.textContent = child.textContent;
+          }
+        }
+        return null;
+      };
+    }
+    return { compile };
+  }
+
+  // src/pseudo.ts
+  function createPseudoSheet(doc) {
+    let el = null;
+    const cache = /* @__PURE__ */ new Map();
+    let n = 0;
+    return (pseudo, css) => {
+      const k = pseudo + "|" + css;
+      const hit = cache.get(k);
+      if (hit) return hit;
+      if (!el) {
+        el = doc.createElement("style");
+        doc.head.appendChild(el);
+      }
+      const cls = "scp" + (n++).toString(36);
+      const sel = pseudo === "before" || pseudo === "after" ? "." + cls + "::" + pseudo : "." + cls + ":" + pseudo;
+      el.sheet.insertRule(sel + "{" + css + "}", el.sheet.cssRules.length);
+      cache.set(k, cls);
+      return cls;
+    };
+  }
+
+  // src/registry.ts
+  function createRegistry() {
+    const entries = /* @__PURE__ */ Object.create(null);
+    function get(name) {
+      return entries[name] || (entries[name] = {
+        html: "",
+        tpl: null,
+        Logic: null,
+        jsStreaming: false,
+        htmlStreaming: false,
+        ver: 0,
+        subs: /* @__PURE__ */ new Set(),
+        fetched: false
+      });
+    }
+    function bump(name) {
+      const r = get(name);
+      r.ver++;
+      for (const fn of r.subs) fn();
+    }
+    return {
+      entries,
+      get,
+      bump,
+      bumpAll() {
+        for (const n in entries) bump(n);
+      }
+    };
+  }
+
+  // src/runtime.ts
+  var COMPONENT_DIR = ".";
+  function createRuntime(doc = document) {
+    const registry = createRegistry();
+    const pseudoClass = createPseudoSheet(doc);
+    const helmet = createHelmetManager(
+      doc,
+      (name) => registry.get(name).htmlStreaming
+    );
+    const external = createExternalModules(() => registry.bumpAll());
+    const factory = createComponentFactory(registry, ensureFetched);
+    const host = {
+      component: (name) => factory.getDC(name),
+      placeholder: (props) => h(Placeholder, props),
+      helmet: (node) => helmet.compile(node),
+      loadExternal: (kind, url) => external.load(kind, url),
+      resolveExternal: (url, name) => external.resolve(url, name),
+      resolveExternalGlobal: (url, name) => external.resolveGlobal(url, name),
+      resolveExternalError: (url, name) => external.getError(url, name),
+      pseudoClass
+    };
+    function ensureFetched(name) {
+      const r = registry.get(name);
+      if (r.fetched) return;
+      r.fetched = true;
+      const url = COMPONENT_DIR + "/" + encodeURIComponent(name) + ".dc.html";
+      fetch(url).then((res) => {
+        if (!res.ok) {
+          console.error(
+            "[dc-runtime] sibling fetch for <" + name + "/> failed:",
+            url,
+            "returned",
+            res.status,
+            "\u2014 the reference renders as an empty placeholder."
+          );
+          return "";
+        }
+        return res.text();
+      }).then((t) => {
+        if (!t) return;
+        const parsed = parseDcText(t);
+        if (!parsed) {
+          console.error(
+            "[dc-runtime] sibling fetch for <" + name + "/>:",
+            url,
+            "has no <x-dc> block \u2014 not a Design Component."
+          );
+          return;
+        }
+        if (parsed.props) r.propsMeta = parsed.props;
+        if (parsed.preview) r.preview = parsed.preview;
+        if (parsed.template && !r.html) updateHtml(name, parsed.template);
+        if (parsed.js && !r.Logic) updateJs(name, parsed.js);
+      }).catch(
+        (e) => console.error(
+          "[dc-runtime] sibling fetch for <" + name + "/> threw:",
+          url,
+          e
+        )
+      );
+    }
+    function updateHtml(name, html) {
+      const r = registry.get(name);
+      r.html = html;
+      try {
+        r.tpl = compileTemplate(html, host);
+      } catch (e) {
+        console.error("[dc-runtime] template compile FAILED for", name, e);
+      }
+      registry.bump(name);
+    }
+    function updateJs(name, src) {
+      const r = registry.get(name);
+      const seq = r.jsSeq = (r.jsSeq || 0) + 1;
+      try {
+        const Cls = evalDcLogic(src);
+        if (r.jsSeq !== seq) return;
+        if (typeof Cls !== "function") {
+          r.logicError = name + ".dc.html: <script data-dc-script> must define `class Component extends DCLogic`";
+        } else {
+          r.logicError = null;
+          r.Logic = Cls;
+        }
+      } catch (e) {
+        if (r.jsSeq !== seq) return;
+        console.error(
+          "[dc-runtime] logic class eval FAILED for",
+          name,
+          "\u2014 the template renders with props only.",
+          e
+        );
+        r.logicError = name + ": " + (e instanceof Error && e.message ? e.message : String(e));
+      }
+      registry.bump(name);
+    }
+    function setStreaming(name, kind, on) {
+      const r = registry.get(name);
+      if (kind === "html") r.htmlStreaming = !!on;
+      else r.jsStreaming = !!on;
+      let any = false;
+      for (const n in registry.entries) {
+        const e = registry.entries[n];
+        if (e && (e.htmlStreaming || e.jsStreaming)) {
+          any = true;
+          break;
+        }
+      }
+      doc.documentElement.classList.toggle("sc-dc-streaming", any);
+      registry.bump(name);
+    }
+    function dcUpdate(name, kind, content, streaming) {
+      if (streaming) registry.get(name).fetched = true;
+      if (kind === "html") {
+        setStreaming(name, "html", !!streaming);
+        updateHtml(name, content);
+      } else if (kind === "js") {
+        setStreaming(name, "js", !!streaming);
+        if (!streaming) updateJs(name, content);
+      } else if (kind === "props") {
+        const { props, preview } = parseDataProps(content);
+        const r = registry.get(name);
+        r.propsMeta = props ?? void 0;
+        r.preview = preview;
+        registry.bump(name);
+      }
+    }
+    function setProps(name, overrides) {
+      registry.get(name).propOverrides = overrides && typeof overrides === "object" ? { ...overrides } : null;
+      registry.bump(name);
+    }
+    function adoptParsed(name, parsed) {
+      if (!parsed) return;
+      const r = registry.get(name);
+      if (parsed.props) r.propsMeta = parsed.props;
+      if (parsed.preview) r.preview = parsed.preview;
+      if (parsed.template) updateHtml(name, parsed.template);
+      if (parsed.js) updateJs(name, parsed.js);
+    }
+    return {
+      registry,
+      getDC: factory.getDC,
+      updateHtml,
+      updateJs,
+      dcUpdate,
+      setProps,
+      adoptParsed,
+      markFetched: (name) => {
+        registry.get(name).fetched = true;
+      },
+      annotatedTemplate: (name) => {
+        const r = registry.get(name);
+        return r.tpl && r.tpl.__annotated || null;
+      },
+      templateSource: (name) => registry.get(name).html || null,
+      StreamableLogic
+    };
+  }
+
+  // src/index.ts
+  var REACT_URL = "https://unpkg.com/react@18.3.1/umd/react.production.min.js";
+  var REACT_SRI = "sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z";
+  var REACT_DOM_URL = "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js";
+  var REACT_DOM_SRI = "sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1";
+  function hideRawTemplate() {
+    const s = document.createElement("style");
+    s.textContent = "x-dc{display:none!important}";
+    document.head.appendChild(s);
+  }
+  function loadScript(src, integrity) {
+    return new Promise((resolve2, reject) => {
+      //! nosemgrep: create-script-element
+      const s = document.createElement("script");
+      s.src = src;
+      s.integrity = integrity;
+      s.crossOrigin = "anonymous";
+      s.async = false;
+      s.onload = () => resolve2();
+      s.onerror = () => reject(new Error(`failed to load ${src}`));
+      document.head.appendChild(s);
+    });
+  }
+  function loadReactUmd() {
+    const w = window;
+    if (w.React && w.ReactDOM) return Promise.resolve();
+    return Promise.all([
+      loadScript(REACT_URL, REACT_SRI),
+      loadScript(REACT_DOM_URL, REACT_DOM_SRI)
+    ]).then(() => void 0);
+  }
+  function init() {
+    const runtime = createRuntime(document);
+    let rootName = "Root";
+    const baseCss = document.createElement("style");
+    baseCss.textContent = BASE_CSS;
+    document.head.prepend(baseCss);
+    const notifyHost = () => {
+      if (window.parent === window) return;
+      const r = runtime.registry.entries[rootName];
+      try {
+        window.parent.postMessage(
+          {
+            type: "__dc_booted",
+            rootName,
+            propsMeta: r && r.propsMeta || null,
+            preview: r && r.preview || null
+          },
+          "*"
+        );
+      } catch {
+      }
+    };
+    const api = {
+      __dcUpdate: (name, kind, content, streaming) => {
+        runtime.dcUpdate(name, kind, content, streaming);
+        if (name === rootName && !streaming && kind === "props") notifyHost();
+      },
+      __dcSetProps: (name, overrides) => runtime.setProps(name, overrides),
+      /** Name of the component currently mounted as the page root — DC tools
+       *  push their template-stream here when targeting "the open page". */
+      __dcRootName: () => rootName,
+      /** Editor bridge — the encoded, `data-dc-tpl`-annotated template source.
+       *  The host editor parses this into its own template DOM so it can map a
+       *  rendered node (carrying the same `data-dc-tpl`) back to the source
+       *  node that emitted it. Returns the encoded form (`<sc-comp>`,
+       *  `sc-camel-*` attrs); the editor decodes on serialize. */
+      __dcAnnotatedTemplate: (name) => runtime.annotatedTemplate(name),
+      /** Editor bridge — the *original* (decoded) template source. */
+      __dcTemplateSource: (name) => runtime.templateSource(name),
+      __dcBoot: () => {
+        rootName = boot(runtime, document) ?? rootName;
+        notifyHost();
+      },
+      __dcRegistry: runtime.registry.entries,
+      getDC: (name) => runtime.getDC(name),
+      // `DCLogic` is the documented base class name; `StreamableLogic` is the
+      // implementation alias kept for any project that already references it.
+      DCLogic: runtime.StreamableLogic,
+      StreamableLogic: runtime.StreamableLogic
+    };
+    Object.assign(window, api);
+    if (document.readyState !== "loading") api.__dcBoot();
+    else document.addEventListener("DOMContentLoaded", () => api.__dcBoot());
+  }
+  hideRawTemplate();
+  loadReactUmd().then(init).catch((err) => {
+    console.error("[dc] failed to load React or boot:", err);
+    throw err;
+  });
+})();

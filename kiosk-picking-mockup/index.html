@@ -10,6 +10,69 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
+  <button id="fullscreenBtn" onclick="openFullscreen()">
+    ⛶ Full Screen
+</button>
+
+<style>
+#fullscreenBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 10px 18px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+}
+
+#fullscreenBtn:hover {
+    background: #444;
+}
+</style>
+
+<script>
+const elem = document.documentElement;
+const fullscreenBtn = document.getElementById("fullscreenBtn");
+
+function openFullscreen() {
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // Safari
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE11
+        elem.msRequestFullscreen();
+    }
+}
+
+function closeFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { // Safari
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE11
+        document.msExitFullscreen();
+    }
+}
+
+// Hide/show button depending on fullscreen state
+function updateFullscreenButton() {
+    const isFullscreen =
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.msFullscreenElement;
+
+    fullscreenBtn.style.display = isFullscreen ? "none" : "block";
+}
+
+document.addEventListener("fullscreenchange", updateFullscreenButton);
+document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
+document.addEventListener("MSFullscreenChange", updateFullscreenButton);
+</script>
+  
 <div id="root"></div>
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel" src="data.jsx"></script>

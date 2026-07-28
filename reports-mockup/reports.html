@@ -762,7 +762,7 @@ class Component extends DCLogic {
   meta(){ return [
     { sec:'Overview', items:[ ['dash_day','Dashboard — Day'], ['dash_week','Dashboard — Week'] ] },
     { sec:'Compliance', items:[ ['signature','Signature Report'], ['plaster','Blue Plaster Report'], ['checks','Field Checks Report'], ['absence','Absence Report'], ['daysworked','Days Worked'] ] },
-    { sec:'KPIs', items:[ ['husbandry','Husbandry KPIs'], ['field','Daily Harvest KPI'], ['recon','Yield Reconciliation'] ] },
+    { sec:'KPIs', items:[ ['husbandry','Daily Husbandry KPIs'], ['field','Daily Harvest KPIs'], ['recon','Yield Reconciliation'] ] },
     { sec:'Analysis', items:[ ['task','Task Summary'], ['picker','Picker League Table'], ['fieldleague','Field League Table'] ] },
   ]; }
   titleOf(id){ for(const s of this.meta()) for(const it of s.items) if(it[0]===id) return it[1]; return ''; }

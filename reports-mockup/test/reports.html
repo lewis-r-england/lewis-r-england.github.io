@@ -31,8 +31,8 @@
     <div style="display:flex; align-items:center; gap:10px; padding:18px 16px 12px 18px; min-height:64px;">
       <div style="width:30px; height:30px; border-radius:8px; background:var(--brand,#14532d); flex:0 0 auto; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:15px;">B</div>
       <div class="bx-lbl" style="display:{{ v.labelDisp }}; line-height:1.1;">
-        <div style="font-weight:700; font-size:15px; color:var(--brand,#14532d); letter-spacing:-.01em;">Boxford Farms</div>
-        <div style="font-size:11px; color:var(--muted,#71807a); margin-top:2px;">Labour Management</div>
+        <div style="font-weight:700; font-size:15px; color:var(--brand,#14532d); letter-spacing:-.01em;">BSF</div>
+        <div style="font-size:11px; color:var(--muted,#71807a); margin-top:2px;">Flexifarm Report Mockup</div>
       </div>
     </div>
 
@@ -1509,7 +1509,7 @@ class Component extends DCLogic {
         noteBtnColor: S.noteOpen?'#fff':'var(--muted,#71807a)',
         showTableControls:isTable, table:{count:0},
         showRangeToggle:false, toggleRange:()=>this.toggleRange(),
-        rangeLabel: S.rangeMode ? 'Single value' : 'Between dates',
+        rangeLabel: S.rangeMode ? 'Filter on single week/date' : 'Filter by week/date range',
         rangeBtnStyle:`font-family:inherit; font-size:11.5px; font-weight:600; padding:6px 11px; border:1px solid ${S.rangeMode?'var(--accent,#2e9c6d)':'var(--line,#e4e8e4)'}; background:${S.rangeMode?'var(--sactive,#e8f2ec)':'#fff'}; border-radius:8px; cursor:pointer; color:${S.rangeMode?'var(--brand,#14532d)':'var(--muted,#71807a)'};`,
         hasFilters:false, filters:[],
         toggleCompact:()=>this.toggleCompact(), compactLabel: S.compact?'Comfortable':'Compact',

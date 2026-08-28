@@ -1,0 +1,303 @@
+
+
+########## ppt/slides/slide1.xml ##########
+[shape] Version A
+
+--- TABLE 1 ---
+R1:
+   C1: Timesheet Ref. No.
+   C2: Week
+   C3: Date
+   C4: Field (/Loc)
+   C5: Product
+   C6: Variety
+   C7: Task
+   C8: Employee
+   C9: Rate Type
+   C10: Class
+   C11: Pack Size
+   C12: Quantity
+   C13: Piece Rate
+   C14: Hourly Rate
+   C15: Start Time
+   C16: Finish Time
+   C17: Break
+   C18: Total  Time Worked
+   C19: Earnings
+   C20: Supervisor
+   C21: Team
+   C22: Created By
+R2:
+   C1: Automated Field /
+   C2: Auto-gen based on date
+   C3: Prefilled with today’s date. Editable.
+   C4: Searchable dropdown with “Code – Name”
+   C5: Prefilled based on Field (IF LOCATION IS FIELD!)
+   C6: Dropdown if multiple for “product”
+   C7: Searchable dropdown with “Code – Name”
+   C8: Searchable dropdown with “Code – Name”
+   C9: Dropdwon “TW”, “PW”, “TTW”, “TPW”
+   C10: Settable if picking task. Creates as many “Sub rows” as classes.  Can specify class 1, 2 or 3. As many of each as needed
+   C11: Dropdown. Constrain to those for product.
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: Not editable. Calculated from other entries.
+   C19: Not editable. Calculated from other entries.
+   C20: Searchable Dropdown.
+   C21: If team work. Prefill with most recent. Searchable dropdown “Team Code – Team Name”
+   C22: Non-editable. Represents logged in user.
+R3:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+R4:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+R5:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+R6:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+R7:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+
+
+########## ppt/slides/slide2.xml ##########
+[shape] Version B
+
+--- TABLE 1 ---
+R1:
+   C1: Timesheet Ref. No.
+   C2: Week
+   C3: Date
+   C4: Field Code
+   C5: Field Name
+   C6: Product
+   C7: Variety
+   C8: Task Code
+   C9: Task Name
+   C10: Pack Size
+   C11: Class
+   C12: Quantity
+   C13: Payroll Number
+   C14: Employee Name
+   C15: Rate Type
+   C16: Piece Rate
+   C17: Hourly Rate
+   C18: Start Time
+   C19: Finish Time
+   C20: Break
+   C21: Total  Time Worked
+   C22: Earnings
+   C23: Supervisor
+   C24: Team Name
+   C25: Created By
+R2:
+   C1: Automated Field
+   C2: Auto-gen based on date
+   C3: Prefilled with today’s date. Editable
+   C4: 
+   C5: Populated Based on “Field Code”
+   C6: Populated based on “Field Code”
+   C7: Options based on “Field Code”
+   C8: 
+   C9: Populated Based on Task Code
+   C10: Dropdown. Constrain to those for product.
+   C11: Picking only. Dropdown to select one.
+   C12: 
+   C13: 
+   C14: Filledbased on “PayrolNumber”
+   C15: Dropdwon “TW”, “PW”, “TTW”, “TPW”
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: Not editable. Calculated from other entries.
+   C22: Not editable. Calculated from other entries.
+   C23: 
+   C24: If team work. Prefill with most recent. Searchable dropdown “Team Code – Team Name”
+   C25: 
+R3:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+   C23: 
+   C24: 
+   C25: 
+R4:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+   C23: 
+   C24: 
+   C25: 
+R5:
+   C1: 
+   C2: 
+   C3: 
+   C4: 
+   C5: 
+   C6: 
+   C7: 
+   C8: 
+   C9: 
+   C10: 
+   C11: 
+   C12: 
+   C13: 
+   C14: 
+   C15: 
+   C16: 
+   C17: 
+   C18: 
+   C19: 
+   C20: 
+   C21: 
+   C22: 
+   C23: 
+   C24: 
+   C25: 

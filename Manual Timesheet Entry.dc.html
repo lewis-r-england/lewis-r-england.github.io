@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{height:100%}body{margin:0;overflow:hidden;background:#f4f6f4;font-family:"IBM Plex Sans",system-ui,sans-serif;color:#1c2620;-webkit-font-smoothing:antialiased}a{color:#14532d}a:hover{color:#1c7a45}input{font-family:inherit}input::placeholder{color:#4e8a67}@keyframes tsfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}</style></helmet>
+
+<div style="height:100vh;max-height:100vh;overflow:hidden;display:flex;flex-direction:column;background:#f4f6f4">
+
+  <div style="flex:0 0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:13px 22px;border-bottom:1px solid #e4e8e4;background:#fff">
+    <div style="min-width:0">
+      <div style="font-size:11px;color:#71807a;font-weight:500">Timesheets · Entry</div>
+      <h1 style="margin:1px 0 0;font-size:21px;font-weight:700;letter-spacing:-0.02em;white-space:nowrap">Manual Timesheet Entry</h1>
+    </div>
+    <div style="flex:1 1 auto;min-width:10px"></div>
+
+    <div style="position:relative">
+      <button onClick="{{ toggleDemo }}" style="font-family:inherit;display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:9px;border:1px solid #e4e8e4;background:#fff;color:#1c2620;cursor:pointer" style-hover="border-color:#14532d;color:#14532d">Modify demo<span style="font-size:9px;color:#9aa8a1">▼</span></button>
+      <sc-if value="{{ demoOpen }}">
+        <div style="position:absolute;top:calc(100% + 8px);right:0;z-index:60;width:300px;background:#fff;border:1px solid #d7ded9;border-radius:12px;box-shadow:0 18px 40px rgba(20,40,28,.18);padding:14px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#71807a">SPEC</span>
+            <div style="display:flex;border:1px solid #e4e8e4;border-radius:9px;overflow:hidden">
+              <sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}"><button onClick="{{ setA }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;cursor:pointer;background:#14532d;color:#fff">Version A</button></sc-if>
+              <sc-if value="{{ isB }}"><button onClick="{{ setA }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;cursor:pointer;background:#fff;color:#1c2620">Version A</button></sc-if>
+              <sc-if value="{{ isB }}"><button onClick="{{ setB }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;border-left:1px solid #e4e8e4;cursor:pointer;background:#14532d;color:#fff">Version B</button></sc-if>
+              <sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}"><button onClick="{{ setB }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;border-left:1px solid #e4e8e4;cursor:pointer;background:#fff;color:#1c2620">Version B</button></sc-if>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#71807a">ENTRY</span>
+            <div style="display:flex;border:1px solid #e4e8e4;border-radius:9px;overflow:hidden">
+              <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}"><button onClick="{{ setGrid }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;cursor:pointer;background:#1c2620;color:#fff">Grid</button></sc-if>
+              <sc-if value="{{ isDrawer }}"><button onClick="{{ setGrid }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;cursor:pointer;background:#fff;color:#1c2620">Grid</button></sc-if>
+              <sc-if value="{{ isDrawer }}"><button onClick="{{ setDrawer }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;border-left:1px solid #e4e8e4;cursor:pointer;background:#1c2620;color:#fff">Row drawer</button></sc-if>
+              <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}"><button onClick="{{ setDrawer }}" style="font-family:inherit;flex:1 1 0;font-size:12.5px;font-weight:600;padding:7px 12px;border:none;border-left:1px solid #e4e8e4;cursor:pointer;background:#fff;color:#1c2620">Row drawer</button></sc-if>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#71807a">LOAD</span>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <sc-for list="{{ presets }}" as="s" hint-placeholder-count="5">
+                <sc-if value="{{ s.on }}">
+                  <button onClick="{{ s.pick }}" style="font-family:inherit;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:20px;cursor:pointer;border:1px solid #14532d;background:#14532d;color:#fff">{{ s.label }}</button>
+                </sc-if>
+                <sc-if value="{{ s.off }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ s.pick }}" style="font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:20px;cursor:pointer;border:1px solid #e4e8e4;background:#fff;color:#3c473f" style-hover="border-color:#14532d;color:#14532d">{{ s.label }}</button>
+                </sc-if>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div onClick="{{ toggleDemo }}" style="position:fixed;inset:0;z-index:50"></div>
+      </sc-if>
+    </div>
+  </div>
+
+
+  <div style="flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:16px 22px 22px;gap:12px">
+
+    <sc-if value="{{ submitted }}">
+      <div style="animation:tsfade .3s ease;display:flex;align-items:center;gap:11px;padding:11px 14px;border:1px solid #bfe0cb;border-left:4px solid #14532d;border-radius:10px;background:#f2f9f4">
+        <span style="width:20px;height:20px;border-radius:50%;background:#14532d;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center">✓</span>
+        <div style="flex:1 1 auto;min-width:0">
+          <div style="font-size:13px;font-weight:600">{{ savedTitle }}</div>
+          <div style="font-size:11.5px;color:#71807a;margin-top:1px">{{ savedSub }}</div>
+        </div>
+        <button onClick="{{ unlock }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:1px solid #e4e8e4;background:#fff;color:#1c2620;cursor:pointer">Unlock &amp; edit</button>
+        <button onClick="{{ newSheet }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:none;background:#14532d;color:#fff;cursor:pointer">New sheet</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ hasIssues }}">
+      <div style="animation:tsfade .3s ease;display:flex;align-items:center;gap:11px;padding:11px 14px;border:1px solid #f0c9c2;border-left:4px solid #b3402c;border-radius:10px;background:#fdf5f3">
+        <span style="width:20px;height:20px;border-radius:50%;background:#b3402c;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center">!</span>
+        <div style="flex:1 1 auto;min-width:0">
+          <div style="font-size:13px;font-weight:600">{{ issueTitle }}</div>
+          <div style="font-size:11.5px;color:#71807a;margin-top:1px">{{ issueHint }}</div>
+        </div>
+        <button onClick="{{ jumpIssue }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:1px solid #e4e8e4;background:#fff;color:#1c2620;cursor:pointer">Open first issue</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1 1 auto;min-height:0;display:flex;flex-direction:column;border:1px solid #e4e8e4;border-radius:12px;background:#fff;overflow:hidden">
+        <div style="flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #e4e8e4;background:#fbfcfb">
+          <span style="font-size:12px;font-weight:600">{{ gridTitle }}</span>
+          <span style="font-size:11.5px;color:#71807a">{{ gridNote }}</span>
+          <div style="flex:1 1 auto"></div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#71807a">{{ colCount }} columns · scroll →</span>
+        </div>
+        <div style="flex:1 1 auto;min-height:0;overflow:auto">
+          <table style="border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:12.5px">
+            <thead>
+              <tr>
+                <th style="position:sticky;top:0;z-index:3;background:#0f3d21;color:#fff;text-align:left;padding:9px 10px;font-weight:600;font-size:11px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.14)">#</th>
+                <sc-for list="{{ cols }}" as="col" hint-placeholder-count="14">
+                  <th style="position:sticky;top:0;z-index:3;background:#14532d;color:#fff;text-align:left;padding:9px 12px;font-weight:600;font-size:11.5px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.14)">{{ col.label }}</th>
+                </sc-for>
+                <th style="position:sticky;top:0;z-index:3;background:#0f3d21;color:#fff;text-align:left;padding:9px 12px;font-weight:600;font-size:11.5px;white-space:nowrap">Row</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ rows }}" as="row" hint-placeholder-count="4">
+                <tr>
+                  <td style="padding:8px 10px;border-bottom:1px solid #e4e8e4;border-right:1px solid #eef1ee;background:#fbfcfb;color:#9aa8a1;font-family:'IBM Plex Mono',monospace;font-size:11px;vertical-align:top;white-space:nowrap">{{ row.n }}</td>
+                  <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="14">
+                    <td style="padding:0;border-bottom:1px solid #e4e8e4;border-right:1px solid #eef1ee;vertical-align:top">
+                      <sc-if value="{{ cell.isAuto }}"><div style="padding:8px 12px;white-space:nowrap;background:#f6f8f6;color:#9caaa3;font-size:12px;min-width:58px">{{ cell.v }}</div></sc-if>
+                      <sc-if value="{{ cell.isCalc }}"><div style="padding:8px 12px;white-space:nowrap;background:#f2f7f3;color:#14532d;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:12px;min-width:58px">{{ cell.v }}</div></sc-if>
+                      <sc-if value="{{ cell.isText }}" hint-placeholder-val="{{ true }}"><input value="{{ cell.v }}" onChange="{{ cell.onInput }}" placeholder="{{ cell.ph }}" style="width:calc(100% - 6px);min-width:74px;margin:3px;padding:6px 9px;border:1px solid #dfe8e2;border-radius:6px;background:#fff;font-size:12.5px;color:#1c2620;outline:none" style-hover="border-color:#9ecab0" style-focus="border-color:#14532d;box-shadow:0 0 0 3px rgba(20,83,45,.12)"></sc-if>
+                      <sc-if value="{{ cell.isTextBad }}">
+                        <div style="position:relative;margin:3px">
+                          <input value="{{ cell.v }}" onChange="{{ cell.onInput }}" placeholder="{{ cell.ph }}" style="width:100%;min-width:68px;padding:5px 8px;border:1px solid #e0a79a;border-radius:6px;background:#fdf1ee;font-size:12.5px;font-weight:600;color:#8f2f1e;outline:none">
+                          <div style="position:absolute;top:calc(100% + 4px);left:0;z-index:6;padding:5px 9px;border-radius:6px;background:#8f2f1e;color:#fff;font-size:11px;font-weight:500;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.18)">{{ cell.msg }}</div>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ cell.isDate }}">
+                        <dc-import name="Date Field" variant="grid" value="{{ cell.v }}" open="{{ cell.open }}" on-toggle="{{ cell.toggle }}" on-pick="{{ cell.pick }}" bad="{{ cell.bad }}" hint-size="112px,33px"></dc-import>
+                      </sc-if>
+                      <sc-if value="{{ cell.isLook }}">
+                        <dc-import name="Lookup Field" variant="grid" value="{{ cell.v }}" placeholder="{{ cell.ph }}" options="{{ cell.opts }}" open="{{ cell.open }}" query="{{ cell.query }}" on-toggle="{{ cell.toggle }}" on-query="{{ cell.setQuery }}" on-pick="{{ cell.pick }}" bad="{{ cell.bad }}" msg="{{ cell.msg }}" footer="{{ cell.foot }}" search-hint="{{ cell.hint }}" hint-size="150px,33px"></dc-import>
+                      </sc-if>
+                      <sc-if value="{{ cell.isSub }}">
+                        <div style="display:flex;flex-direction:column;min-width:82px">
+                          <sc-for list="{{ cell.segs }}" as="s" hint-placeholder-count="2">
+                            <div style="display:flex;align-items:center;gap:2px;height:34px;border-bottom:1px dashed #dbe3dd">
+                              <sc-if value="{{ s.ctl.isText }}" hint-placeholder-val="{{ true }}"><input value="{{ s.ctl.v }}" onChange="{{ s.ctl.onInput }}" placeholder="{{ s.ctl.ph }}" style="width:calc(100% - 6px);min-width:62px;margin:3px;padding:5px 8px;border:1px solid #dfe8e2;border-radius:6px;background:#fff;font-size:12.5px;color:#1c2620;outline:none" style-hover="border-color:#9ecab0" style-focus="border-color:#14532d;box-shadow:0 0 0 3px rgba(20,83,45,.12)"></sc-if>
+                              <sc-if value="{{ s.ctl.isCalc }}"><div style="padding:7px 11px;background:#f2f7f3;color:#14532d;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:12px">{{ s.ctl.v }}</div></sc-if>
+                              <sc-if value="{{ s.ctl.isLook }}">
+                                <div style="flex:1 1 auto;min-width:0">
+                                  <dc-import name="Lookup Field" variant="grid" value="{{ s.ctl.v }}" placeholder="{{ s.ctl.ph }}" options="{{ s.ctl.opts }}" open="{{ s.ctl.open }}" query="{{ s.ctl.query }}" on-toggle="{{ s.ctl.toggle }}" on-query="{{ s.ctl.setQuery }}" on-pick="{{ s.ctl.pick }}" bad="{{ s.ctl.bad }}" msg="{{ s.ctl.msg }}" search-hint="{{ s.ctl.hint }}" hint-size="118px,33px"></dc-import>
+                                </div>
+                              </sc-if>
+                              <sc-if value="{{ s.ctl.isAuto }}"><div style="flex:1 1 auto;align-self:stretch;display:flex;align-items:center;padding:7px 11px;background:#f6f8f6;color:#9caaa3;font-size:12px">{{ s.ctl.v }}</div></sc-if>
+                              <sc-if value="{{ s.canRemove }}"><button onClick="{{ s.remove }}" title="Remove class sub-row" style="flex:0 0 auto;width:20px;height:20px;margin-right:4px;border:none;border-radius:5px;background:transparent;color:#b6c2bb;font-size:13px;cursor:pointer" style-hover="background:#fdf1ee;color:#8f2f1e">×</button></sc-if>
+                            </div>
+                          </sc-for>
+                          <sc-if value="{{ cell.canAdd }}"><button onClick="{{ cell.add }}" style="padding:6px 11px;border:none;background:#f7faf8;color:#14532d;font-family:inherit;font-size:11.5px;font-weight:600;text-align:left;cursor:pointer" style-hover="background:#eaf3ed">+ class</button></sc-if>
+                          <sc-if value="{{ cell.padAdd }}"><div style="height:29px;background:#fbfcfb"></div></sc-if>
+                        </div>
+                      </sc-if>
+                    </td>
+                  </sc-for>
+                  <td style="padding:0;border-bottom:1px solid #e4e8e4;background:#fbfcfb;vertical-align:top">
+                    <div style="display:flex;align-items:center;gap:4px;padding:5px 9px">
+                      <button onClick="{{ row.act.open }}" style="font-family:inherit;font-size:11px;font-weight:600;padding:4px 9px;border:1px solid #e4e8e4;border-radius:6px;background:#fff;color:#14532d;cursor:pointer;white-space:nowrap" style-hover="border-color:#14532d">Open</button>
+                      <sc-if value="{{ row.act.canAddCls }}"><button onClick="{{ row.act.addCls }}" style="font-family:inherit;font-size:11px;font-weight:600;padding:4px 9px;border:1px solid #e4e8e4;border-radius:6px;background:#fff;color:#3c473f;cursor:pointer;white-space:nowrap" style-hover="border-color:#14532d">+ class row</button></sc-if>
+                      <button onClick="{{ row.act.del }}" title="Delete row" style="width:24px;height:24px;border:none;border-radius:6px;background:transparent;color:#b6c2bb;font-size:14px;cursor:pointer" style-hover="background:#fdf1ee;color:#8f2f1e">×</button>
+                    </div>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <div style="flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:7px 12px;border-top:1px solid #e4e8e4;background:#fbfcfb">
+          <button onClick="{{ addRow }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:6px 12px;border:1px dashed #cfdcd4;border-radius:8px;background:#fff;color:#14532d;cursor:pointer" style-hover="border-color:#14532d">+ Add row</button>
+          <button onClick="{{ dupLast }}" style="font-family:inherit;font-size:12px;font-weight:500;padding:6px 12px;border-radius:8px;border:1px solid #e4e8e4;background:#fff;color:#1c2620;cursor:pointer" style-hover="border-color:#14532d">Duplicate last row</button>
+          <div style="flex:1 1 auto;min-width:8px"></div>
+          <div style="position:relative">
+            <button onClick="{{ toggleBulk }}" style="font-family:inherit;font-size:12px;font-weight:500;padding:6px 12px;border-radius:8px;border:1px solid #e4e8e4;background:#fff;color:#1c2620;cursor:pointer" style-hover="border-color:#14532d">Fill column from row 1…</button>
+            <sc-if value="{{ bulkOpen }}">
+              <div style="position:absolute;bottom:calc(100% + 6px);right:0;z-index:40;width:250px;background:#fff;border:1px solid #d7ded9;border-radius:10px;box-shadow:0 14px 34px rgba(20,40,28,.2);overflow:hidden">
+                <div style="padding:8px 11px;font-size:10.5px;font-weight:600;letter-spacing:.06em;color:#71807a;background:#fbfcfb;border-bottom:1px solid #eef1ee">COPY ROW 1 DOWN THE COLUMN</div>
+                <sc-for list="{{ bulkCols }}" as="b" hint-placeholder-count="5">
+                  <button onClick="{{ b.apply }}" style="display:flex;align-items:baseline;gap:8px;width:100%;padding:8px 11px;border:none;border-bottom:1px solid #f3f5f3;background:#fff;font-family:inherit;font-size:12.5px;text-align:left;cursor:pointer" style-hover="background:#f2f7f3">
+                    <span style="flex:1 1 auto">{{ b.label }}</span>
+                    <span style="font-size:11px;color:#9aa8a1">{{ b.v }}</span>
+                  </button>
+                </sc-for>
+              </div>
+              <div onClick="{{ toggleBulk }}" style="position:fixed;inset:0;z-index:30"></div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDrawer }}">
+      <div style="flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:12px">
+        <div style="flex:1 1 auto;min-height:0;display:flex;flex-direction:column;border:1px solid #e4e8e4;border-radius:12px;background:#fff;overflow:hidden">
+          <div style="flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #e4e8e4;background:#fbfcfb">
+            <span style="font-size:12px;font-weight:600">Today's rows</span>
+            <span style="font-size:11.5px;color:#71807a">Click a row to edit all {{ colCount }} fields in a dialog</span>
+            <div style="flex:1 1 auto"></div>
+            <button onClick="{{ addRow }}" style="font-family:inherit;font-size:11.5px;font-weight:600;padding:5px 11px;border:1px dashed #cfdcd4;border-radius:7px;background:#fff;color:#14532d;cursor:pointer">+ New row</button>
+            <button onClick="{{ dupLast }}" style="font-family:inherit;font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:7px;border:1px solid #e4e8e4;background:#fff;color:#1c2620;cursor:pointer" style-hover="border-color:#14532d">Duplicate last row</button>
+          </div>
+          <div style="flex:1 1 auto;min-height:0;overflow:auto">
+            <table style="border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px">
+              <thead>
+                <tr>
+                  <sc-for list="{{ summaryCols }}" as="sc" hint-placeholder-count="9">
+                    <th style="background:#14532d;color:#fff;text-align:left;padding:8px 12px;font-weight:600;font-size:11.5px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.14)">{{ sc.label }}</th>
+                  </sc-for>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ summaryRows }}" as="sr" hint-placeholder-count="3">
+                  <sc-if value="{{ sr.sel }}" hint-placeholder-val="{{ true }}">
+                    <tr onClick="{{ sr.pick }}" style="cursor:pointer;background:#f2f7f3">
+                      <sc-for list="{{ sr.cells }}" as="c" hint-placeholder-count="9">
+                        <td style="padding:9px 12px;border-bottom:1px solid #eef1ee;border-right:1px solid #eaf0ec;white-space:nowrap;font-weight:600;color:#14532d">{{ c.v }}</td>
+                      </sc-for>
+                    </tr>
+                  </sc-if>
+                  <sc-if value="{{ sr.unsel }}">
+                    <tr onClick="{{ sr.pick }}" style="cursor:pointer" style-hover="background:#fbfcfb">
+                      <sc-for list="{{ sr.cells }}" as="c" hint-placeholder-count="9">
+                        <td style="padding:9px 12px;border-bottom:1px solid #eef1ee;border-right:1px solid #f3f5f3;white-space:nowrap">{{ c.v }}</td>
+                      </sc-for>
+                    </tr>
+                  </sc-if>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <sc-if value="{{ noSel }}">
+          <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:center;border:1px dashed #cfdcd4;border-radius:12px;background:#fff;color:#9aa8a1;font-size:13px">No rows yet — add one to start the sheet.</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <div style="flex:0 0 auto;position:relative;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;border:1px solid #e4e8e4;border-radius:12px;background:#fff">
+      <sc-for list="{{ totals }}" as="t" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:1px;padding-right:16px;border-right:1px solid #eef1ee">
+          <span style="font-size:10px;font-weight:600;letter-spacing:.07em;color:#71807a">{{ t.label }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600">{{ t.v }}</span>
+        </div>
+      </sc-for>
+      <div style="flex:1 1 auto;min-width:10px"></div>
+      <sc-if value="{{ toastOn }}"><span style="font-size:12px;font-weight:600;color:#14532d;background:#eaf3ed;border-radius:20px;padding:5px 12px">{{ toast }}</span></sc-if>
+      <button onClick="{{ saveDraft }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:7px 15px;border-radius:8px;border:1px solid #14532d;background:#fff;color:#14532d;cursor:pointer" style-hover="background:#f2f7f3">Save draft</button>
+      <sc-if value="{{ canSubmit }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ submit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 18px;border-radius:8px;border:none;background:#14532d;color:#fff;cursor:pointer" style-hover="background:#1a6b3a">Submit for approval</button>
+      </sc-if>
+      <sc-if value="{{ cannotSubmit }}">
+        <button onClick="{{ submit }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 18px;border-radius:8px;border:none;background:#c9d3cd;color:#fff;cursor:pointer">Submit for approval</button>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ dlgOpen }}">
+    <div style="position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:26px;background:rgba(12,26,18,.45);animation:tsfade .18s ease">
+      <div onClick="{{ closeDlg }}" style="position:absolute;inset:0"></div>
+  <div style="position:relative;width:min(1460px,96vw);max-height:90vh;overflow:auto;border:1px solid #cfdcd4;border-radius:14px;background:#fff;box-shadow:0 30px 80px rgba(10,26,16,.4)">
+        <div style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid #e4e8e4;background:#f7faf8">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#14532d;background:#eaf3ed;border-radius:5px;padding:3px 8px">{{ drawerRef }}</span>
+          <span style="font-size:14px;font-weight:700">{{ drawerTitle }}</span>
+          <span style="font-size:12px;color:#71807a">{{ drawerSub }}</span>
+          <div style="flex:1 1 auto;min-width:10px"></div>
+          <button onClick="{{ delSel }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:1px solid #e4e8e4;background:#fff;color:#8f2f1e;cursor:pointer">Delete row</button>
+          <button onClick="{{ closeDlg }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:1px solid #e4e8e4;background:#fff;cursor:pointer">Close</button>
+          <button onClick="{{ saveRow }}" style="font-family:inherit;font-size:12px;font-weight:600;padding:6px 15px;border-radius:8px;border:none;background:#14532d;color:#fff;cursor:pointer">Save row</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:#eef1ee">
+          <sc-for list="{{ sections }}" as="sec" hint-placeholder-count="5">
+            <div style="background:#fff;padding:16px 18px 20px">
+              <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">
+                <span style="font-size:10.5px;font-weight:600;letter-spacing:.08em;color:#71807a">{{ sec.title }}</span>
+                <span style="font-size:11px;color:#9aa8a1">{{ sec.note }}</span>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <sc-for list="{{ sec.fields }}" as="f" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <span style="font-size:11px;font-weight:500;color:#71807a">{{ f.label }}</span>
+                    <sc-if value="{{ f.ctl.isAuto }}"><div style="padding:8px 11px;border-radius:8px;background:#f6f8f6;color:#8b9a93;font-size:13px">{{ f.ctl.v }}</div></sc-if>
+                    <sc-if value="{{ f.ctl.isCalc }}"><div style="padding:8px 11px;border-radius:8px;background:#f2f7f3;color:#14532d;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:13px">{{ f.ctl.v }}</div></sc-if>
+                    <sc-if value="{{ f.ctl.isText }}" hint-placeholder-val="{{ true }}"><input value="{{ f.ctl.v }}" onChange="{{ f.ctl.onInput }}" placeholder="{{ f.ctl.ph }}" style="padding:8px 11px;border:1px solid #d7ded9;border-radius:8px;font-size:13px;color:#1c2620;outline:none" style-focus="border-color:#14532d;box-shadow:0 0 0 3px rgba(20,83,45,.1)"></sc-if>
+                    <sc-if value="{{ f.ctl.isTextBad }}">
+                      <input value="{{ f.ctl.v }}" onChange="{{ f.ctl.onInput }}" placeholder="{{ f.ctl.ph }}" style="padding:8px 11px;border:1px solid #e0a79a;border-radius:8px;background:#fdf1ee;font-size:13px;font-weight:600;color:#8f2f1e;outline:none">
+                      <span style="font-size:11px;color:#8f2f1e">{{ f.ctl.msg }}</span>
+                    </sc-if>
+                    <sc-if value="{{ f.ctl.isDate }}">
+                      <dc-import name="Date Field" variant="field" value="{{ f.ctl.v }}" open="{{ f.ctl.open }}" on-toggle="{{ f.ctl.toggle }}" on-pick="{{ f.ctl.pick }}" bad="{{ f.ctl.bad }}" hint-size="100%,38px"></dc-import>
+                    </sc-if>
+                    <sc-if value="{{ f.ctl.isLook }}">
+                      <dc-import name="Lookup Field" variant="field" value="{{ f.ctl.v }}" placeholder="{{ f.ctl.ph }}" options="{{ f.ctl.opts }}" open="{{ f.ctl.open }}" query="{{ f.ctl.query }}" on-toggle="{{ f.ctl.toggle }}" on-query="{{ f.ctl.setQuery }}" on-pick="{{ f.ctl.pick }}" bad="{{ f.ctl.bad }}" msg="{{ f.ctl.msg }}" footer="{{ f.ctl.foot }}" search-hint="{{ f.ctl.hint }}" hint-size="100%,38px"></dc-import>
+                    </sc-if>
+                  </div>
+                </sc-for>
+
+                <sc-if value="{{ sec.isClassEditor }}">
+                  <div style="border:1px solid #e4e8e4;border-radius:9px;overflow:hidden">
+                    <div style="display:grid;grid-template-columns:54px minmax(96px,1fr) 52px 64px 24px;background:#fbfcfb;border-bottom:1px solid #e4e8e4">
+                      <span style="padding:7px 7px;font-size:10.5px;font-weight:600;color:#71807a;white-space:nowrap">CLASS</span>
+                      <span style="padding:7px 7px;font-size:10.5px;font-weight:600;color:#71807a;white-space:nowrap">PACK SIZE</span>
+                      <span style="padding:7px 7px;font-size:10.5px;font-weight:600;color:#71807a;white-space:nowrap">QTY</span>
+                      <span style="padding:7px 7px;font-size:10.5px;font-weight:600;color:#71807a;white-space:nowrap">PIECE</span>
+                      <span></span>
+                    </div>
+                    <sc-for list="{{ classRows }}" as="cr" hint-placeholder-count="2">
+                      <div style="display:grid;grid-template-columns:54px minmax(96px,1fr) 52px 64px 24px;border-bottom:1px dashed #dbe3dd;align-items:center">
+                        <dc-import name="Lookup Field" variant="grid" value="{{ cr.cls.v }}" placeholder="—" options="{{ cr.cls.opts }}" open="{{ cr.cls.open }}" query="{{ cr.cls.query }}" on-toggle="{{ cr.cls.toggle }}" on-query="{{ cr.cls.setQuery }}" on-pick="{{ cr.cls.pick }}" search-hint="Class" hint-size="100%,33px"></dc-import>
+                        <dc-import name="Lookup Field" variant="grid" value="{{ cr.pack.v }}" placeholder="Pack size" options="{{ cr.pack.opts }}" open="{{ cr.pack.open }}" query="{{ cr.pack.query }}" on-toggle="{{ cr.pack.toggle }}" on-query="{{ cr.pack.setQuery }}" on-pick="{{ cr.pack.pick }}" search-hint="Pack size" hint-size="100%,33px"></dc-import>
+                        <input value="{{ cr.qty.v }}" onChange="{{ cr.qty.onInput }}" placeholder="0" style="width:100%;padding:8px 9px;border:none;background:transparent;font-size:12.5px;outline:none" style-focus="background:#f2f7f3">
+                        <sc-if value="{{ cr.piece.isText }}" hint-placeholder-val="{{ true }}"><input value="{{ cr.piece.v }}" onChange="{{ cr.piece.onInput }}" placeholder="0.00" style="width:100%;padding:8px 9px;border:none;background:transparent;font-size:12.5px;outline:none" style-focus="background:#f2f7f3"></sc-if>
+                        <sc-if value="{{ cr.piece.isAuto }}"><div style="padding:8px 9px;background:#f6f8f6;color:#8b9a93;font-size:12px">{{ cr.piece.v }}</div></sc-if>
+                        <sc-if value="{{ cr.canRemove }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cr.remove }}" style="width:22px;height:22px;border:none;border-radius:5px;background:transparent;color:#b6c2bb;font-size:13px;cursor:pointer" style-hover="background:#fdf1ee;color:#8f2f1e">×</button></sc-if>
+                      </div>
+                    </sc-for>
+                    <button onClick="{{ addClass }}" style="width:100%;padding:8px 12px;border:none;background:#f7faf8;color:#14532d;font-family:inherit;font-size:12px;font-weight:600;text-align:left;cursor:pointer" style-hover="background:#eaf3ed">+ Add class sub-row</button>
+                  </div>
+                  <span style="font-size:11px;color:#9aa8a1">{{ classNote }}</span>
+                </sc-if>
+
+                <sc-if value="{{ sec.isTotals }}">
+                  <div style="display:flex;gap:10px;margin-top:3px">
+                    <div style="flex:1 1 0;padding:11px 13px;border-radius:10px;background:#f2f7f3;border:1px solid #d5e6dc">
+                      <div style="font-size:10.5px;font-weight:600;letter-spacing:.06em;color:#71807a">TOTAL TIME WORKED</div>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:#14532d;margin-top:3px">{{ selTotal }}</div>
+                    </div>
+                    <div style="flex:1 1 0;padding:11px 13px;border-radius:10px;background:#f2f7f3;border:1px solid #d5e6dc">
+                      <div style="font-size:10.5px;font-weight:600;letter-spacing:.06em;color:#71807a">EARNINGS</div>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:#14532d;margin-top:3px">{{ selEarn }}</div>
+                    </div>
+                  </div>
+                  <span style="font-size:11px;color:#9aa8a1">Both calculated from the entries above, not editable.</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;version&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;A&quot;,&quot;B&quot;],&quot;default&quot;:&quot;A&quot;,&quot;tsType&quot;:&quot;'A'|'B'&quot;},&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;grid&quot;,&quot;drawer&quot;],&quot;default&quot;:&quot;grid&quot;,&quot;tsType&quot;:&quot;'grid'|'drawer'&quot;}}">
+const FIELDS = [
+  { code: 'F1100', name: 'LSGH', product: 'Strawberry', varieties: ['Karima', 'Luce Tray', 'Luce Mini'] },
+  { code: 'F2392', name: 'Wallings Tunnels', product: 'Raspberry', varieties: ['BTRAS', 'Blush BG'] },
+  { code: 'F1180', name: 'Home Orchard', product: 'Apple', varieties: ['Blush BG'] },
+  { code: 'F3040', name: 'Cherry House 2', product: 'Cherry', varieties: ['Luce Tray', 'Luce Mini'] },
+  { code: 'L001', name: 'Office', product: '', varieties: [], nonCrop: true },
+  { code: 'L002', name: 'Caravans', product: '', varieties: [], nonCrop: true }
+];
+const TASKS = [{ code: '1002', name: 'Picking' }, { code: '1293', name: 'Weeding' }, { code: '1221', name: 'Husbandry' }, { code: '1400', name: 'Supervision', sup: true }];
+const EMPS = [
+  { code: '5391', name: 'Janelle Espinoza', sup: 'Kyla Crosby' },
+  { code: '5380', name: 'Dallas Lawson', sup: 'Tristen Spence' },
+  { code: '5363', name: 'Phoebe Hoffman', sup: 'Kyla Crosby' },
+  { code: '5444', name: 'Laney Cain', sup: 'Aislinn Kaur' },
+  { code: '5450', name: 'Mila Booker', sup: 'Aislinn Kaur' }
+];
+const SUPS = ['Kyla Crosby', 'Tristen Spence', 'Aislinn Kaur'];
+const TEAMS = [{ code: 'T04', name: 'Tunnel Team 4' }, { code: 'T07', name: 'Picking Team 7' }, { code: 'T11', name: 'Husbandry Team 11' }];
+const RATES = [{ code: 'TW', name: 'Time work' }, { code: 'PW', name: 'Piece work' }, { code: 'TTW', name: 'Team time work' }, { code: 'TPW', name: 'Team piece work' }];
+const PACKS = { Strawberry: ['250g punnet', '150g punnet', '1kg Bin'], Raspberry: ['250g punnet', '150g punnet', '1kg Bin'], Apple: ['1kg Bin'], Cherry: ['250g punnet', '1kg Bin'] };
+const PACK_RATE = { '1kg Bin': 1.05, '250g punnet': 0.42, '150g punnet': 0.28 };
+const CLASS_MULT = { '1': 1, '2': 0.74, '3': 0.52 };
+const HOURLY = '12.21';
+const SUP_HOURLY = '15.00';
+const REF_START = parseInt('4KQ7B3', 36);
+const REF_BASE = i => (REF_START + i).toString(36).toUpperCase().slice(-6);
+const DATE = '27/08/2026';
+
+let UID = 100;
+const uid = () => ++UID;
+
+const cls = (c, pack) => ({ cls: c, pack: pack || '', qty: '', piece: pack ? (PACK_RATE[pack] * (CLASS_MULT[c] || 1)).toFixed(2) : '' });
+const blankRec = () => ({ id: uid(), date: DATE, field: '', variety: '', task: '', pay: '', rate: '', classes: [], qty: '', piece: '', hourly: HOURLY, start: '', finish: '', brk: '', sup: '', team: '' });
+
+const SAMPLE = () => [
+  { id: uid(), date: DATE, field: 'F1100', variety: 'Karima', task: '1002', pay: '5391', rate: 'PW',
+    classes: [{ cls: '1', pack: '250g punnet', qty: '48', piece: '0.42' }, { cls: '2', pack: '250g punnet', qty: '12', piece: '0.31' }],
+    hourly: HOURLY, start: '06:30', finish: '12:00', brk: '0:30', sup: 'Kyla Crosby', team: '' },
+  { id: uid(), date: DATE, field: 'F2392', variety: '', task: '1293', pay: '5380', rate: 'TW',
+    classes: [], hourly: HOURLY, start: '07:00', finish: '15:30', brk: '0:45', sup: 'Tristen Spence', team: '' },
+  { id: uid(), date: DATE, field: 'F2392', variety: 'BTRAS', task: '1002', pay: '5444', rate: 'PW',
+    classes: [{ cls: '1', pack: '1kg Bin', qty: '26', piece: '1.05' }, { cls: '2', pack: '250g punnet', qty: '34', piece: '0.31' }, { cls: '3', pack: '150g punnet', qty: '9', piece: '0.15' }],
+    hourly: HOURLY, start: '06:15', finish: '13:45', brk: '0:30', sup: 'Aislinn Kaur', team: '' }
+];
+
+const parseHM = s => {
+  const m = /^\s*(\d{1,2})\s*[:.]\s*(\d{2})\s*$/.exec(s || '');
+  if (!m) return null;
+  const h = +m[1], mi = +m[2];
+  if (h > 23 || mi > 59) return null;
+  return h * 60 + mi;
+};
+const fmtHM = n => (n == null ? '—' : Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0'));
+const money = n => (n == null ? '—' : '£' + n.toFixed(2));
+
+class Component extends DCLogic {
+  state = { ver: null, view: null, recs: SAMPLE(), sel: 0, openKey: null, query: '', showIssues: false, submitted: false, toast: '', bulkOpen: false, demoOpen: false, dlg: false, preset: 'sample' };
+
+  get ver() { return this.state.ver || this.props.version || 'A'; }
+  get view() { return this.state.view || this.props.view || 'grid'; }
+  get locked() { return this.state.submitted; }
+
+  /* ---------- derivations ---------- */
+  fieldOf(r) { return FIELDS.filter(f => f.code === r.field)[0]; }
+  taskOf(r) { return TASKS.filter(t => t.code === r.task)[0]; }
+  empOf(r) { return EMPS.filter(e => e.code === r.pay)[0]; }
+  productOf(r) { const f = this.fieldOf(r); return f ? f.product : ''; }
+  nonCrop(r) { const f = this.fieldOf(r); return !!(f && f.nonCrop); }
+  varietiesOf(r) { const f = this.fieldOf(r); return f ? f.varieties : []; }
+  soleVariety(r) { const vs = this.varietiesOf(r); return vs.length === 1 ? vs[0] : null; }
+  varietyCtl(key, i, msg) {
+    const r = this.state.recs[i];
+    if (this.nonCrop(r)) return this.auto('— no product');
+    const sole = this.soleVariety(r);
+    if (sole) return this.auto(sole);
+    if (!this.fieldOf(r)) return this.auto('—');
+    return this.look(key, r.variety, this.varietyOpts(r), op => this.edit(i, { variety: op.name }), { ph: 'Variety', hint: 'Variety', msg: msg });
+  }
+  isPicking(r) { return r.task === '1002' && !this.nonCrop(r); }
+  isPiece(r) { return r.rate === 'PW' || r.rate === 'TPW'; }
+  isTeam(r) { return r.rate === 'TTW' || r.rate === 'TPW'; }
+  worked(r) {
+    const s = parseHM(r.start), f = parseHM(r.finish);
+    if (s == null || f == null || f <= s) return null;
+    const b = parseHM(r.brk) != null ? parseHM(r.brk) : (r.brk ? null : 0);
+    return f - s - (b || 0);
+  }
+  earnings(r) {
+    const w = this.worked(r);
+    if (this.isPiece(r)) {
+      if (!r.classes.length) {
+        const q = parseFloat(r.qty), p = parseFloat(r.piece);
+        return (isNaN(q) || isNaN(p)) ? null : q * p;
+      }
+      let t = 0, any = false;
+      r.classes.forEach(c => { const q = parseFloat(c.qty), p = parseFloat(c.piece); if (!isNaN(q) && !isNaN(p)) { t += q * p; any = true; } });
+      return any ? t : null;
+    }
+    if (w == null) return null;
+    const h = parseFloat(r.hourly);
+    return isNaN(h) ? null : (w / 60) * h;
+  }
+  issues(r) {
+    const o = {};
+    if (!r.date) o.date = 'Date required';
+    if (!r.field) o.field = 'Field required';
+    if (!r.task) o.task = 'Task required';
+    if (!r.pay) o.emp = 'Employee required';
+    if (!r.rate) o.rate = 'Rate type required';
+    if (!r.start) o.start = 'Start Time required';
+    if (!r.finish) o.finish = 'Finish Time required';
+    const s = parseHM(r.start), f = parseHM(r.finish);
+    if (r.start && s == null) o.start = 'Use HH:MM';
+    if (r.finish && f == null) o.finish = 'Use HH:MM';
+    if (s != null && f != null && f <= s) o.finish = 'Finish Time is before Start Time';
+    const w = this.worked(r);
+    if (w != null && w > 360 && (parseHM(r.brk) || 0) === 0) o.brk = 'Break required for shifts over 6 hours';
+    if (!this.nonCrop(r) && this.fieldOf(r) && !this.soleVariety(r) && !r.variety) o.variety = 'Variety required';
+    if (this.isPicking(r)) {
+      const ok = r.classes.some(c => c.cls && parseFloat(c.qty) > 0);
+      if (!ok) o.cls = 'Picking needs a class and quantity';
+    } else if (this.isPiece(r)) {
+      if (!(parseFloat(r.qty) > 0)) o.qty = 'Quantity required for piece work';
+      if (!(parseFloat(r.piece) > 0)) o.piece = 'Piece rate required for piece work';
+    }
+    if (this.isTeam(r) && !r.team) o.team = 'Team required for team work';
+    if (!r.sup) o.sup = 'Supervisor required';
+    return o;
+  }
+  refOf(i) { return REF_BASE(i); }
+
+  /* ---------- mutations ---------- */
+  edit(i, patch) {
+    const recs = this.state.recs.map((r, k) => k === i ? Object.assign({}, r, patch) : r);
+    this.setState({ recs });
+  }
+  editClass(i, ci, patch) {
+    const recs = this.state.recs.map((r, k) => {
+      if (k !== i) return r;
+      return Object.assign({}, r, { classes: r.classes.map((c, j) => j === ci ? Object.assign({}, c, patch) : c) });
+    });
+    this.setState({ recs });
+  }
+  addClass(i) {
+    const r = this.state.recs[i];
+    const used = r.classes.map(c => c.cls);
+    const next = ['1', '2', '3'].filter(c => used.indexOf(c) < 0)[0] || '1';
+    const pack = r.classes.length ? r.classes[r.classes.length - 1].pack : (PACKS[this.productOf(r)] || [])[0] || '';
+    this.edit(i, { classes: r.classes.concat([cls(next, pack)]) });
+  }
+  delClass(i, ci) {
+    const r = this.state.recs[i];
+    this.edit(i, { classes: r.classes.filter((c, j) => j !== ci) });
+  }
+  addRow() {
+    const recs = this.state.recs.concat([blankRec()]);
+    this.setState({ recs, sel: recs.length - 1, openKey: null });
+  }
+  delRow(i) {
+    const recs = this.state.recs.filter((r, k) => k !== i);
+    this.setState({ recs, sel: Math.max(0, Math.min(this.state.sel, recs.length - 1)), openKey: null, toast: 'Row deleted' });
+    this.ping();
+  }
+  dupLast() {
+    const recs = this.state.recs;
+    if (!recs.length) return this.addRow();
+    const last = recs[recs.length - 1];
+    const copy = Object.assign({}, last, { id: uid(), classes: last.classes.map(c => Object.assign({}, c)) });
+    this.setState({ recs: recs.concat([copy]), sel: recs.length, toast: 'Duplicated row ' + recs.length });
+    this.ping();
+  }
+  ping() { clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  toast(msg) { this.setState({ toast: msg }); this.ping(); }
+  openMenu(key) { this.setState({ openKey: this.state.openKey === key ? null : key, query: '' }); }
+
+  loadPreset(k) {
+    const base = { openKey: null, query: '', preset: k, submitted: false, showIssues: false, sel: 0, bulkOpen: false, toast: '' };
+    if (k === 'empty') return this.setState(Object.assign(base, { recs: [blankRec()] }));
+    if (k === 'sample') return this.setState(Object.assign(base, { recs: SAMPLE() }));
+    if (k === 'location') {
+      const recs = SAMPLE().slice(0, 2).concat([
+        Object.assign(blankRec(), { field: 'L001', task: '1221', pay: '5363', rate: 'TW', start: '08:00', finish: '16:00', brk: '0:30', sup: 'Kyla Crosby' }),
+        Object.assign(blankRec(), { field: 'F1180', task: '1293', pay: '5450', rate: 'TW', start: '07:30', finish: '14:00', brk: '0:30', sup: 'Aislinn Kaur' })
+      ]);
+      return this.setState(Object.assign(base, { recs, sel: 2 }));
+    }
+    if (k === 'searching') {
+      const recs = SAMPLE().concat([Object.assign(blankRec(), { field: 'F1100', variety: 'Karima', task: '1002' })]);
+      return this.setState(Object.assign(base, { recs, sel: 3, openKey: 'r3.emp' }));
+    }
+    if (k === 'team') {
+      const recs = SAMPLE().map(r => Object.assign({}, r, { rate: r.rate === 'TW' ? 'TTW' : 'TPW', team: 'T04 – Tunnel Team 4', classes: r.classes.map(c => Object.assign({}, c)) }));
+      return this.setState(Object.assign(base, { recs }));
+    }
+    if (k === 'issues') {
+      const recs = SAMPLE();
+      recs[1] = Object.assign({}, recs[1], { finish: '05:30' });
+      recs[2] = Object.assign({}, recs[2], { brk: '' });
+      return this.setState(Object.assign(base, { recs, showIssues: true }));
+    }
+    if (k === 'submitted') return this.setState(Object.assign(base, { recs: SAMPLE(), submitted: true }));
+  }
+
+  submit() {
+    const bad = this.state.recs.filter(r => Object.keys(this.issues(r)).length).length;
+    if (bad) { this.setState({ showIssues: true, preset: 'custom' }); this.toast(bad + ' row(s) need attention'); return; }
+    this.setState({ submitted: true, openKey: null, preset: 'submitted' });
+    this.toast('Submitted for approval');
+  }
+
+  /* ---------- control builders ---------- */
+  auto(v) { return { isAuto: true, v: (v == null || v === '') ? '—' : String(v) }; }
+  calc(v) { return { isCalc: true, v: (v == null || v === '') ? '—' : String(v) }; }
+  txt(v, onChange, ph, msg) {
+    if (this.locked) return this.auto(v);
+    const bad = !!(msg && this.state.showIssues);
+    const c = { v: v == null ? '' : String(v), ph: ph || '', onInput: e => onChange(e.target.value), msg: msg || '' };
+    if (bad) c.isTextBad = true; else c.isText = true;
+    return c;
+  }
+  date(key, v, onPick, msg) {
+    if (this.locked) return this.auto(v);
+    return {
+      isDate: true, v: v == null ? '' : String(v), ph: 'dd/mm/yyyy',
+      open: this.state.openKey === key,
+      toggle: () => this.openMenu(key),
+      pick: x => { onPick(x); this.setState({ openKey: null }); },
+      bad: !!(msg && this.state.showIssues), msg: msg || ''
+    };
+  }
+  weekOf(r) {
+    const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec((r.date || '').trim());
+    if (!m) return '—';
+    const dt = new Date(Date.UTC(+m[3], +m[2] - 1, +m[1]));
+    const day = dt.getUTCDay() || 7;
+    dt.setUTCDate(dt.getUTCDate() + 4 - day);
+    const start = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+    return String(Math.ceil(((dt - start) / 86400000 + 1) / 7));
+  }
+  look(key, v, opts, onPick, o) {
+    o = o || {};
+    if (this.locked) return this.auto(v);
+    return {
+      isLook: true, v: v == null ? '' : String(v), ph: o.ph || 'Select', opts,
+      open: this.state.openKey === key, query: this.state.query,
+      toggle: () => this.openMenu(key),
+      setQuery: q => this.setState({ query: q }),
+      pick: op => { onPick(op); this.setState({ openKey: null, query: '' }); },
+      bad: !!(o.msg && this.state.showIssues), msg: o.msg || '', foot: o.foot || '', hint: o.hint || 'Search code or name'
+    };
+  }
+
+  fieldOpts() { return FIELDS.map(f => ({ code: f.code, name: f.name, meta: f.nonCrop ? 'location' : f.product })); }
+  varietyOpts(r) { const f = this.fieldOf(r); return (f ? f.varieties : []).map(v => ({ name: v })); }
+  taskOpts() { return TASKS.map(t => ({ code: t.code, name: t.name })); }
+  empOpts() { return EMPS.map(e => ({ code: e.code, name: e.name, meta: e.sup })); }
+  packOpts(r) { return (PACKS[this.productOf(r)] || Object.keys(PACK_RATE)).map(p => ({ name: p })); }
+  clsOpts() { return [{ code: '1', name: 'Class 1' }, { code: '2', name: 'Class 2' }, { code: '3', name: 'Class 3' }]; }
+
+  pickField(i, op) {
+    const r = this.state.recs[i];
+    const f = FIELDS.filter(x => x.code === op.code)[0];
+    if (f && f.nonCrop) { this.edit(i, { field: op.code, variety: '', classes: [] }); return; }
+    const keepVar = f && f.varieties.length === 1 ? f.varieties[0] : (f && f.varieties.indexOf(r.variety) > -1 ? r.variety : '');
+    const packs = PACKS[f ? f.product : ''] || [];
+    const classes = r.classes.map(c => packs.indexOf(c.pack) > -1 ? c : Object.assign({}, c, { pack: packs[0] || '', piece: packs[0] ? (PACK_RATE[packs[0]] * (CLASS_MULT[c.cls] || 1)).toFixed(2) : '' }));
+    this.edit(i, { field: op.code, variety: keepVar, classes });
+  }
+  pickTask(i, op) {
+    const r = this.state.recs[i];
+    const patch = { task: op.code };
+    if (op.code === '1002' && !r.classes.length) patch.classes = [cls('1', (PACKS[this.productOf(r)] || [])[0])];
+    if (op.code !== '1002') patch.classes = [];
+    const t = TASKS.filter(x => x.code === op.code)[0];
+    if (t && t.sup) patch.hourly = SUP_HOURLY;
+    else if (r.hourly === SUP_HOURLY) patch.hourly = HOURLY;
+    this.edit(i, patch);
+  }
+  pickEmp(i, op) {
+    const r = this.state.recs[i];
+    this.edit(i, { pay: op.code, sup: r.sup || (EMPS.filter(e => e.code === op.code)[0] || {}).sup || '' });
+  }
+  pickRate(i, op) {
+    const patch = { rate: op.code };
+    if (op.code !== 'TTW' && op.code !== 'TPW') patch.team = '';
+    this.edit(i, patch);
+  }
+  setClassPack(i, ci, pack) {
+    const c = this.state.recs[i].classes[ci];
+    this.editClass(i, ci, { pack, piece: (PACK_RATE[pack] * (CLASS_MULT[c.cls] || 1)).toFixed(2) });
+  }
+  setClassCls(i, ci, code) {
+    const c = this.state.recs[i].classes[ci];
+    this.editClass(i, ci, { cls: code, piece: c.pack ? (PACK_RATE[c.pack] * (CLASS_MULT[code] || 1)).toFixed(2) : c.piece });
+  }
+
+  classCtls(i, keyPrefix) {
+    const r = this.state.recs[i];
+    return r.classes.map((c, ci) => ({
+      cls: this.look(keyPrefix + '.c' + ci + '.cls', c.cls, this.clsOpts(), op => this.setClassCls(i, ci, op.code), { ph: '—', hint: 'Class' }),
+      pack: this.look(keyPrefix + '.c' + ci + '.pack', c.pack, this.packOpts(r), op => this.setClassPack(i, ci, op.name), { ph: 'Pack size', hint: 'Pack size' }),
+      qty: this.txt(c.qty, v => this.editClass(i, ci, { qty: v }), '0'),
+      piece: this.isPiece(r) ? this.txt(c.piece, v => this.editClass(i, ci, { piece: v }), '0.00') : this.auto('—'),
+      canRemove: !this.locked && r.classes.length > 1,
+      remove: () => this.delClass(i, ci)
+    }));
+  }
+
+  /* ---------- grid rows ---------- */
+  aCells(i) {
+    const r = this.state.recs[i], iss = this.issues(r), f = this.fieldOf(r), t = this.taskOf(r), e = this.empOf(r);
+    const picking = this.isPicking(r);
+    const ctls = this.classCtls(i, 'r' + i);
+    const piece = this.isPiece(r);
+    const subCol = (key, extra) => {
+      if (!picking) {
+        if (piece && key === 'qty') return this.txt(r.qty, x => this.edit(i, { qty: x }), '0', iss.qty);
+        if (piece && key === 'piece') return this.txt(r.piece, x => this.edit(i, { piece: x }), '0.00', iss.piece);
+        return this.auto('—');
+      }
+      if (key === 'piece' && !piece) return this.auto('—');
+      const segs = ctls.map((c, ci) => ({ ctl: c[key], canRemove: !!extra && c.canRemove, remove: c.remove }));
+      const cell = { isSub: true, segs };
+      if (extra) { cell.canAdd = !this.locked; cell.add = () => this.addClass(i); } else { cell.padAdd = !this.locked; }
+      return cell;
+    };
+    return [
+      this.auto(this.refOf(i)), this.auto(this.weekOf(r)),
+      this.date('r' + i + '.date', r.date, x => this.edit(i, { date: x }), iss.date),
+      this.look('r' + i + '.field', f ? f.code + ' – ' + f.name : '', this.fieldOpts(), op => this.pickField(i, op), { ph: 'Field / loc', msg: iss.field, foot: 'Product and varieties follow the field' }),
+      this.auto(this.nonCrop(r) ? '— none' : this.productOf(r)),
+      this.varietyCtl('r' + i + '.var', i, iss.variety),
+      this.look('r' + i + '.task', t ? t.code + ' – ' + t.name : '', this.taskOpts(), op => this.pickTask(i, op), { ph: 'Task', msg: iss.task }),
+      this.look('r' + i + '.emp', e ? e.code + ' – ' + e.name : '', this.empOpts(), op => this.pickEmp(i, op), { ph: 'Employee', msg: iss.emp, hint: 'Payroll no. or name', foot: 'Supervisor prefills from the employee' }),
+      this.look('r' + i + '.rate', r.rate, RATES, op => this.pickRate(i, op), { ph: 'Rate', msg: iss.rate, hint: 'TW · PW · TTW · TPW' }),
+      subCol('cls', true), subCol('pack'), subCol('qty'), subCol('piece'),
+      this.isPiece(r) ? this.auto('—') : this.txt(r.hourly, v => this.edit(i, { hourly: v }), '0.00'),
+      this.txt(r.start, v => this.edit(i, { start: v }), 'HH:MM', iss.start),
+      this.txt(r.finish, v => this.edit(i, { finish: v }), 'HH:MM', iss.finish),
+      this.txt(r.brk, v => this.edit(i, { brk: v }), 'H:MM', iss.brk),
+      this.calc(fmtHM(this.worked(r))), this.calc(money(this.earnings(r))),
+      this.look('r' + i + '.sup', r.sup, SUPS.map(s => ({ name: s })), op => this.edit(i, { sup: op.name }), { ph: 'Supervisor', msg: iss.sup, hint: 'Supervisor' }),
+      this.isTeam(r)
+        ? this.look('r' + i + '.team', r.team, TEAMS.map(t2 => ({ code: t2.code, name: t2.name })), op => this.edit(i, { team: op.code + ' – ' + op.name }), { ph: 'Team', msg: iss.team, hint: 'Team code or name' })
+        : this.auto('—'),
+      this.auto('L. England')
+    ];
+  }
+
+  bCells(i, ci, primary) {
+    const r = this.state.recs[i], iss = this.issues(r), f = this.fieldOf(r), t = this.taskOf(r), e = this.empOf(r);
+    const c = r.classes[ci] || { cls: '', pack: '', qty: '', piece: '' };
+    const has = r.classes.length > 0;
+    const shift = (ctl, v) => primary ? ctl : this.auto(v);
+    const ctls = has ? this.classCtls(i, 'r' + i) : [];
+    const cc = ctls[ci] || {};
+    return [
+      this.auto(this.state.submitted ? 'TS-' + (24107 + i) + '-' + (ci + 1) : 'auto'), this.auto(this.weekOf(r)),
+      shift(this.date('r' + i + '.date', r.date, x => this.edit(i, { date: x }), iss.date), r.date),
+      shift(this.look('r' + i + '.field', r.field, this.fieldOpts(), op => this.pickField(i, op), { ph: 'Code', msg: iss.field, hint: 'Field code' }), r.field),
+      this.auto(f ? f.name : ''), this.auto(this.nonCrop(r) ? '— none' : this.productOf(r)),
+      primary ? this.varietyCtl('r' + i + '.var', i, iss.variety) : this.auto(this.nonCrop(r) ? '— none' : r.variety),
+      shift(this.look('r' + i + '.task', r.task, this.taskOpts(), op => this.pickTask(i, op), { ph: 'Code', msg: iss.task, hint: 'Task code' }), r.task),
+      this.auto(t ? t.name : ''),
+      has ? cc.pack : this.auto('—'),
+      has ? cc.cls : this.auto('—'),
+      has ? cc.qty : (this.isPiece(r) ? shift(this.txt(r.qty, x => this.edit(i, { qty: x }), '0', iss.qty), r.qty) : this.auto('—')),
+      shift(this.look('r' + i + '.emp', r.pay, this.empOpts(), op => this.pickEmp(i, op), { ph: 'Payroll no.', msg: iss.emp, hint: 'Payroll no. or name', foot: 'Employee Name fills from this' }), r.pay),
+      this.auto(e ? e.name : ''),
+      shift(this.look('r' + i + '.rate', r.rate, RATES, op => this.pickRate(i, op), { ph: 'Rate', msg: iss.rate, hint: 'TW · PW · TTW · TPW' }), r.rate),
+      !this.isPiece(r) ? this.auto('—') : (has ? cc.piece : shift(this.txt(r.piece, x => this.edit(i, { piece: x }), '0.00', iss.piece), r.piece)),
+      this.isPiece(r) ? this.auto('—') : shift(this.txt(r.hourly, v => this.edit(i, { hourly: v }), '0.00'), r.hourly),
+      shift(this.txt(r.start, v => this.edit(i, { start: v }), 'HH:MM', iss.start), r.start),
+      shift(this.txt(r.finish, v => this.edit(i, { finish: v }), 'HH:MM', iss.finish), r.finish),
+      shift(this.txt(r.brk, v => this.edit(i, { brk: v }), 'H:MM', iss.brk), r.brk),
+      this.calc(primary ? fmtHM(this.worked(r)) : '0:00'),
+      this.calc(this.isPiece(r)
+        ? (has
+          ? (!isNaN(parseFloat(c.qty)) && !isNaN(parseFloat(c.piece)) ? money(parseFloat(c.qty) * parseFloat(c.piece)) : '—')
+          : money(this.earnings(r)))
+        : (primary ? money(this.earnings(r)) : money(0))),
+      shift(this.look('r' + i + '.sup', r.sup, SUPS.map(s => ({ name: s })), op => this.edit(i, { sup: op.name }), { ph: 'Supervisor', msg: iss.sup, hint: 'Supervisor' }), r.sup),
+      this.isTeam(r)
+        ? shift(this.look('r' + i + '.team', r.team, TEAMS.map(t2 => ({ code: t2.code, name: t2.name })), op => this.edit(i, { team: op.code + ' – ' + op.name }), { ph: 'Team', msg: iss.team, hint: 'Team code or name' }), r.team)
+        : this.auto('—'),
+      this.auto('L. England')
+    ];
+  }
+
+  renderVals() {
+    const v = this.ver, view = this.view, st = this.state;
+    const recs = st.recs;
+    const colsA = ['Timesheet Ref. No.', 'Week', 'Date', 'Field (/Loc)', 'Product', 'Variety', 'Task', 'Employee', 'Rate Type', 'Class', 'Pack Size', 'Quantity', 'Piece Rate', 'Hourly Rate', 'Start Time', 'Finish Time', 'Break', 'Total Time Worked', 'Earnings', 'Supervisor', 'Team', 'Created By'];
+    const colsB = ['Timesheet Ref. No.', 'Week', 'Date', 'Field Code', 'Field Name', 'Product', 'Variety', 'Task Code', 'Task Name', 'Pack Size', 'Class', 'Quantity', 'Payroll Number', 'Employee Name', 'Rate Type', 'Piece Rate', 'Hourly Rate', 'Start Time', 'Finish Time', 'Break', 'Total Time Worked', 'Earnings', 'Supervisor', 'Team Name', 'Created By'];
+    const cols = (v === 'A' ? colsA : colsB).map(label => ({ label }));
+
+    const rows = [];
+    recs.forEach((r, i) => {
+      if (v === 'A') {
+        rows.push({ n: String(rows.length + 1), cells: this.aCells(i), act: { open: () => this.setState({ dlg: true, sel: i, openKey: null }), del: () => this.delRow(i), canAddCls: false } });
+      } else {
+        const n = Math.max(1, r.classes.length);
+        for (let ci = 0; ci < n; ci++) {
+          rows.push({
+            n: String(rows.length + 1), cells: this.bCells(i, ci, ci === 0),
+            act: {
+              open: () => this.setState({ dlg: true, sel: i, openKey: null }),
+              del: () => (r.classes.length > 1 ? this.delClass(i, ci) : this.delRow(i)),
+              canAddCls: !this.locked && this.isPicking(r) && ci === 0 && r.classes.length < 3,
+              addCls: () => this.addClass(i)
+            }
+          });
+        }
+      }
+    });
+
+    let mins = 0, pay = 0, issueRows = 0, firstIssue = -1;
+    recs.forEach((r, i) => {
+      const w = this.worked(r); if (w) mins += w;
+      const e = this.earnings(r); if (e) pay += e;
+      if (Object.keys(this.issues(r)).length) { issueRows++; if (firstIssue < 0) firstIssue = i; }
+    });
+
+    const sel = Math.min(st.sel, recs.length - 1);
+    const r = recs[sel];
+    const iss = r ? this.issues(r) : {};
+    const f = r ? this.fieldOf(r) : null, t = r ? this.taskOf(r) : null, e = r ? this.empOf(r) : null;
+    const sections = [];
+    if (r) {
+      sections.push({
+        title: 'REFERENCE', note: 'automated',
+        fields: [
+          { label: 'Timesheet Ref. No.', ctl: this.auto(this.refOf(sel)) },
+          { label: 'Week', ctl: this.auto(this.weekOf(r)) },
+          { label: 'Date', ctl: this.date('d.date', r.date, x => this.edit(sel, { date: x }), iss.date) },
+          { label: 'Created By', ctl: this.auto('L. England') }
+        ]
+      });
+      sections.push({
+        title: 'JOB', note: v === 'A' ? 'code – name lookups' : 'codes drive names',
+        fields: v === 'A'
+          ? [
+            { label: 'Field (/Loc)', ctl: this.look('d.field', f ? f.code + ' – ' + f.name : '', this.fieldOpts(), op => this.pickField(sel, op), { ph: 'Field / loc', msg: iss.field, foot: 'Product and varieties follow the field' }) },
+            { label: 'Product', ctl: this.auto(this.nonCrop(r) ? '— no product at this location' : this.productOf(r)) },
+            { label: 'Variety', ctl: this.varietyCtl('d.var', sel, iss.variety) },
+            { label: 'Task', ctl: this.look('d.task', t ? t.code + ' – ' + t.name : '', this.taskOpts(), op => this.pickTask(sel, op), { ph: 'Task', msg: iss.task }) }
+          ]
+          : [
+            { label: 'Field Code', ctl: this.look('d.field', r.field, this.fieldOpts(), op => this.pickField(sel, op), { ph: 'Code', msg: iss.field, hint: 'Field code' }) },
+            { label: 'Field Name', ctl: this.auto(f ? f.name : '') },
+            { label: 'Product', ctl: this.auto(this.nonCrop(r) ? '— no product at this location' : this.productOf(r)) },
+            { label: 'Variety', ctl: this.varietyCtl('d.var', sel, iss.variety) },
+            { label: 'Task Code', ctl: this.look('d.task', r.task, this.taskOpts(), op => this.pickTask(sel, op), { ph: 'Code', msg: iss.task, hint: 'Task code' }) },
+            { label: 'Task Name', ctl: this.auto(t ? t.name : '') }
+          ]
+      });
+      const teamCtl = this.isTeam(r)
+        ? this.look('d.team', r.team, TEAMS.map(t2 => ({ code: t2.code, name: t2.name })), op => this.edit(sel, { team: op.code + ' – ' + op.name }), { ph: 'Team', msg: iss.team, hint: 'Team code or name' })
+        : this.auto('— (not team work)');
+      sections.push({
+        title: 'WORKER', note: this.isTeam(r) ? 'team work' : '',
+        fields: v === 'A'
+          ? [
+            { label: 'Employee', ctl: this.look('d.emp', e ? e.code + ' – ' + e.name : '', this.empOpts(), op => this.pickEmp(sel, op), { ph: 'Employee', msg: iss.emp, hint: 'Payroll no. or name' }) },
+            { label: 'Rate Type', ctl: this.look('d.rate', r.rate, RATES, op => this.pickRate(sel, op), { ph: 'Rate', msg: iss.rate, hint: 'TW · PW · TTW · TPW' }) },
+            { label: 'Team', ctl: teamCtl },
+            { label: 'Supervisor', ctl: this.look('d.sup', r.sup, SUPS.map(s => ({ name: s })), op => this.edit(sel, { sup: op.name }), { ph: 'Supervisor', msg: iss.sup, hint: 'Supervisor' }) }
+          ]
+          : [
+            { label: 'Payroll Number', ctl: this.look('d.emp', r.pay, this.empOpts(), op => this.pickEmp(sel, op), { ph: 'Payroll no.', msg: iss.emp, hint: 'Payroll no. or name', foot: 'Employee Name fills from this' }) },
+            { label: 'Employee Name', ctl: this.auto(e ? e.name : '') },
+            { label: 'Rate Type', ctl: this.look('d.rate', r.rate, RATES, op => this.pickRate(sel, op), { ph: 'Rate', msg: iss.rate, hint: 'TW · PW · TTW · TPW' }) },
+            { label: 'Team Name', ctl: teamCtl },
+            { label: 'Supervisor', ctl: this.look('d.sup', r.sup, SUPS.map(s => ({ name: s })), op => this.edit(sel, { sup: op.name }), { ph: 'Supervisor', msg: iss.sup, hint: 'Supervisor' }) }
+          ]
+      });
+      if (!this.isPicking(r) && this.isPiece(r)) {
+        sections.push({
+          title: 'OUTPUT', note: 'piece work, non-picking task',
+          fields: [
+            { label: 'Class', ctl: this.auto('— picking only') },
+            { label: 'Pack Size', ctl: this.auto('— picking only') },
+            { label: 'Quantity', ctl: this.txt(r.qty, x => this.edit(sel, { qty: x }), '0', iss.qty) },
+            { label: 'Piece Rate', ctl: this.txt(r.piece, x => this.edit(sel, { piece: x }), '0.00', iss.piece) }
+          ]
+        });
+      } else if (!this.isPicking(r)) {
+        sections.push({ title: 'OUTPUT', note: 'picking only', fields: [{ label: 'Class / Pack Size / Quantity / Piece Rate', ctl: this.auto('— not a picking task') }] });
+      } else if (v === 'A') {
+        sections.push({ title: 'OUTPUT', note: 'class sub-rows', fields: [], isClassEditor: true });
+      } else {
+        const ctls = this.classCtls(sel, 'd');
+        const c0 = ctls[0] || {};
+        sections.push({
+          title: 'OUTPUT', note: 'one class per row',
+          fields: [
+            { label: 'Pack Size', ctl: c0.pack || this.auto('') },
+            { label: 'Class', ctl: c0.cls || this.auto('') },
+            { label: 'Quantity', ctl: c0.qty || this.auto('') },
+            { label: 'Piece Rate', ctl: c0.piece || this.auto('') },
+            { label: 'Second class this shift', ctl: this.auto('Adds another row — shift fields repeat') }
+          ]
+        });
+      }
+      sections.push({
+        title: 'TIME & PAY', note: '',
+        fields: [
+          { label: 'Start Time', ctl: this.txt(r.start, x => this.edit(sel, { start: x }), 'HH:MM', iss.start) },
+          { label: 'Finish Time', ctl: this.txt(r.finish, x => this.edit(sel, { finish: x }), 'HH:MM', iss.finish) },
+          { label: 'Break', ctl: this.txt(r.brk, x => this.edit(sel, { brk: x }), 'H:MM', iss.brk) },
+          { label: 'Hourly Rate', ctl: this.isPiece(r) ? this.auto('— piece work') : this.txt(r.hourly, x => this.edit(sel, { hourly: x }), '0.00') }
+        ],
+        isTotals: true
+      });
+    }
+
+    const bulkKeys = [
+      { label: 'Date', k: 'date', v: r ? recs[0].date : '' },
+      { label: 'Task', k: 'task', v: recs[0] ? (this.taskOf(recs[0]) || {}).name || '—' : '' },
+      { label: v === 'A' ? 'Field (/Loc)' : 'Field Code', k: 'field', v: recs[0] ? recs[0].field || '—' : '' },
+      { label: 'Rate Type', k: 'rate', v: recs[0] ? recs[0].rate || '—' : '' },
+      { label: 'Start Time', k: 'start', v: recs[0] ? recs[0].start || '—' : '' },
+      { label: 'Finish Time', k: 'finish', v: recs[0] ? recs[0].finish || '—' : '' },
+      { label: 'Break', k: 'brk', v: recs[0] ? recs[0].brk || '—' : '' },
+      { label: 'Supervisor', k: 'sup', v: recs[0] ? recs[0].sup || '—' : '' }
+    ];
+
+    const presetDefs = [['empty', 'Empty sheet'], ['sample', 'Sample day'], ['searching', 'Searching'], ['location', 'Office / single variety'], ['team', 'Team work'], ['issues', 'Validation'], ['submitted', 'Submitted']];
+
+    return {
+      isA: v === 'A', isB: v === 'B', isGrid: view === 'grid', isDrawer: view === 'drawer',
+      setA: () => this.setState({ ver: 'A', openKey: null }), setB: () => this.setState({ ver: 'B', openKey: null }),
+      setGrid: () => this.setState({ view: 'grid', openKey: null }), setDrawer: () => this.setState({ view: 'drawer', openKey: null }),
+      presets: presetDefs.map(([k, label]) => ({ label, on: st.preset === k, off: st.preset !== k, pick: () => this.loadPreset(k) })),
+      cols, rows, colCount: String(cols.length),
+      gridTitle: v === 'A' ? 'Version A — combined Code – Name lookups, class sub-rows' : 'Version B — split code / name columns, one class per row',
+      gridNote: v === 'A' ? 'Class, Pack Size, Quantity and Piece Rate subdivide inside the parent row' : 'A second class for the same shift is a second row',
+      addRow: () => this.addRow(), dupLast: () => this.dupLast(),
+      totals: [
+        { label: 'ROWS', v: String(rows.length) },
+        { label: 'TOTAL HOURS', v: fmtHM(mins) },
+        { label: 'TOTAL EARNINGS', v: money(pay) }
+      ],
+      submitted: st.submitted,
+      savedTitle: 'Submitted ' + rows.length + ' rows for approval',
+      savedSub: 'Week 35 · Thu 27 Aug 2026 · sent to ' + SUPS.join(', ') + '. Rows are locked until approval.',
+      unlock: () => this.setState({ submitted: false, preset: 'custom', toast: 'Unlocked for editing' }),
+      newSheet: () => this.loadPreset('empty'),
+      hasIssues: st.showIssues && issueRows > 0 && !st.submitted,
+      issueTitle: issueRows + (issueRows === 1 ? ' row needs attention before submission' : ' rows need attention before submission'),
+      issueHint: 'Rows with a red field are blocked. Fix them or delete the row.',
+      jumpIssue: () => this.setState({ view: 'drawer', sel: Math.max(0, firstIssue), openKey: null }),
+      canSubmit: issueRows === 0 && !st.submitted && recs.length > 0,
+      cannotSubmit: issueRows > 0 || st.submitted || recs.length === 0,
+      submit: () => this.submit(),
+      saveDraft: () => this.toast('Draft saved'),
+      toast: st.toast, toastOn: !!st.toast,
+      bulkOpen: st.bulkOpen, toggleBulk: () => this.setState({ bulkOpen: !st.bulkOpen }),
+      demoOpen: st.demoOpen, toggleDemo: () => this.setState({ demoOpen: !st.demoOpen }),
+      bulkCols: bulkKeys.map(b => ({
+        label: b.label, v: b.v,
+        apply: () => {
+          const src = recs[0];
+          if (!src) return;
+          this.setState({ recs: recs.map(x => Object.assign({}, x, { [b.k]: src[b.k] })), bulkOpen: false, toast: b.label + ' filled down' });
+          this.ping();
+        }
+      })),
+      summaryCols: ['Ref', 'Date', v === 'A' ? 'Field (/Loc)' : 'Field Code', v === 'A' ? 'Task' : 'Task Code', v === 'A' ? 'Employee' : 'Payroll No.', 'Rate', 'Time', 'Total', 'Earnings'].map(label => ({ label })),
+      summaryRows: recs.map((x, i) => {
+        const xf = this.fieldOf(x), xt = this.taskOf(x), xe = this.empOf(x);
+        const cells = [
+          this.refOf(i), x.date || '—',
+          v === 'A' ? (xf ? xf.code + ' – ' + xf.name : '—') : (x.field || '—'),
+          v === 'A' ? (xt ? xt.code + ' – ' + xt.name : '—') : (x.task || '—'),
+          v === 'A' ? (xe ? xe.code + ' – ' + xe.name : '—') : (x.pay || '—'),
+          x.rate || '—',
+          (x.start || '—') + ' – ' + (x.finish || '—'),
+          fmtHM(this.worked(x)), money(this.earnings(x))
+        ].map(y => ({ v: y }));
+        return { cells, sel: i === sel, unsel: i !== sel, pick: () => this.setState({ sel: i, dlg: true, openKey: null }) };
+      }),
+      hasSel: !!r, noSel: !r,
+      drawerRef: this.refOf(sel),
+      drawerTitle: r ? (e ? e.code + ' – ' + e.name : 'New row') : '',
+      drawerSub: r ? [(f ? f.code + ' – ' + f.name : 'no field'), (t ? t.code + ' – ' + t.name : 'no task'), r.date].join(' · ') : '',
+      sections,
+      classRows: r ? this.classCtls(sel, 'd') : [],
+      classNote: v === 'A' ? 'Sub-rows apply to Pack Size, Quantity and Piece Rate. Piece rate defaults from pack size and class.' : '',
+      addClass: () => this.addClass(sel),
+      dlgOpen: st.dlg && !!r,
+      closeDlg: () => this.setState({ dlg: false, openKey: null }),
+      delSel: () => { this.delRow(sel); this.setState({ dlg: false }); },
+      saveRow: () => { const ok = !Object.keys(iss).length; this.setState({ showIssues: true, dlg: !ok }); this.toast(Object.keys(iss).length ? 'Row has ' + Object.keys(iss).length + ' issue(s)' : 'Row saved'); },
+      selTotal: r ? fmtHM(this.worked(r)) : '—',
+      selEarn: r ? money(this.earnings(r)) : '—'
+    };
+  }
+}
+</script>
+</body>
+</html>

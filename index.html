@@ -6,11 +6,14 @@
 <title>Lewis England</title>
 <meta name="description" content="Lewis England — international affairs, maps, GIS and composing. Projects in cemetery mapping and fruit farming digitisation." />
 <meta name="color-scheme" content="light dark" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Ctext x='16' y='22' font-family='ui-sans-serif,system-ui,sans-serif' font-size='17' font-weight='700' fill='%23fafafa' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23141210'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' font-weight='700' fill='%23faf8f5' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E" />
 
-<!-- Set theme + arm the entrance animation before first paint (no flash, and no
-     hidden content if JS is unavailable — .enter-armed is only ever added by JS). -->
+<link rel="preload" href="./fonts/Fraunces-latin-VF.woff2" as="font" type="font/woff2" crossorigin />
+
 <script>
+  // Runs before first paint: settles the theme (no flash), arms the entrance
+  // animation, and records whether the Popover API is available. .enter-armed
+  // is only ever added here, so without JS nothing is left hidden.
   (function () {
     var root = document.documentElement;
     try {
@@ -19,31 +22,65 @@
                        : matchMedia("(prefers-color-scheme: dark)").matches;
       if (dark) root.classList.add("dark");
     } catch (e) {}
+    if (!Object.prototype.hasOwnProperty.call(HTMLElement.prototype, "popover")) {
+      root.classList.add("no-popover");
+    }
     root.classList.add("enter-armed");
   })();
 </script>
 
 <style>
+  /* ------------------------------------------------------------------
+     Fraunces — one variable file, four axes.
+       opsz 9–144   optical size: sturdier at small sizes, finer at display
+       wght 100–900
+       SOFT 0–100   softens the terminals
+       WONK 0–1     swaps in the wonky letterforms (the singular g, y, w)
+     Axes are always listed opsz, wght, SOFT, WONK and in that order, so
+     font-variation-settings stays interpolable for the hover transitions.
+  ------------------------------------------------------------------ */
+
+  @font-face {
+    font-family: "Fraunces";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("./fonts/Fraunces-latin-VF.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Fraunces";
+    font-style: italic;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("./fonts/Fraunces-Italic-latin-VF.woff2") format("woff2");
+  }
+
   :root {
-    --background: 210 20% 98%;
-    --foreground: 220 20% 4%;
-    --muted-foreground: 215 16% 28%;
-    --card: 0 0% 100%;
-    --border: 210 15% 90%;
-    --accent: 210 15% 96%;
-    --ring: 215 12% 28%;
-    --radius: 0.5rem;
+    /* Warmed a little off the inspiration's cool grey — Fraunces sits better
+       on paper than on slate. */
+    --background: 40 30% 98%;
+    --foreground: 28 14% 9%;
+    --muted-foreground: 30 8% 34%;
+    --card: 40 40% 99.5%;
+    --border: 34 16% 88%;
+    --accent: 36 24% 94%;
+    --ring: 30 10% 30%;
+    --shadow: 28 20% 12%;
+
+    --radius: 0.75rem;
     --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .dark {
-    --background: 220 15% 8%;
-    --foreground: 210 20% 98%;
-    --muted-foreground: 215 15% 70%;
-    --card: 220 15% 11%;
-    --border: 220 15% 18%;
-    --accent: 220 15% 14%;
-    --ring: 210 8% 72%;
+    --background: 28 12% 7%;
+    --foreground: 40 24% 96%;
+    --muted-foreground: 36 10% 66%;
+    --card: 28 11% 11%;
+    --border: 30 8% 20%;
+    --accent: 30 9% 15%;
+    --ring: 38 14% 70%;
+    --shadow: 0 0% 0%;
   }
 
   * { box-sizing: border-box; }
@@ -57,36 +94,34 @@
     min-height: 100vh;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-    font-size: 15px;
-    line-height: 1.625;
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-variation-settings: "opsz" 14, "wght" 370, "SOFT" 20, "WONK" 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.22s var(--ease-out-quint),
-                color 0.22s var(--ease-out-quint);
   }
 
   ::selection {
-    background: hsl(var(--foreground) / 0.14);
+    background: hsl(var(--foreground) / 0.12);
   }
 
   main {
-    max-width: 36rem;
+    max-width: 34rem;
     margin: 0 auto;
-    padding: 2rem 0;
+    padding: 2.5rem 0 4rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.75rem;
   }
 
   @media (min-width: 768px) {
-    main { padding-top: 4rem; }
+    main { padding-top: 5.5rem; gap: 3.25rem; }
   }
 
-  .px { padding-left: 1rem; padding-right: 1rem; }
+  .px { padding-left: 1.5rem; padding-right: 1.5rem; }
 
-  h1, h2, h3 { margin: 0; font-size: inherit; font-weight: inherit; }
+  h1, h2 { margin: 0; font-size: inherit; font-weight: inherit; }
   p { margin: 0; }
   ul { list-style: none; margin: 0; padding: 0; }
 
@@ -100,64 +135,99 @@
   }
 
   .name {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    font-size: clamp(2.5rem, 9vw, 3.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    /* Display optical size, and the wonk fully on — this is the one place
+       the wonky letterforms get to be the point. */
+    font-variation-settings: "opsz" 144, "wght" 640, "SOFT" 50, "WONK" 1;
   }
 
   .location {
-    font-size: 0.875rem;
-    color: hsl(var(--muted-foreground) / 0.8);
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground) / 0.85);
+    font-variation-settings: "opsz" 9, "wght" 500, "SOFT" 0, "WONK" 0;
   }
 
-  /* ---------- Intro ---------- */
+  /* ---------- Lede ---------- */
 
-  .intro {
+  .lede {
+    font-size: clamp(1.0625rem, 3.4vw, 1.1875rem);
+    line-height: 1.55;
     text-wrap: pretty;
-    color: hsl(var(--muted-foreground) / 0.9);
+    color: hsl(var(--foreground) / 0.86);
+    font-variation-settings: "opsz" 40, "wght" 330, "SOFT" 40, "WONK" 0;
+  }
+
+  .lede em {
+    font-style: italic;
+    font-variation-settings: "opsz" 40, "wght" 360, "SOFT" 60, "WONK" 1;
   }
 
   /* ---------- Sections ---------- */
 
-  .section { display: flex; flex-direction: column; gap: 0.5rem; }
+  .section { display: flex; flex-direction: column; gap: 1.25rem; }
 
   .section-title {
-    font-size: 0.75rem;
-    line-height: 1rem;
-    font-weight: 500;
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: hsl(var(--muted-foreground) / 0.8);
+    color: hsl(var(--muted-foreground) / 0.7);
+    font-variation-settings: "opsz" 9, "wght" 600, "SOFT" 0, "WONK" 0;
   }
 
-  .stack-sm > li + li { margin-top: 0.375rem; }
-  .stack-md > li + li { margin-top: 0.75rem; }
+  .projects > li + li { margin-top: 1.5rem; }
+  .elsewhere > li + li { margin-top: 0.625rem; }
 
   .project-name {
-    font-weight: 500;
-    color: hsl(var(--foreground) / 0.9);
+    font-size: 1.375rem;
+    letter-spacing: -0.015em;
+    font-variation-settings: "opsz" 60, "wght" 500, "SOFT" 20, "WONK" 0;
+    transition: font-variation-settings 0.45s var(--ease-out-quint),
+                color 0.25s var(--ease-out-quint);
+  }
+
+  /* The axes themselves are the hover state: the name gains weight, softens,
+     and the wonk comes on. */
+  .row:hover .project-name,
+  .row:focus-within .project-name {
+    font-variation-settings: "opsz" 60, "wght" 620, "SOFT" 70, "WONK" 1;
   }
 
   .project-desc {
-    color: hsl(var(--muted-foreground) / 0.8);
+    margin-top: 0.3125rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
     text-wrap: pretty;
+    color: hsl(var(--muted-foreground) / 0.9);
+    font-variation-settings: "opsz" 14, "wght" 350, "SOFT" 20, "WONK" 0;
+  }
+
+  .elsewhere-name {
+    font-size: 1rem;
+    font-variation-settings: "opsz" 24, "wght" 400, "SOFT" 20, "WONK" 0;
+    transition: font-variation-settings 0.45s var(--ease-out-quint);
+  }
+
+  .row:hover .elsewhere-name {
+    font-variation-settings: "opsz" 24, "wght" 520, "SOFT" 60, "WONK" 1;
   }
 
   /* ---------- Links ---------- */
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+  a { color: inherit; text-decoration: none; }
 
   .link {
-    color: hsl(var(--muted-foreground));
-    transition: color 0.2s var(--ease-out-quint);
+    display: inline-block;
+    color: hsl(var(--foreground) / 0.92);
+    transition: color 0.25s var(--ease-out-quint);
   }
 
-  .link:hover,
-  .link:focus-visible { color: hsl(var(--foreground)); }
+  .link-muted { color: hsl(var(--muted-foreground)); }
+  .link:hover, .link:focus-visible { color: hsl(var(--foreground)); }
 
   .link-underline { position: relative; }
 
@@ -165,36 +235,40 @@
     content: "";
     position: absolute;
     inset-inline: 0;
-    bottom: -2px;
+    bottom: -0.15em;
     height: 1px;
     background-color: currentColor;
+    opacity: 0.5;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.2s var(--ease-out-quint);
+    transition: transform 0.35s var(--ease-out-quint);
   }
 
   .link:hover .link-underline::after,
-  .link:focus-visible .link-underline::after { transform: scaleX(1); }
+  .link:focus-visible .link-underline::after,
+  .trigger:hover .link-underline::after,
+  .trigger[aria-expanded="true"] .link-underline::after { transform: scaleX(1); }
 
-  /* The little ↗ that fades up as you approach a row, then commits on the link. */
   .arrow {
-    margin-left: 0.25rem;
+    margin-left: 0.3em;
     display: inline-block;
-    width: 0.75rem;
-    height: 0.75rem;
-    vertical-align: -0.125em;
+    width: 0.7em;
+    height: 0.7em;
+    vertical-align: baseline;
     opacity: 0;
-    transition: opacity 0.2s var(--ease-out-quint);
+    transform: translate(-2px, 2px);
+    transition: opacity 0.3s var(--ease-out-quint),
+                transform 0.3s var(--ease-out-quint);
   }
 
-  .row:hover .arrow { opacity: 0.5; }
+  .row:hover .arrow { opacity: 0.4; transform: translate(0, 0); }
   .link:hover .arrow,
-  .link:focus-visible .arrow { opacity: 1; }
+  .link:focus-visible .arrow { opacity: 1; transform: translate(0, 0); }
 
-  :where(a, button, summary):focus-visible {
+  :where(a, button):focus-visible {
     outline: 2px solid hsl(var(--ring));
-    outline-offset: 3px;
-    border-radius: 3px;
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   /* ---------- Theme toggle ---------- */
@@ -206,138 +280,199 @@
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
+    margin: 0.25rem -0.6rem 0 0;
     padding: 0;
-    margin: -0.25rem -0.5rem 0 0;
     border: 0;
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: 999px;
     background: transparent;
     color: hsl(var(--muted-foreground));
     cursor: pointer;
   }
 
-  .toggle:hover {
-    background-color: hsl(var(--accent));
-    color: hsl(var(--foreground));
-  }
+  .toggle:hover { background-color: hsl(var(--accent)); color: hsl(var(--foreground)); }
 
   .toggle-icons {
     position: relative;
     display: inline-flex;
-    width: 1.5rem;
-    height: 1.5rem;
-    align-items: center;
-    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   .toggle-icons > svg {
     position: absolute;
-    width: 1.5rem;
-    height: 1.5rem;
-    transition: transform 0.35s var(--ease-out-quint);
+    inset: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.45s var(--ease-out-quint),
+                opacity 0.3s var(--ease-out-quint);
   }
 
-  .icon-sun { transform: rotate(0deg) scale(1); }
-  .icon-moon { transform: rotate(90deg) scale(0); }
-  .dark .icon-sun { transform: rotate(-90deg) scale(0); }
-  .dark .icon-moon { transform: rotate(0deg) scale(1); }
+  .icon-sun  { transform: rotate(0deg)   scale(1); opacity: 1; }
+  .icon-moon { transform: rotate(-70deg) scale(0); opacity: 0; }
+  .dark .icon-sun  { transform: rotate(70deg) scale(0); opacity: 0; }
+  .dark .icon-moon { transform: rotate(0deg)  scale(1); opacity: 1; }
 
   .btn-press {
-    transition-property: color, background-color, opacity, transform;
+    transition-property: color, background-color, transform;
     transition-timing-function: var(--ease-out-quint);
-    transition-duration: 0.15s, 0.15s, 0.15s, 0.35s;
+    transition-duration: 0.2s, 0.2s, 0.35s;
   }
 
-  .btn-press:active {
-    transform: scale(0.9);
-    transition-duration: 0.15s, 0.15s, 0.15s, 90ms;
-  }
+  .btn-press:active { transform: scale(0.88); transition-duration: 0.2s, 0.2s, 90ms; }
 
   .sr-only {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
   }
 
-  /* ---------- Grouped popover (the fruit-farming mockups) ---------- */
+  /* ---------- The grouped popover ---------- */
 
-  .popover { position: relative; display: inline-block; }
+  .popover-wrap { position: relative; display: inline-block; }
 
-  .popover > summary {
+  .trigger {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .count {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    list-style: none;
-    cursor: pointer;
+    justify-content: center;
+    min-width: 1.35em;
+    height: 1.35em;
+    padding: 0 0.4em;
+    border-radius: 999px;
+    background-color: hsl(var(--accent));
     color: hsl(var(--muted-foreground));
-    transition: color 0.2s var(--ease-out-quint);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    font-variation-settings: "opsz" 9, "wght" 600, "SOFT" 0, "WONK" 0;
+    transform: translateY(-0.15em);
+    transition: background-color 0.25s var(--ease-out-quint),
+                color 0.25s var(--ease-out-quint);
   }
 
-  .popover > summary::-webkit-details-marker { display: none; }
-  .popover > summary:hover { color: hsl(var(--foreground)); }
-  .popover > summary:hover .link-underline::after { transform: scaleX(1); }
-
-  .chevron {
-    width: 0.75rem;
-    height: 0.75rem;
-    opacity: 0.6;
-    transition: transform 0.25s var(--ease-out-quint);
+  .row:hover .count,
+  .trigger[aria-expanded="true"] .count {
+    background-color: hsl(var(--foreground) / 0.9);
+    color: hsl(var(--background));
   }
 
-  .popover[open] > summary .chevron { transform: rotate(180deg); }
-
-  .popover-panel {
-    position: absolute;
-    z-index: 50;
-    top: calc(100% + 0.5rem);
-    left: 0;
-    min-width: 16rem;
-    max-width: min(20rem, calc(100vw - 2rem));
-    padding: 0.375rem;
+  .panel {
+    /* Native popover puts this in the top layer, so it can never be painted
+       over by later sections; JS sets top/left on open. */
+    position: fixed;
+    inset: auto;
+    z-index: 60;
+    width: max-content;
+    max-width: min(21rem, calc(100vw - 2rem));
+    margin: 0;
+    padding: 0.5rem;
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius);
-    background-color: hsl(var(--card));
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    animation: popover-in 0.28s var(--ease-out-quint) both;
+    /* Near-opaque: at 0.86 the Elsewhere list behind it ghosted straight
+       through and the panel read as muddy rather than layered. */
+    background-color: hsl(var(--card) / 0.985);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    backdrop-filter: blur(20px) saturate(1.4);
+    box-shadow:
+      0 1px 2px hsl(var(--shadow) / 0.06),
+      0 8px 20px -6px hsl(var(--shadow) / 0.14),
+      0 24px 48px -12px hsl(var(--shadow) / 0.16);
+    overflow: visible;
   }
 
-  .popover-panel a {
+  .panel::backdrop { background: transparent; }
+
+  /* The notch, built from two rotated layers so the border reads continuous. */
+  .panel::before,
+  .panel::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: var(--notch, 1.5rem);
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    border-radius: 2px 0 0 0;
+  }
+
+  .panel::before {
+    border-top: 1px solid hsl(var(--border));
+    border-left: 1px solid hsl(var(--border));
+  }
+
+  .panel::after {
+    top: -4px;
+    background-color: hsl(var(--card) / 0.985);
+  }
+
+  .panel-item {
     display: block;
-    padding: 0.5rem 0.625rem;
-    border-radius: calc(var(--radius) - 3px);
-    color: hsl(var(--muted-foreground));
-    transition: background-color 0.15s var(--ease-out-quint),
-                color 0.15s var(--ease-out-quint);
+    padding: 0.625rem 0.75rem;
+    border-radius: calc(var(--radius) - 0.35rem);
+    transition: background-color 0.2s var(--ease-out-quint);
   }
 
-  .popover-panel a:hover,
-  .popover-panel a:focus-visible {
-    background-color: hsl(var(--accent));
-    color: hsl(var(--foreground));
-  }
+  .panel-item:hover,
+  .panel-item:focus-visible { background-color: hsl(var(--accent) / 0.75); }
 
-  .popover-item-name {
+  .panel-item-name {
     display: block;
-    font-weight: 500;
-    color: hsl(var(--foreground) / 0.9);
+    font-size: 1rem;
+    color: hsl(var(--foreground) / 0.92);
+    font-variation-settings: "opsz" 30, "wght" 480, "SOFT" 20, "WONK" 0;
+    transition: font-variation-settings 0.4s var(--ease-out-quint);
   }
 
-  .popover-item-desc {
+  .panel-item:hover .panel-item-name,
+  .panel-item:focus-visible .panel-item-name {
+    font-variation-settings: "opsz" 30, "wght" 580, "SOFT" 70, "WONK" 1;
+  }
+
+  .panel-item-desc {
     display: block;
+    margin-top: 0.0625rem;
     font-size: 0.8125rem;
-    line-height: 1.4;
-    color: hsl(var(--muted-foreground) / 0.8);
+    line-height: 1.45;
+    color: hsl(var(--muted-foreground) / 0.85);
+    font-variation-settings: "opsz" 9, "wght" 350, "SOFT" 20, "WONK" 0;
   }
 
-  @keyframes popover-in {
-    from { opacity: 0; transform: translateY(-6px); filter: blur(3px); }
-    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  /* Open state: the panel lifts in, then its items follow in sequence —
+     the same blur-fade the page itself enters with. */
+  .panel:popover-open,
+  .no-popover .panel.is-open {
+    animation: panel-in 0.34s var(--ease-out-quint) backwards;
   }
+
+  .panel:popover-open .panel-item,
+  .no-popover .panel.is-open .panel-item {
+    animation: slide-from-down-and-fade 0.42s var(--ease-out-quint) backwards;
+    animation-delay: calc(0.07s + var(--j, 0) * 0.05s);
+  }
+
+  @keyframes panel-in {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+
+  /* Fallback for browsers without the Popover API: anchor to the wrapper. */
+  .no-popover .panel { display: none; position: absolute; top: calc(100% + 0.7rem); left: 0; }
+  .no-popover .panel.is-open { display: block; }
 
   /* ---------- Footer ---------- */
 
@@ -345,31 +480,37 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.75rem 1.25rem;
+    gap: 0.75rem 1.5rem;
     flex-wrap: wrap;
-    padding-top: 1.25rem;
+    padding-top: 1.5rem;
     border-top: 1px solid hsl(var(--border));
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
+    font-variation-settings: "opsz" 14, "wght" 380, "SOFT" 20, "WONK" 0;
   }
 
-  .socials { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .socials { display: flex; gap: 1.25rem; flex-wrap: wrap; }
 
   /* ---------- Sequential blur-fade entrance ---------- */
 
   .enter-armed .animate-enter { opacity: 0; }
 
   .enter-go .animate-enter {
-    /* 'backwards', not 'both': a filled-forwards blur(0)/translateY(0) would
-       persist as a filter + transform, and each of those leaves the element
-       holding its own stacking context. Later sections would then paint over
-       the popover panel below, whatever z-index it carries. */
-    animation: slide-from-down-and-fade 0.7s var(--ease-out-quint) backwards;
-    animation-delay: calc(0.1s + var(--i, 0) * 0.06s);
+    /* 'backwards', not 'both': a filled-forwards blur(0)/translateY(0) sticks
+       around as a filter and a transform, each of which would leave the
+       element holding its own stacking context. */
+    animation: slide-from-down-and-fade 0.75s var(--ease-out-quint) backwards;
+    animation-delay: calc(0.06s + var(--i, 0) * 0.065s);
   }
 
   @keyframes slide-from-down-and-fade {
-    from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+    from { opacity: 0; transform: translateY(18px); filter: blur(5px); }
     to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.25s;
+    animation-timing-function: var(--ease-out-quint);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -379,6 +520,8 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+    ::view-transition-old(root),
+    ::view-transition-new(root) { animation: none !important; }
   }
 </style>
 </head>
@@ -394,7 +537,7 @@
 
     <button type="button" id="themeToggle" class="toggle btn-press" aria-label="Toggle theme">
       <span class="toggle-icons" aria-hidden="true">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c5.523 0 10-4.477 10-10c0-.463-.694-.54-.933-.143a6.5 6.5 0 1 1-8.924-8.924C12.54 2.693 12.463 2 12 2C6.477 2 2 6.477 2 12s4.477 10 10 10"></path></svg>
       </span>
       <span class="sr-only">Toggle theme</span>
@@ -402,53 +545,55 @@
   </header>
 
   <div class="px animate-enter" style="--i: 1">
-    <p class="intro">
-      Hi. I&rsquo;m Lewis.<br />
-      I&rsquo;m interested in international affairs, maps, GIS and composing.
+    <p class="lede">
+      Hi. I&rsquo;m Lewis. I&rsquo;m interested in international affairs,
+      <em>maps, GIS</em> and composing.
     </p>
   </div>
 
   <section class="section px">
     <h2 class="section-title animate-enter" style="--i: 2">Projects</h2>
 
-    <ul class="stack-md">
+    <ul class="projects">
       <li class="row animate-enter" style="--i: 3">
         <a class="link" href="https://gravesmatter.org" target="_blank" rel="noopener">
-          <span class="project-name link-underline">Graves Matter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+          <span class="project-name link-underline">Graves Matter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
         </a>
         <p class="project-desc">A digital graveyard map &mdash; recording and locating graves so they can be found again.</p>
       </li>
 
       <li class="row animate-enter" style="--i: 4">
         <a class="link" href="https://fruitscanner.lewisengland.uk" target="_blank" rel="noopener">
-          <span class="project-name link-underline">Fruit Scanner</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+          <span class="project-name link-underline">Fruit Scanner</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
         </a>
         <p class="project-desc">Scanning and tracking fruit through the packhouse.</p>
       </li>
 
       <li class="row animate-enter" style="--i: 5">
-        <details class="popover" id="mockupsPopover">
-          <summary>
-            <span class="project-name link-underline">Assorted fruit farming digitisation projects</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
-          </summary>
+        <span class="popover-wrap">
+          <button type="button" class="trigger" id="mockupsTrigger"
+                  popovertarget="mockupsPanel" aria-expanded="false">
+            <span class="project-name link-underline">Fruit farming digitisation</span>
+            <span class="count" aria-hidden="true">3</span>
+            <span class="sr-only">Show the three mockups</span>
+          </button>
 
-          <div class="popover-panel">
-            <a href="./kiosk-picking-mockup/">
-              <span class="popover-item-name">Picking kiosk</span>
-              <span class="popover-item-desc">Touchscreen crop recording for pickers in the field</span>
+          <div class="panel" id="mockupsPanel" popover>
+            <a class="panel-item" href="./kiosk-picking-mockup/" style="--j: 0">
+              <span class="panel-item-name">Picking kiosk</span>
+              <span class="panel-item-desc">Touchscreen crop recording for pickers in the field</span>
             </a>
-            <a href="./manual-timesheet-mockup/">
-              <span class="popover-item-name">Manual timesheet entry</span>
-              <span class="popover-item-desc">Bulk hours entry for the office</span>
+            <a class="panel-item" href="./manual-timesheet-mockup/" style="--j: 1">
+              <span class="panel-item-name">Manual timesheet entry</span>
+              <span class="panel-item-desc">Bulk hours entry for the office</span>
             </a>
-            <a href="./reports-mockup/">
-              <span class="popover-item-name">Reports</span>
-              <span class="popover-item-desc">Payroll and productivity reporting</span>
+            <a class="panel-item" href="./reports-mockup/" style="--j: 2">
+              <span class="panel-item-name">Reports</span>
+              <span class="panel-item-desc">Payroll and productivity reporting</span>
             </a>
           </div>
-        </details>
-        <p class="project-desc">Interface mockups for farm labour, picking and payroll.</p>
+        </span>
+        <p class="project-desc">Assorted interface mockups for farm labour, picking and payroll.</p>
       </li>
     </ul>
   </section>
@@ -456,25 +601,25 @@
   <section class="section px">
     <h2 class="section-title animate-enter" style="--i: 6">Elsewhere</h2>
 
-    <ul class="stack-sm">
+    <ul class="elsewhere">
       <li class="row animate-enter" style="--i: 7">
-        <a class="link" href="./travel-costs/">
-          <span class="link-underline">Train fare tracker</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+        <a class="link link-muted" href="./travel-costs/">
+          <span class="elsewhere-name link-underline">Train fare tracker</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
         </a>
       </li>
       <li class="row animate-enter" style="--i: 8">
-        <a class="link" href="./hitcham-bell/">
-          <span class="link-underline">Hitcham bell tower restoration</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+        <a class="link link-muted" href="./hitcham-bell/">
+          <span class="elsewhere-name link-underline">Hitcham bell tower restoration</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
         </a>
       </li>
       <li class="row animate-enter" style="--i: 9">
-        <a class="link" href="./QuizTestNoAnimation.html">
-          <span class="link-underline">Hanzi stroke quiz</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+        <a class="link link-muted" href="./QuizTestNoAnimation.html">
+          <span class="elsewhere-name link-underline">Hanzi stroke quiz</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
         </a>
       </li>
       <li class="row animate-enter" style="--i: 10">
-        <a class="link" href="./pdfupload.html">
-          <span class="link-underline">PDF page splitter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+        <a class="link link-muted" href="./pdfupload.html">
+          <span class="elsewhere-name link-underline">PDF page splitter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
         </a>
       </li>
     </ul>
@@ -482,9 +627,9 @@
 
   <footer class="px animate-enter" style="--i: 11">
     <div class="socials">
-      <a class="link" href="https://www.facebook.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Facebook</span></a>
-      <a class="link" href="https://www.instagram.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Instagram</span></a>
-      <a class="link" href="https://github.com/lewis-r-england" target="_blank" rel="me noopener"><span class="link-underline">GitHub</span></a>
+      <a class="link link-muted" href="https://www.facebook.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Facebook</span></a>
+      <a class="link link-muted" href="https://www.instagram.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Instagram</span></a>
+      <a class="link link-muted" href="https://github.com/lewis-r-england" target="_blank" rel="me noopener"><span class="link-underline">GitHub</span></a>
     </div>
 
     <!-- Honeypot address for naive scrapers; the real one is assembled below. -->
@@ -498,48 +643,133 @@
   (function () {
     var root = document.documentElement;
 
-    // Release the staggered entrance once styles have settled.
-    requestAnimationFrame(function () {
+    /* --- Entrance -------------------------------------------------------
+       Hold the stagger until Fraunces is ready, so the text blur-fades in
+       already set in the real font rather than reflowing from the fallback
+       mid-animation. The timeout keeps a slow font from stalling the page. */
+    var released = false;
+    function release() {
+      if (released) return;
+      released = true;
       requestAnimationFrame(function () {
         root.classList.remove("enter-armed");
         root.classList.add("enter-go");
       });
-    });
+    }
 
-    // Theme toggle.
-    document.getElementById("themeToggle").addEventListener("click", function () {
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(release);
+    setTimeout(release, 1200);
+
+    /* --- Theme ---------------------------------------------------------- */
+    function flip() {
       var dark = root.classList.toggle("dark");
       try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    }
+
+    document.getElementById("themeToggle").addEventListener("click", function () {
+      if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.startViewTransition(flip);
+      } else {
+        flip();
+      }
     });
 
-    // Follow the system theme until an explicit choice has been stored.
+    // Track the system theme until an explicit choice has been stored.
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
       var saved = null;
       try { saved = localStorage.getItem("theme"); } catch (err) {}
       if (!saved) root.classList.toggle("dark", e.matches);
     });
 
-    // <details> gives us the open/close and keyboard handling; a popover also
-    // needs to dismiss on outside click and on Escape.
-    var popover = document.getElementById("mockupsPopover");
+    /* --- Popover --------------------------------------------------------
+       The Popover API gives light-dismiss, Escape and the top layer for
+       free. Where it is missing we drive the same states by hand, and the
+       panel falls back to absolute positioning inside its wrapper. */
+    var trigger = document.getElementById("mockupsTrigger");
+    var panel = document.getElementById("mockupsPanel");
+    var native = typeof panel.showPopover === "function";
 
-    document.addEventListener("click", function (e) {
-      if (popover.open && !popover.contains(e.target)) popover.open = false;
+    function place() {
+      var r = trigger.getBoundingClientRect();
+      // Measure before painting, then keep the panel on screen.
+      panel.style.left = "0px";
+      panel.style.top = "0px";
+      var w = panel.offsetWidth;
+      var margin = 12;
+      var left = Math.min(Math.max(margin, r.left), window.innerWidth - w - margin);
+
+      panel.style.left = left + "px";
+      panel.style.top = (r.bottom + 10) + "px";
+      // Keep the notch pointing at the trigger even once the panel is nudged
+      // back inside the viewport.
+      panel.style.setProperty("--notch", Math.max(12, Math.min(r.left - left + 16, w - 22)) + "px");
+    }
+
+    function setOpen(open) {
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) {
+        if (native) place();
+        panel.classList.toggle("is-open", open);
+      } else {
+        panel.classList.remove("is-open");
+      }
+    }
+
+    if (native) {
+      panel.addEventListener("beforetoggle", function (e) {
+        if (e.newState === "open") place();
+      });
+      panel.addEventListener("toggle", function (e) {
+        setOpen(e.newState === "open");
+      });
+      // The panel is fixed to the viewport, so follow the trigger if either
+      // changes underneath it.
+      ["scroll", "resize"].forEach(function (evt) {
+        window.addEventListener(evt, function () {
+          if (panel.matches(":popover-open")) place();
+        }, { passive: true });
+      });
+    } else {
+      trigger.addEventListener("click", function () {
+        setOpen(!panel.classList.contains("is-open"));
+      });
+
+      document.addEventListener("click", function (e) {
+        if (panel.classList.contains("is-open") &&
+            !panel.contains(e.target) && !trigger.contains(e.target)) {
+          setOpen(false);
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && panel.classList.contains("is-open")) {
+          setOpen(false);
+          trigger.focus();
+        }
+      });
+    }
+
+    // Arrow-key roving between the panel's items, as a menu should.
+    panel.addEventListener("keydown", function (e) {
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      var items = Array.prototype.slice.call(panel.querySelectorAll(".panel-item"));
+      var at = items.indexOf(document.activeElement);
+      var next = e.key === "ArrowDown"
+        ? (at + 1) % items.length
+        : (at <= 0 ? items.length - 1 : at - 1);
+      items[next].focus();
+      e.preventDefault();
     });
 
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && popover.open) {
-        popover.open = false;
-        popover.querySelector("summary").focus();
+    trigger.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" && trigger.getAttribute("aria-expanded") === "true") {
+        panel.querySelector(".panel-item").focus();
+        e.preventDefault();
       }
     });
 
-    // Email assembled at runtime so it isn't sitting in the markup as plain text.
-    var user = "me";
-    var domain = "lewisengland";
-    var tld = "uk";
-    var email = user + String.fromCharCode(64) + domain + String.fromCharCode(46) + tld;
-
+    /* --- Email ---------------------------------------------------------- */
+    var email = "me" + String.fromCharCode(64) + "lewisengland" + String.fromCharCode(46) + "uk";
     var link = document.getElementById("emailLink");
     link.href = "mailto:" + email;
     link.setAttribute("aria-label", "Email " + email);

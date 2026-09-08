@@ -1,3 +1,14 @@
 # lewis-r-england.github.io
-allgemeines
-[Latest](https://lewis-r-england.github.io/manual-timesheet-mockup/)
+
+Personal site — <https://lewis-r-england.github.io/>
+
+| Page | Path |
+| --- | --- |
+| Home | `index.html` |
+| Train fare tracker | `travel-costs/` |
+| Picking kiosk mockup | `kiosk-picking-mockup/` |
+| Manual timesheet mockup | `manual-timesheet-mockup/` |
+| Reports mockup | `reports-mockup/` |
+| Hitcham bell tower restoration | `hitcham-bell/` |
+| Hanzi stroke quiz | `QuizTestNoAnimation.html` |
+| PDF page splitter | `pdfupload.html` |

@@ -9,6 +9,5 @@ Personal site — <https://lewis-r-england.github.io/>
 | Picking kiosk mockup | `kiosk-picking-mockup/` |
 | Manual timesheet mockup | `manual-timesheet-mockup/` |
 | Reports mockup | `reports-mockup/` |
-| Hitcham bell tower restoration | `hitcham-bell/` |
 | Hanzi stroke quiz | `QuizTestNoAnimation.html` |
 | PDF page splitter | `pdfupload.html` |

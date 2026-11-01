@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lewis England</title>
-<meta name="description" content="Lewis England — international affairs, maps, GIS and composing. Projects in cemetery mapping and fruit farming digitisation." />
+<meta name="description" content="Lewis England — international affairs, maps, GIS and composing. Selected work from the DAAD portfolio, plus projects in cemetery mapping and fruit farming digitisation." />
 <meta name="color-scheme" content="light dark" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23141210'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' font-weight='700' fill='%23faf8f5' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E" />
 
@@ -13,7 +13,7 @@
 <script>
   // Runs before first paint: settles the theme (no flash), arms the entrance
   // animation, and records whether the Popover API is available. .enter-armed
-  // is only ever added here, so without JS nothing is left hidden.
+  // and .js are only ever added here, so without JS nothing is left hidden.
   (function () {
     var root = document.documentElement;
     try {
@@ -25,21 +25,11 @@
     if (!Object.prototype.hasOwnProperty.call(HTMLElement.prototype, "popover")) {
       root.classList.add("no-popover");
     }
-    root.classList.add("enter-armed");
+    root.classList.add("js", "enter-armed");
   })();
 </script>
 
 <style>
-  /* ------------------------------------------------------------------
-     Fraunces — one variable file, four axes.
-       opsz 9–144   optical size: sturdier at small sizes, finer at display
-       wght 100–900
-       SOFT 0–100   softens the terminals
-       WONK 0–1     swaps in the wonky letterforms (the singular g, y, w)
-     Axes are always listed opsz, wght, SOFT, WONK and in that order, so
-     font-variation-settings stays interpolable for the hover transitions.
-  ------------------------------------------------------------------ */
-
   @font-face {
     font-family: "Fraunces";
     font-style: normal;
@@ -57,8 +47,6 @@
   }
 
   :root {
-    /* Warmed a little off the inspiration's cool grey — Fraunces sits better
-       on paper than on slate. */
     --background: 40 30% 98%;
     --foreground: 28 14% 9%;
     --muted-foreground: 30 8% 34%;
@@ -85,9 +73,7 @@
 
   * { box-sizing: border-box; }
 
-  html {
-    -webkit-tap-highlight-color: transparent;
-  }
+  html { -webkit-tap-highlight-color: transparent; }
 
   body {
     margin: 0;
@@ -102,9 +88,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  ::selection {
-    background: hsl(var(--foreground) / 0.12);
-  }
+  ::selection { background: hsl(var(--foreground) / 0.12); }
 
   main {
     max-width: 34rem;
@@ -121,7 +105,7 @@
 
   .px { padding-left: 1.5rem; padding-right: 1.5rem; }
 
-  h1, h2 { margin: 0; font-size: inherit; font-weight: inherit; }
+  h1, h2, h3 { margin: 0; font-size: inherit; font-weight: inherit; }
   p { margin: 0; }
   ul { list-style: none; margin: 0; padding: 0; }
 
@@ -138,8 +122,6 @@
     font-size: clamp(2.5rem, 9vw, 3.5rem);
     line-height: 1.02;
     letter-spacing: -0.03em;
-    /* Display optical size, and the wonk fully on — this is the one place
-       the wonky letterforms get to be the point. */
     font-variation-settings: "opsz" 144, "wght" 640, "SOFT" 50, "WONK" 1;
   }
 
@@ -190,8 +172,6 @@
                 color 0.25s var(--ease-out-quint);
   }
 
-  /* The axes themselves are the hover state: the name gains weight, softens,
-     and the wonk comes on. */
   .row:hover .project-name,
   .row:focus-within .project-name {
     font-variation-settings: "opsz" 60, "wght" 620, "SOFT" 70, "WONK" 1;
@@ -247,7 +227,9 @@
   .link:hover .link-underline::after,
   .link:focus-visible .link-underline::after,
   .trigger:hover .link-underline::after,
-  .trigger[aria-expanded="true"] .link-underline::after { transform: scaleX(1); }
+  .trigger[aria-expanded="true"] .link-underline::after,
+  .acc-trigger:hover .link-underline::after,
+  .acc-trigger:focus-visible .link-underline::after { transform: scaleX(1); }
 
   .arrow {
     margin-left: 0.3em;
@@ -330,6 +312,90 @@
     border: 0;
   }
 
+  /* ---------- Accordion: "Other misc. projects" ---------- */
+
+  .acc-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: hsl(var(--muted-foreground));
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: left;
+    font-variation-settings: "opsz" 24, "wght" 400, "SOFT" 20, "WONK" 0;
+    transition: color 0.25s var(--ease-out-quint),
+                font-variation-settings 0.45s var(--ease-out-quint);
+  }
+
+  .acc-trigger:hover,
+  .acc-trigger[aria-expanded="true"] { color: hsl(var(--foreground)); }
+
+  .acc-trigger:hover {
+    font-variation-settings: "opsz" 24, "wght" 520, "SOFT" 60, "WONK" 1;
+  }
+
+  .chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background-color: hsl(var(--accent));
+    color: hsl(var(--muted-foreground));
+    transition: transform 0.55s var(--ease-out-quint),
+                background-color 0.25s var(--ease-out-quint),
+                color 0.25s var(--ease-out-quint);
+  }
+
+  .chevron svg { width: 0.8rem; height: 0.8rem; }
+
+  .acc-trigger:hover .chevron { color: hsl(var(--foreground)); }
+
+  .acc-trigger[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+    background-color: hsl(var(--foreground) / 0.9);
+    color: hsl(var(--background));
+  }
+
+  /* Height animates via grid rows 0fr → 1fr. Without JS it simply stays open. */
+  .acc-panel { display: grid; grid-template-rows: 1fr; }
+
+  .js .acc-panel {
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.55s var(--ease-out-quint);
+  }
+
+  .js .acc-panel.is-open { grid-template-rows: 1fr; }
+
+  .acc-inner { min-height: 0; overflow: hidden; }
+
+  /* Once fully open, stop clipping so the fallback popover can overflow. */
+  .acc-panel.is-settled .acc-inner { overflow: visible; }
+
+  .acc-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+    padding-top: 1.75rem;
+  }
+
+  .acc-group { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .js .acc-panel:not(.is-open) .acc-item {
+    opacity: 0;
+    transition: opacity 0.2s var(--ease-out-quint);
+  }
+
+  .acc-panel.is-open .acc-item {
+    animation: slide-from-down-and-fade 0.6s var(--ease-out-quint) backwards;
+    animation-delay: calc(0.05s + var(--k, 0) * 0.055s);
+  }
+
   /* ---------- The grouped popover ---------- */
 
   .popover-wrap { position: relative; display: inline-block; }
@@ -372,8 +438,6 @@
   }
 
   .panel {
-    /* Native popover puts this in the top layer, so it can never be painted
-       over by later sections; JS sets top/left on open. */
     position: fixed;
     inset: auto;
     z-index: 60;
@@ -383,8 +447,6 @@
     padding: 0.5rem;
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius);
-    /* Near-opaque: at 0.86 the Elsewhere list behind it ghosted straight
-       through and the panel read as muddy rather than layered. */
     background-color: hsl(var(--card) / 0.985);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     backdrop-filter: blur(20px) saturate(1.4);
@@ -397,7 +459,6 @@
 
   .panel::backdrop { background: transparent; }
 
-  /* The notch, built from two rotated layers so the border reads continuous. */
   .panel::before,
   .panel::after {
     content: "";
@@ -452,8 +513,6 @@
     font-variation-settings: "opsz" 9, "wght" 350, "SOFT" 20, "WONK" 0;
   }
 
-  /* Open state: the panel lifts in, then its items follow in sequence —
-     the same blur-fade the page itself enters with. */
   .panel:popover-open,
   .no-popover .panel.is-open {
     animation: panel-in 0.34s var(--ease-out-quint) backwards;
@@ -470,7 +529,6 @@
     to   { opacity: 1; transform: translateY(0)    scale(1); }
   }
 
-  /* Fallback for browsers without the Popover API: anchor to the wrapper. */
   .no-popover .panel { display: none; position: absolute; top: calc(100% + 0.7rem); left: 0; }
   .no-popover .panel.is-open { display: block; }
 
@@ -495,9 +553,6 @@
   .enter-armed .animate-enter { opacity: 0; }
 
   .enter-go .animate-enter {
-    /* 'backwards', not 'both': a filled-forwards blur(0)/translateY(0) sticks
-       around as a filter and a transform, each of which would leave the
-       element holding its own stacking context. */
     animation: slide-from-down-and-fade 0.75s var(--ease-out-quint) backwards;
     animation-delay: calc(0.06s + var(--i, 0) * 0.065s);
   }
@@ -552,80 +607,108 @@
   </div>
 
   <section class="section px">
-    <h2 class="section-title animate-enter" style="--i: 2">Projects</h2>
+    <h2 class="section-title animate-enter" style="--i: 2">Work</h2>
 
     <ul class="projects">
       <li class="row animate-enter" style="--i: 3">
-        <a class="link" href="https://gravesmatter.org" target="_blank" rel="noopener">
-          <span class="project-name link-underline">Graves Matter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+        <a class="link" href="./daad.html">
+          <span class="project-name link-underline">Selected Items from DAAD Portfolio</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
         </a>
-        <p class="project-desc">A digital graveyard map &mdash; recording and locating graves so they can be found again.</p>
+        <p class="project-desc">Work completed as part of my role as Programme and Office Management Officer at the German Academic Exchange Service (DAAD) in London.</p>
       </li>
+    </ul>
+  </section>
 
-      <li class="row animate-enter" style="--i: 4">
-        <a class="link" href="https://fruitscanner.lewisengland.uk" target="_blank" rel="noopener">
-          <span class="project-name link-underline">Fruit Scanner</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-        </a>
-        <p class="project-desc">Scanning and tracking fruit through the packhouse.</p>
-      </li>
-
-      <li class="row animate-enter" style="--i: 5">
-        <span class="popover-wrap">
-          <button type="button" class="trigger" id="mockupsTrigger"
-                  popovertarget="mockupsPanel" aria-expanded="false">
-            <span class="project-name link-underline">Fruit farming digitisation</span>
-            <span class="count" aria-hidden="true">3</span>
-            <span class="sr-only">Show the three mockups</span>
-          </button>
-
-          <div class="panel" id="mockupsPanel" popover>
-            <a class="panel-item" href="./kiosk-picking-mockup/" style="--j: 0">
-              <span class="panel-item-name">Picking kiosk</span>
-              <span class="panel-item-desc">Touchscreen crop recording for pickers in the field</span>
-            </a>
-            <a class="panel-item" href="./manual-timesheet-mockup/" style="--j: 1">
-              <span class="panel-item-name">Manual timesheet entry</span>
-              <span class="panel-item-desc">Bulk hours entry for the office</span>
-            </a>
-            <a class="panel-item" href="./reports-mockup/" style="--j: 2">
-              <span class="panel-item-name">Reports</span>
-              <span class="panel-item-desc">Payroll and productivity reporting</span>
-            </a>
-          </div>
+  <section class="px">
+    <div class="animate-enter" style="--i: 4">
+      <button type="button" class="acc-trigger" id="miscTrigger"
+              aria-expanded="false" aria-controls="miscPanel">
+        <span class="link-underline">Other misc. projects</span>
+        <span class="chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
         </span>
-        <p class="project-desc">Assorted interface mockups for farm labour, picking and payroll.</p>
-      </li>
-    </ul>
+      </button>
+    </div>
+
+    <div class="acc-panel" id="miscPanel" role="region" aria-labelledby="miscTrigger">
+      <div class="acc-inner">
+        <div class="acc-body">
+
+          <ul class="projects">
+            <li class="row acc-item" style="--k: 0">
+              <a class="link" href="https://gravesmatter.org" target="_blank" rel="noopener">
+                <span class="project-name link-underline">Graves Matter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+              </a>
+              <p class="project-desc">A digital graveyard map &mdash; recording and locating graves so they can be found again.</p>
+            </li>
+
+            <li class="row acc-item" style="--k: 1">
+              <a class="link" href="https://fruitscanner.lewisengland.uk" target="_blank" rel="noopener">
+                <span class="project-name link-underline">Fruit Scanner</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+              </a>
+              <p class="project-desc">Scanning and tracking fruit through the packhouse.</p>
+            </li>
+
+            <li class="row acc-item" style="--k: 2">
+              <span class="popover-wrap">
+                <button type="button" class="trigger" id="mockupsTrigger"
+                        popovertarget="mockupsPanel" aria-expanded="false">
+                  <span class="project-name link-underline">Fruit farming digitisation</span>
+                  <span class="count" aria-hidden="true">3</span>
+                  <span class="sr-only">Show the three mockups</span>
+                </button>
+
+                <div class="panel" id="mockupsPanel" popover>
+                  <a class="panel-item" href="./kiosk-picking-mockup/" style="--j: 0">
+                    <span class="panel-item-name">Picking kiosk</span>
+                    <span class="panel-item-desc">Touchscreen crop recording for pickers in the field</span>
+                  </a>
+                  <a class="panel-item" href="./manual-timesheet-mockup/" style="--j: 1">
+                    <span class="panel-item-name">Manual timesheet entry</span>
+                    <span class="panel-item-desc">Bulk hours entry for the office</span>
+                  </a>
+                  <a class="panel-item" href="./reports-mockup/" style="--j: 2">
+                    <span class="panel-item-name">Reports</span>
+                    <span class="panel-item-desc">Payroll and productivity reporting</span>
+                  </a>
+                </div>
+              </span>
+              <p class="project-desc">Assorted interface mockups for farm labour, picking and payroll.</p>
+            </li>
+          </ul>
+
+          <div class="acc-group">
+            <h3 class="section-title acc-item" style="--k: 3">Elsewhere</h3>
+            <ul class="elsewhere">
+              <li class="row acc-item" style="--k: 4">
+                <a class="link link-muted" href="./travel-costs/">
+                  <span class="elsewhere-name link-underline">Train fare tracker</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+                </a>
+              </li>
+              <li class="row acc-item" style="--k: 5">
+                <a class="link link-muted" href="./hitcham-bell/">
+                  <span class="elsewhere-name link-underline">Bell tower restoration</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+                </a>
+              </li>
+              <li class="row acc-item" style="--k: 6">
+                <a class="link link-muted" href="./QuizTestNoAnimation.html">
+                  <span class="elsewhere-name link-underline">Hanzi stroke quiz</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+                </a>
+              </li>
+              <li class="row acc-item" style="--k: 7">
+                <a class="link link-muted" href="./pdfupload.html">
+                  <span class="elsewhere-name link-underline">PDF page splitter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="section px">
-    <h2 class="section-title animate-enter" style="--i: 6">Elsewhere</h2>
-
-    <ul class="elsewhere">
-      <li class="row animate-enter" style="--i: 7">
-        <a class="link link-muted" href="./travel-costs/">
-          <span class="elsewhere-name link-underline">Train fare tracker</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-        </a>
-      </li>
-      <li class="row animate-enter" style="--i: 8">
-        <a class="link link-muted" href="./hitcham-bell/">
-          <span class="elsewhere-name link-underline">Bell tower restoration</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-        </a>
-      </li>
-      <li class="row animate-enter" style="--i: 9">
-        <a class="link link-muted" href="./QuizTestNoAnimation.html">
-          <span class="elsewhere-name link-underline">Hanzi stroke quiz</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-        </a>
-      </li>
-      <li class="row animate-enter" style="--i: 10">
-        <a class="link link-muted" href="./pdfupload.html">
-          <span class="elsewhere-name link-underline">PDF page splitter</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-        </a>
-      </li>
-    </ul>
-  </section>
-
-  <footer class="px animate-enter" style="--i: 11">
+  <footer class="px animate-enter" style="--i: 5">
     <div class="socials">
       <a class="link link-muted" href="https://www.facebook.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Facebook</span></a>
       <a class="link link-muted" href="https://www.instagram.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Instagram</span></a>
@@ -643,10 +726,7 @@
   (function () {
     var root = document.documentElement;
 
-    /* --- Entrance -------------------------------------------------------
-       Hold the stagger until Fraunces is ready, so the text blur-fades in
-       already set in the real font rather than reflowing from the fallback
-       mid-animation. The timeout keeps a slow font from stalling the page. */
+    /* --- Entrance ------------------------------------------------------- */
     var released = false;
     function release() {
       if (released) return;
@@ -674,24 +754,19 @@
       }
     });
 
-    // Track the system theme until an explicit choice has been stored.
     matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
       var saved = null;
       try { saved = localStorage.getItem("theme"); } catch (err) {}
       if (!saved) root.classList.toggle("dark", e.matches);
     });
 
-    /* --- Popover --------------------------------------------------------
-       The Popover API gives light-dismiss, Escape and the top layer for
-       free. Where it is missing we drive the same states by hand, and the
-       panel falls back to absolute positioning inside its wrapper. */
+    /* --- Popover -------------------------------------------------------- */
     var trigger = document.getElementById("mockupsTrigger");
     var panel = document.getElementById("mockupsPanel");
     var native = typeof panel.showPopover === "function";
 
     function place() {
       var r = trigger.getBoundingClientRect();
-      // Measure before painting, then keep the panel on screen.
       panel.style.left = "0px";
       panel.style.top = "0px";
       var w = panel.offsetWidth;
@@ -700,8 +775,6 @@
 
       panel.style.left = left + "px";
       panel.style.top = (r.bottom + 10) + "px";
-      // Keep the notch pointing at the trigger even once the panel is nudged
-      // back inside the viewport.
       panel.style.setProperty("--notch", Math.max(12, Math.min(r.left - left + 16, w - 22)) + "px");
     }
 
@@ -722,8 +795,6 @@
       panel.addEventListener("toggle", function (e) {
         setOpen(e.newState === "open");
       });
-      // The panel is fixed to the viewport, so follow the trigger if either
-      // changes underneath it.
       ["scroll", "resize"].forEach(function (evt) {
         window.addEventListener(evt, function () {
           if (panel.matches(":popover-open")) place();
@@ -749,7 +820,14 @@
       });
     }
 
-    // Arrow-key roving between the panel's items, as a menu should.
+    function closeMockups() {
+      if (native) {
+        if (panel.matches(":popover-open")) panel.hidePopover();
+      } else {
+        setOpen(false);
+      }
+    }
+
     panel.addEventListener("keydown", function (e) {
       if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
       var items = Array.prototype.slice.call(panel.querySelectorAll(".panel-item"));
@@ -766,6 +844,40 @@
         panel.querySelector(".panel-item").focus();
         e.preventDefault();
       }
+    });
+
+    /* --- Accordion ------------------------------------------------------
+       Collapsed panels are inert, so their links can't be tabbed to while
+       hidden. Once the open transition ends the panel stops clipping. */
+    var accBtn = document.getElementById("miscTrigger");
+    var accPanel = document.getElementById("miscPanel");
+    var settleTimer = null;
+
+    accPanel.inert = true;
+
+    function settle() {
+      if (accPanel.classList.contains("is-open")) accPanel.classList.add("is-settled");
+    }
+
+    function setAcc(open) {
+      accBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      accPanel.classList.toggle("is-open", open);
+      accPanel.classList.remove("is-settled");
+      accPanel.inert = !open;
+      clearTimeout(settleTimer);
+      if (open) {
+        settleTimer = setTimeout(settle, 700); // fallback if transitionend never fires
+      } else {
+        closeMockups();
+      }
+    }
+
+    accBtn.addEventListener("click", function () {
+      setAcc(accBtn.getAttribute("aria-expanded") !== "true");
+    });
+
+    accPanel.addEventListener("transitionend", function (e) {
+      if (e.target === accPanel && e.propertyName === "grid-template-rows") settle();
     });
 
     /* --- Email ---------------------------------------------------------- */

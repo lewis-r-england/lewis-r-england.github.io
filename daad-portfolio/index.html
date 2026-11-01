@@ -642,3 +642,333 @@
 
   <div class="px animate-enter" style="--i: 1">
     <p class="lede">
+      Work completed as part of my role as <em>Programme and Office Management Officer</em>
+      at the German Academic Exchange Service (DAAD) in London.
+    </p>
+    <p class="note">Further work examples and references available on request.</p>
+  </div>
+
+  <section class="section px">
+    <h2 class="section-title animate-enter" style="--i: 2">Portfolio</h2>
+
+    <ul class="projects">
+      <li class="row animate-enter" style="--i: 3">
+        <button type="button" class="trigger" data-gallery="shoutout" aria-haspopup="dialog">
+          <span class="project-name link-underline">#ShoutOutForGerman</span>
+          <span class="count" aria-hidden="true">3</span>
+          <span class="sr-only">View the three campaign videos</span>
+        </button>
+        <p class="project-desc">Social media campaign.</p>
+        <div class="thumbs" data-gallery="shoutout"></div>
+      </li>
+
+      <li class="row animate-enter" style="--i: 4">
+        <button type="button" class="trigger" data-gallery="symposium" aria-haspopup="dialog">
+          <span class="project-name link-underline">Making the Case for German</span>
+          <span class="count" aria-hidden="true">4</span>
+          <span class="sr-only">View the four brand identity images</span>
+        </button>
+        <p class="project-desc">Brand identity for the Goethe-Institut &ndash; DAAD Symposium.</p>
+        <div class="thumbs" data-gallery="symposium"></div>
+      </li>
+    </ul>
+  </section>
+
+  <footer class="px animate-enter" style="--i: 5">
+    <div class="socials">
+      <a class="link link-muted" href="https://www.facebook.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Facebook</span></a>
+      <a class="link link-muted" href="https://www.instagram.com/Lewis.england" target="_blank" rel="me noopener"><span class="link-underline">Instagram</span></a>
+      <a class="link link-muted" href="https://github.com/lewis-r-england" target="_blank" rel="me noopener"><span class="link-underline">GitHub</span></a>
+    </div>
+
+    <span class="sr-only">me [at] example [dot] com</span>
+    <a class="link" id="emailLink" href="#" rel="nofollow noopener"><span class="link-underline">Get in touch</span></a>
+  </footer>
+
+</main>
+
+<dialog class="lightbox" id="lightbox" aria-labelledby="lbTitle">
+  <div class="lb-bar">
+    <p class="lb-title" id="lbTitle"></p>
+    <span class="lb-count" id="lbCount" aria-live="polite"></span>
+    <button type="button" class="lb-btn btn-press" id="lbClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+    </button>
+  </div>
+
+  <div class="lb-stage">
+    <div class="lb-track" id="lbTrack" tabindex="-1"></div>
+    <button type="button" class="lb-btn lb-nav lb-prev btn-press" id="lbPrev" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+    </button>
+    <button type="button" class="lb-btn lb-nav lb-next btn-press" id="lbNext" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+    </button>
+  </div>
+
+  <div class="lb-dots" id="lbDots"></div>
+</dialog>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+
+    /* --- Entrance ------------------------------------------------------- */
+    var released = false;
+    function release() {
+      if (released) return;
+      released = true;
+      requestAnimationFrame(function () {
+        root.classList.remove("enter-armed");
+        root.classList.add("enter-go");
+      });
+    }
+
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(release);
+    setTimeout(release, 1200);
+
+    /* --- Theme ---------------------------------------------------------- */
+    function flip() {
+      var dark = root.classList.toggle("dark");
+      try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    }
+
+    document.getElementById("themeToggle").addEventListener("click", function () {
+      if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.startViewTransition(flip);
+      } else {
+        flip();
+      }
+    });
+
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+      var saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (err) {}
+      if (!saved) root.classList.toggle("dark", e.matches);
+    });
+
+    /* --- Galleries ------------------------------------------------------
+       Edit here. MEDIA_BASE is prepended to every file: "./" means the
+       files sit next to this page; use "/" for the site root. */
+    var MEDIA_BASE = "./";
+
+    var GALLERIES = {
+      shoutout: {
+        title: "#ShoutOutForGerman — social media campaign",
+        type: "video",
+        src: ["daad-1.mp4", "daad-2.mp4", "daad-3.mp4"]
+      },
+      symposium: {
+        title: "Making the Case for German — Goethe-Institut – DAAD Symposium brand identity",
+        type: "image",
+        src: ["daad-1.jpg", "daad-2.jpg", "daad-3.jpg", "daad-4.jpg"]
+      }
+    };
+
+    var reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    var lb = document.getElementById("lightbox");
+    var track = document.getElementById("lbTrack");
+    var titleEl = document.getElementById("lbTitle");
+    var countEl = document.getElementById("lbCount");
+    var dotsEl = document.getElementById("lbDots");
+    var prevBtn = document.getElementById("lbPrev");
+    var nextBtn = document.getElementById("lbNext");
+    var closeBtn = document.getElementById("lbClose");
+
+    var gallery = null;
+    var index = 0;
+    var opener = null;
+
+    /* Thumbnails, built from GALLERIES so there's one list to maintain. */
+    Array.prototype.forEach.call(document.querySelectorAll(".thumbs[data-gallery]"), function (wrap) {
+      var key = wrap.getAttribute("data-gallery");
+      var g = GALLERIES[key];
+      if (!g) return;
+
+      g.src.forEach(function (file, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "thumb";
+        b.setAttribute("aria-label",
+          "Open " + (g.type === "video" ? "video " : "image ") + (i + 1) + " of " + g.src.length);
+
+        var m;
+        if (g.type === "video") {
+          m = document.createElement("video");
+          m.muted = true;
+          m.playsInline = true;
+          m.preload = "metadata";
+          m.src = MEDIA_BASE + file + "#t=0.1"; // first-frame poster
+          b.innerHTML = '<span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span>';
+        } else {
+          m = document.createElement("img");
+          m.src = MEDIA_BASE + file;
+          m.alt = "";
+          m.loading = "lazy";
+          m.decoding = "async";
+        }
+        m.setAttribute("aria-hidden", "true");
+        m.tabIndex = -1;
+        m.addEventListener("error", function () { b.classList.add("is-missing"); });
+
+        b.insertBefore(m, b.firstChild);
+        b.addEventListener("click", function () { openGallery(key, i, b); });
+        wrap.appendChild(b);
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll(".trigger[data-gallery]"), function (btn) {
+      btn.addEventListener("click", function () {
+        openGallery(btn.getAttribute("data-gallery"), 0, btn);
+      });
+    });
+
+    function openGallery(key, start, from) {
+      gallery = GALLERIES[key];
+      if (!gallery) return;
+      opener = from || null;
+      index = -1;
+
+      var n = gallery.src.length;
+      titleEl.textContent = gallery.title;
+      track.textContent = "";
+      dotsEl.textContent = "";
+
+      gallery.src.forEach(function (file, i) {
+        var slide = document.createElement("div");
+        slide.className = "lb-slide";
+        slide.setAttribute("role", "group");
+        slide.setAttribute("aria-roledescription", "slide");
+        slide.setAttribute("aria-label", (i + 1) + " of " + n);
+
+        var m;
+        if (gallery.type === "video") {
+          m = document.createElement("video");
+          m.controls = true;
+          m.playsInline = true;
+          m.preload = "metadata";
+          m.src = MEDIA_BASE + file;
+        } else {
+          m = document.createElement("img");
+          m.src = MEDIA_BASE + file;
+          m.alt = gallery.title + " — image " + (i + 1) + " of " + n;
+          m.decoding = "async";
+        }
+        m.className = "lb-media";
+        m.addEventListener("error", function () {
+          var miss = document.createElement("p");
+          miss.className = "lb-missing";
+          miss.textContent = "Couldn\u2019t load " + file;
+          if (m.parentNode) m.parentNode.replaceChild(miss, m);
+        });
+
+        slide.appendChild(m);
+        track.appendChild(slide);
+
+        var d = document.createElement("button");
+        d.type = "button";
+        d.className = "lb-dot";
+        d.setAttribute("aria-label", "Go to " + (i + 1) + " of " + n);
+        d.addEventListener("click", function () { go(i, true); });
+        dotsEl.appendChild(d);
+      });
+
+      dotsEl.hidden = n < 2;
+      lb.showModal();
+      requestAnimationFrame(function () { go(start, false); });
+    }
+
+    function go(i, smooth) {
+      if (!gallery) return;
+      i = Math.max(0, Math.min(gallery.src.length - 1, i));
+      track.scrollTo({
+        left: i * track.clientWidth,
+        behavior: smooth && !reduced.matches ? "smooth" : "auto"
+      });
+      if (!smooth) sync();
+    }
+
+    function sync() {
+      if (!gallery) return;
+      var n = gallery.src.length;
+      var w = track.clientWidth || 1;
+      var i = Math.max(0, Math.min(n - 1, Math.round(track.scrollLeft / w)));
+
+      if (i !== index) {
+        index = i;
+        // Pause any video that's scrolled out of view.
+        Array.prototype.forEach.call(track.children, function (s, k) {
+          var v = s.querySelector("video");
+          if (v && k !== i && !v.paused) v.pause();
+        });
+      }
+
+      countEl.textContent = (i + 1) + " / " + n;
+      prevBtn.disabled = i === 0;
+      nextBtn.disabled = i === n - 1;
+      Array.prototype.forEach.call(dotsEl.children, function (d, k) {
+        d.setAttribute("aria-current", k === i ? "true" : "false");
+      });
+    }
+
+    var ticking = false;
+    track.addEventListener("scroll", function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; sync(); });
+    }, { passive: true });
+
+    prevBtn.addEventListener("click", function () { go(index - 1, true); });
+    nextBtn.addEventListener("click", function () { go(index + 1, true); });
+    closeBtn.addEventListener("click", function () { lb.close(); });
+
+    // A vertical mouse wheel steps sideways through the slides.
+    var wheelLock = false;
+    track.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // let horizontal swipes through
+      e.preventDefault();
+      if (wheelLock) return;
+      wheelLock = true;
+      go(index + (e.deltaY > 0 ? 1 : -1), true);
+      setTimeout(function () { wheelLock = false; }, 650);
+    }, { passive: false });
+
+    lb.addEventListener("keydown", function (e) {
+      if (e.target && e.target.tagName === "VIDEO") return; // arrows seek inside a focused video
+      var handled = true;
+      switch (e.key) {
+        case "ArrowRight": go(index + 1, true); break;
+        case "ArrowLeft":  go(index - 1, true); break;
+        case "Home":       go(0, true); break;
+        case "End":        go(gallery ? gallery.src.length - 1 : 0, true); break;
+        default: handled = false;
+      }
+      if (handled) e.preventDefault();
+    });
+
+    // Clicking the dark space around the media closes the lightbox.
+    track.addEventListener("click", function (e) {
+      if (e.target.classList.contains("lb-slide")) lb.close();
+    });
+
+    lb.addEventListener("close", function () {
+      Array.prototype.forEach.call(track.querySelectorAll("video"), function (v) { v.pause(); });
+      track.textContent = "";
+      track.scrollLeft = 0;
+      gallery = null;
+      if (opener) opener.focus();
+    });
+
+    window.addEventListener("resize", function () {
+      if (lb.open) go(index, false);
+    });
+
+    /* --- Email ---------------------------------------------------------- */
+    var email = "me" + String.fromCharCode(64) + "lewisengland" + String.fromCharCode(46) + "uk";
+    var link = document.getElementById("emailLink");
+    link.href = "mailto:" + email;
+    link.setAttribute("aria-label", "Email " + email);
+  })();
+</script>
+</body>
+</html>
